@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.vdcompany.adminSmartbox.mapper.LogMapper">
+
+
+
+	<insert id="insertBoxUpdateLog" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
+	  	insert into sb_box_store_log (
+	  		box_idx, agc_idx, agc_sto_idx, agc_mem_idx, regdate
+	    )
+		values (
+			#{box_idx,jdbcType=VARCHAR}, #{agc_idx,jdbcType=VARCHAR}, #{store_idx,jdbcType=VARCHAR}, 1,
+			#{regdate,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+
+	<select id="getBoxUpdateLog" resultType="com.vdcompany.adminSmartbox.bean.box.BoxUpdateLogVO">
+		SELECT log.box_idx, log.agc_idx, log.agc_sto_idx as store_idx,
+        log.agc_mem_idx, member.name as agc_mem_name,  store.store_name,
+        log.regdate
+		FROM sb_box_store_log as log
+		JOIN agency_member as member
+		ON log.agc_mem_idx = member.idx
+			JOIN agency_store as store
+            ON log.agc_sto_idx = store.idx
+		WHERE box_idx = #{box_idx}
+	</select>
+
+
+</mapper>

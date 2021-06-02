@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.vdcompany.adminSmartbox.mapper.CategoryMapper">
+
+	<select id="getCateList" parameterType="java.lang.String" resultType="com.vdcompany.adminSmartbox.bean.CategoryVO">
+		SELECT * FROM app_category
+		WHERE cate = #{code}
+	</select>
+	
+	<select id="getBrandList" resultType="com.vdcompany.adminSmartbox.bean.BrandVO">
+		SELECT * FROM sb_goods_brand
+		ORDER BY idx
+	</select>
+
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.vdcompany.adminSmartbox.mapper.AgencyMapper">
+
+	<select id="getAgencyDetail" parameterType="java.lang.Integer" resultType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
+		SELECT * FROM agency
+		WHERE idx = #{idx}
+	</select>
+
+	<select id="getAgencyList" resultType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
+		SELECT * FROM agency
+		ORDER BY idx
+	</select>
+
+	<insert id="insertAgency" useGeneratedKeys="true" keyProperty="idx" parameterType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
+	  	insert into agency (
+	  		company_name, company_num, company_type,
+	  		commission_vd, commission_pg,
+	  		rep_nm, rep_mobile, rep_tel, rep_email,
+	  		zipcode, address, addr_detail,
+	  		contract, description,
+	  		regdate, moddate
+	  		
+	    )
+		values (
+	  
+			#{company_name,jdbcType=VARCHAR}, #{company_num,jdbcType=VARCHAR}, 0,
+			#{commission_vd,jdbcType=FLOAT}, #{commission_vd,jdbcType=FLOAT},
+			#{rep_nm,jdbcType=VARCHAR}, #{rep_mobile,jdbcType=VARCHAR}, #{rep_tel,jdbcType=VARCHAR}, #{rep_email,jdbcType=VARCHAR},
+			#{zipcode,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{addr_detail,jdbcType=VARCHAR},
+		 	#{contract,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, 
+		 	#{regdate,jdbcType=TIMESTAMP}, #{moddate,jdbcType=TIMESTAMP}
+		 
+		)
+	</insert>
+
+    <update id="updateAgency" parameterType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
+	  	update agency set 
+	  		company_name = #{company_name},
+	  		company_num = #{company_num}, 
+	  		company_type = #{company_type},
+	  		commission_vd = #{commission_vd},
+	  		commission_pg = #{commission_pg},
+	  		rep_nm = #{rep_nm},
+	  		rep_mobile = #{rep_mobile},
+	  		rep_tel = #{rep_tel},
+	  		rep_email = #{rep_email},
+	  		zipcode = #{zipcode},
+	  		address = #{address},
+	  		addr_detail = #{addr_detail},
+	  		contract = #{contract},
+	  		description = #{description},
+	  		regdate = #{regdate},
+	  		moddate = #{moddate}
+	  	WHERE idx = #{idx}
+    </update>
+
+</mapper>
