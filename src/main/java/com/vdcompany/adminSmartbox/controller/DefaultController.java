@@ -1,12 +1,19 @@
 package com.vdcompany.adminSmartbox.controller;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuSubVO;
+import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +28,7 @@ import com.vdcompany.adminSmartbox.bean.agency.AgencyStoreVO;
 import com.vdcompany.adminSmartbox.bean.agency.AgencyVO;
 import com.vdcompany.adminSmartbox.service.AgencyService;
 import com.vdcompany.adminSmartbox.service.CategoryService;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/default")
@@ -29,8 +37,62 @@ public class DefaultController {
 	AgencyService agencyService;
 	@Autowired
 	CategoryService cateService;
-	
-	
+
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@RequestMapping("/userApp")
+	private ModelAndView userApp(Model model, HttpServletRequest request) {
+		String pageTitle = "기본설정";
+		String url = "/default/userApp";
+		logger.info("[WEB][webController][mainPage] url:"+url);
+		ModelAndView mav = new ModelAndView(url);
+
+		Map<String, Object> pageinfo = new HashMap<>();
+		pageinfo.put("pageTitle", pageTitle);
+		pageinfo.put("date", LocalDateTime.now());
+
+
+		List<LeftMenuVO> leftMenu = new ArrayList<>();
+		//
+		LeftMenuVO leftMenuVO = new LeftMenuVO();
+		leftMenuVO.setMenu_name("약관관리");
+		leftMenuVO.setMenu_icon("pe-7s-display2");
+		leftMenuVO.setLink_url("#");
+
+		List<LeftMenuSubVO> leftMenuSubVOList = new ArrayList<>();
+		LeftMenuSubVO leftMenuSubVO = new LeftMenuSubVO();
+		leftMenuSubVO.setMenu_name("사용자APP");
+		leftMenuSubVO.setLink_url("/default/userApp");
+		LeftMenuSubVO leftMenuSubVO2 = new LeftMenuSubVO();
+		leftMenuSubVO2.setMenu_name("관리자APP");
+		leftMenuSubVO2.setLink_url("/default/adminApp");
+		leftMenuSubVOList.add(leftMenuSubVO);
+		leftMenuSubVOList.add(leftMenuSubVO2);
+
+		leftMenuVO.setLeftMenuSub(leftMenuSubVOList);
+		//
+		LeftMenuVO leftMenuVO2 = new LeftMenuVO();
+		leftMenuVO2.setMenu_name("사업자관리");
+		leftMenuVO2.setMenu_icon("pe-7s-display2");
+		leftMenuVO2.setLink_url("#");
+
+		List<LeftMenuSubVO> leftMenuSubVOList2 = new ArrayList<>();
+		LeftMenuSubVO leftMenuSubVO3 = new LeftMenuSubVO();
+		leftMenuSubVO3.setMenu_name("사업자설정");
+		leftMenuSubVO3.setLink_url("/default/userApp");
+		leftMenuSubVOList2.add(leftMenuSubVO3);
+
+		leftMenuVO2.setLeftMenuSub(leftMenuSubVOList2);
+		//
+		leftMenu.add(leftMenuVO);
+		leftMenu.add(leftMenuVO2);
+
+		mav.addObject("pageInfo", pageinfo);
+		mav.addObject("leftMenuInfo", leftMenu);
+
+		return mav;
+	}
+
 	@RequestMapping("/agencyList")
 	private String agencyList(Model model, HttpServletRequest request) {
 

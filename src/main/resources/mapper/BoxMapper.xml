@@ -67,20 +67,29 @@
 
 
 	<select id="getBoxList" resultType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
-		SELECT info.agc_idx, info.agc_sto_idx as store_idx, info.box_idx, info.alias as box_name,
-		info.description, info.cate, 
-		box.serial, box.id as box_id, box.status, box.serial,
-        store.store_name, store.store_num, agency.company_name as agency_name, info.regdate
-		
-        FROM sb_box_info as info
-        JOIN sb_box as box
-        ON info.box_idx = box.idx 
-			JOIN agency_store as store 
-			ON info.agc_sto_idx = store.idx
-				JOIN agency as agency
-				ON info.agc_idx = agency.idx
-		ORDER BY info.box_idx 
-				
+		SELECT
+			info.agc_idx,
+			info.agc_sto_idx    as store_idx,
+			info.box_idx,
+			info.alias          as box_name,
+			info.description,
+			info.box_idx as cate,
+			box.serial,
+			box.id              as box_id,
+			box.status,
+			box.serial,
+			store.name as store_name,
+			store.idx as store_num,
+			agency.company_name as agency_name,
+			info.regdate
+		FROM sb_box_info as info
+				 JOIN sb_box as box
+					  ON info.box_idx = box.idx
+				 JOIN agency_store as store
+					  ON info.agc_sto_idx = store.idx
+				 JOIN agency as agency
+					  ON info.agc_idx = agency.idx
+		ORDER BY info.box_idx
 	</select>
 
 	<select id="getBoxSearchList" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO" resultType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
