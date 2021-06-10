@@ -12,7 +12,7 @@
 	<groupId>com.vdcompany</groupId>
 	<artifactId>adminSmartbox</artifactId>
 	<name>adminSmartbox</name>
-	<description>Demo project for Spring Boot</description>
+	<description>SmartBox Admin</description>
 	<packaging>war</packaging>
 
 	<properties>
@@ -64,6 +64,12 @@
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.5</version>
 		</dependency>
 
 

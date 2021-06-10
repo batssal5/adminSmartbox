@@ -10,6 +10,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuListVO;
 import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuSubVO;
 import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuVO;
 import org.slf4j.Logger;
@@ -40,55 +45,198 @@ public class DefaultController {
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	String pageTitle = "기본설정";
+	String menuListJson = "{\n" +
+			"   \"leftMenuList\":[\n" +
+			"      {\n" +
+			"         \"menu_name\":\"약관관리\",\n" +
+			"         \"menu_icon\":\"pe-7s-display2\",\n" +
+			"         \"link_url\":\"#\",\n" +
+			"         \"leftMenuSub\":[\n" +
+			"            {\n" +
+			"               \"menu_name\":\"사용자APP\",\n" +
+			"               \"link_url\":\"/default/userApp\"\n" +
+			"            },\n" +
+			"            {\n" +
+			"               \"menu_name\":\"관리자APP\",\n" +
+			"               \"link_url\":\"/default/adminApp\"\n" +
+			"            }\n" +
+			"         ]\n" +
+			"      },\n" +
+			"      {\n" +
+			"         \"menu_name\":\"사업자관리\",\n" +
+			"         \"menu_icon\":\"pe-7s-display2\",\n" +
+			"         \"link_url\":\"#\",\n" +
+			"         \"leftMenuSub\":[\n" +
+			"            {\n" +
+			"               \"menu_name\":\"사업자설정\",\n" +
+			"               \"link_url\":\"/default/agencyMng\"\n" +
+			"            }\n" +
+			"         ]\n" +
+			"      },\n" +
+			"      {\n" +
+			"         \"menu_name\":\"어플관리\",\n" +
+			"         \"menu_icon\":\"pe-7s-display2\",\n" +
+			"         \"link_url\":\"#\",\n" +
+			"         \"leftMenuSub\":[\n" +
+			"            {\n" +
+			"               \"menu_name\":\"버전설정\",\n" +
+			"               \"link_url\":\"/default/appVersion\"\n" +
+			"            },\n" +
+			"            {\n" +
+			"               \"menu_name\":\"제한설정\",\n" +
+			"               \"link_url\":\"/default/appAuth\"\n" +
+			"            }\n" +
+			"         ]\n" +
+			"      },\n" +
+			"      {\n" +
+			"         \"menu_name\":\"환불정책\",\n" +
+			"         \"menu_icon\":\"pe-7s-display2\",\n" +
+			"         \"link_url\":\"#\",\n" +
+			"         \"leftMenuSub\":[\n" +
+			"            {\n" +
+			"               \"menu_name\":\"환불설정\",\n" +
+			"               \"link_url\":\"/default/refundMng\"\n" +
+			"            }\n" +
+			"         ]\n" +
+			"      },\n" +
+			"      {\n" +
+			"         \"menu_name\":\"결제수단관리\",\n" +
+			"         \"menu_icon\":\"pe-7s-display2\",\n" +
+			"         \"link_url\":\"#\",\n" +
+			"         \"leftMenuSub\":[\n" +
+			"            {\n" +
+			"               \"menu_name\":\"카드설정\",\n" +
+			"               \"link_url\":\"/default/paymentCardMng\"\n" +
+			"            }\n" +
+			"         ]\n" +
+			"      }\n" +
+			"   ]\n" +
+			"}";
+	//
+
 	@RequestMapping("/userApp")
 	private ModelAndView userApp(Model model, HttpServletRequest request) {
-		String pageTitle = "기본설정";
 		String url = "/default/userApp";
-		logger.info("[WEB][webController][mainPage] url:"+url);
 		ModelAndView mav = new ModelAndView(url);
 
 		Map<String, Object> pageinfo = new HashMap<>();
 		pageinfo.put("pageTitle", pageTitle);
 		pageinfo.put("date", LocalDateTime.now());
 
-
-		List<LeftMenuVO> leftMenu = new ArrayList<>();
-		//
-		LeftMenuVO leftMenuVO = new LeftMenuVO();
-		leftMenuVO.setMenu_name("약관관리");
-		leftMenuVO.setMenu_icon("pe-7s-display2");
-		leftMenuVO.setLink_url("#");
-
-		List<LeftMenuSubVO> leftMenuSubVOList = new ArrayList<>();
-		LeftMenuSubVO leftMenuSubVO = new LeftMenuSubVO();
-		leftMenuSubVO.setMenu_name("사용자APP");
-		leftMenuSubVO.setLink_url("/default/userApp");
-		LeftMenuSubVO leftMenuSubVO2 = new LeftMenuSubVO();
-		leftMenuSubVO2.setMenu_name("관리자APP");
-		leftMenuSubVO2.setLink_url("/default/adminApp");
-		leftMenuSubVOList.add(leftMenuSubVO);
-		leftMenuSubVOList.add(leftMenuSubVO2);
-
-		leftMenuVO.setLeftMenuSub(leftMenuSubVOList);
-		//
-		LeftMenuVO leftMenuVO2 = new LeftMenuVO();
-		leftMenuVO2.setMenu_name("사업자관리");
-		leftMenuVO2.setMenu_icon("pe-7s-display2");
-		leftMenuVO2.setLink_url("#");
-
-		List<LeftMenuSubVO> leftMenuSubVOList2 = new ArrayList<>();
-		LeftMenuSubVO leftMenuSubVO3 = new LeftMenuSubVO();
-		leftMenuSubVO3.setMenu_name("사업자설정");
-		leftMenuSubVO3.setLink_url("/default/userApp");
-		leftMenuSubVOList2.add(leftMenuSubVO3);
-
-		leftMenuVO2.setLeftMenuSub(leftMenuSubVOList2);
-		//
-		leftMenu.add(leftMenuVO);
-		leftMenu.add(leftMenuVO2);
+		LeftMenuListVO leftMenuListVO = new Gson().fromJson(menuListJson, LeftMenuListVO.class);
+		logger.info("json:"+new GsonBuilder().setPrettyPrinting().create().toJson(leftMenuListVO));
 
 		mav.addObject("pageInfo", pageinfo);
-		mav.addObject("leftMenuInfo", leftMenu);
+		mav.addObject("leftMenuInfo", leftMenuListVO);
+
+		return mav;
+	}
+
+	@RequestMapping("/adminApp")
+	private ModelAndView adminApp(Model model, HttpServletRequest request) {
+		String url = "/default/adminApp";
+		ModelAndView mav = new ModelAndView(url);
+
+		Map<String, Object> pageinfo = new HashMap<>();
+		pageinfo.put("pageTitle", pageTitle);
+		pageinfo.put("date", LocalDateTime.now());
+
+		LeftMenuListVO leftMenuListVO = new Gson().fromJson(menuListJson, LeftMenuListVO.class);
+		logger.info("json:"+new GsonBuilder().setPrettyPrinting().create().toJson(leftMenuListVO));
+
+		mav.addObject("pageInfo", pageinfo);
+		mav.addObject("leftMenuInfo", leftMenuListVO);
+
+		return mav;
+	}
+
+	@RequestMapping("/agencyMng")
+	private ModelAndView agencyMng(Model model, HttpServletRequest request) {
+		String url = "/default/agencyMng";
+		ModelAndView mav = new ModelAndView(url);
+
+		Map<String, Object> pageinfo = new HashMap<>();
+		pageinfo.put("pageTitle", pageTitle);
+		pageinfo.put("date", LocalDateTime.now());
+
+		LeftMenuListVO leftMenuListVO = new Gson().fromJson(menuListJson, LeftMenuListVO.class);
+		logger.info("json:"+new GsonBuilder().setPrettyPrinting().create().toJson(leftMenuListVO));
+
+		mav.addObject("pageInfo", pageinfo);
+		mav.addObject("leftMenuInfo", leftMenuListVO);
+
+		return mav;
+	}
+
+	@RequestMapping("/appVersion")
+	private ModelAndView appVersion(Model model, HttpServletRequest request) {
+		String url = "/default/appVersion";
+		ModelAndView mav = new ModelAndView(url);
+
+		Map<String, Object> pageinfo = new HashMap<>();
+		pageinfo.put("pageTitle", pageTitle);
+		pageinfo.put("date", LocalDateTime.now());
+
+		LeftMenuListVO leftMenuListVO = new Gson().fromJson(menuListJson, LeftMenuListVO.class);
+		logger.info("json:"+new GsonBuilder().setPrettyPrinting().create().toJson(leftMenuListVO));
+
+		mav.addObject("pageInfo", pageinfo);
+		mav.addObject("leftMenuInfo", leftMenuListVO);
+
+		return mav;
+	}
+
+	@RequestMapping("/appAuth")
+	private ModelAndView appAuth(Model model, HttpServletRequest request) {
+		String url = "/default/appAuth";
+		ModelAndView mav = new ModelAndView(url);
+
+		Map<String, Object> pageinfo = new HashMap<>();
+		pageinfo.put("pageTitle", pageTitle);
+		pageinfo.put("date", LocalDateTime.now());
+
+		LeftMenuListVO leftMenuListVO = new Gson().fromJson(menuListJson, LeftMenuListVO.class);
+		logger.info("json:"+new GsonBuilder().setPrettyPrinting().create().toJson(leftMenuListVO));
+
+		mav.addObject("pageInfo", pageinfo);
+		mav.addObject("leftMenuInfo", leftMenuListVO);
+
+		return mav;
+	}
+
+	@RequestMapping("/refundMng")
+	private ModelAndView refundMng(Model model, HttpServletRequest request) {
+		String url = "/default/refundMng";
+		ModelAndView mav = new ModelAndView(url);
+
+		Map<String, Object> pageinfo = new HashMap<>();
+		pageinfo.put("pageTitle", pageTitle);
+		pageinfo.put("date", LocalDateTime.now());
+
+		LeftMenuListVO leftMenuListVO = new Gson().fromJson(menuListJson, LeftMenuListVO.class);
+		logger.info("json:"+new GsonBuilder().setPrettyPrinting().create().toJson(leftMenuListVO));
+
+		mav.addObject("pageInfo", pageinfo);
+		mav.addObject("leftMenuInfo", leftMenuListVO);
+
+		return mav;
+	}
+
+	@RequestMapping("/paymentCardMng")
+	private ModelAndView paymentCardMng(Model model, HttpServletRequest request) {
+		String url = "/default/paymentCardMng";
+		ModelAndView mav = new ModelAndView(url);
+
+		Map<String, Object> pageinfo = new HashMap<>();
+		pageinfo.put("pageTitle", pageTitle);
+		pageinfo.put("date", LocalDateTime.now());
+
+		LeftMenuListVO leftMenuListVO = new Gson().fromJson(menuListJson, LeftMenuListVO.class);
+		logger.info("json:"+new GsonBuilder().setPrettyPrinting().create().toJson(leftMenuListVO));
+
+		mav.addObject("pageInfo", pageinfo);
+		mav.addObject("leftMenuInfo", leftMenuListVO);
 
 		return mav;
 	}

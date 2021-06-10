@@ -39,7 +39,8 @@ response.setDateHeader("Expires",0);
         <div class="app-sidebar-wrapper">
             <div class="app-sidebar sidebar-shadow">
                 <div class="app-header__logo">
-                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="KeroUI Admin Template" src="/bootstrab/assets/images/logo.png"></a>
+                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="SmartBox Admin" >
+                        <img src="/bootstrab/assets/images/logo.png"></a>
                     <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
                                 <span class="hamburger-box">
                                     <span class="hamburger-inner"></span>
@@ -51,8 +52,8 @@ response.setDateHeader("Expires",0);
                         <ul class="vertical-nav-menu">
                             <li class="app-sidebar__heading">${pageInfo.pageTitle}</li>
                             <li class="mm-active">
-                                <c:forEach items="${leftMenuInfo}" var="row" varStatus="leftMenuInfo">
-                                <a href="${row.link_url}">
+                                <c:forEach items="${leftMenuInfo.leftMenuList}" var="row" varStatus="leftMenuInfo">
+                                <a href="#" aria-expanded="true">
                                     <i class="metismenu-icon ${row.menu_icon}"></i>
                                         ${row.menu_name}
                                     <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
