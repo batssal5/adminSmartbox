@@ -1,0 +1,124 @@
+INFO  21-06-10 10:00:46:172[http-nio-8888-exec-1] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:00:56:538[restartedMain] [AdminSmartboxApplication:55] - Starting AdminSmartboxApplication using Java 14.0.2 on DESKTOP-O9DMHOH with PID 1404 (C:\SmartBoxAdmin\target\classes started by vd in C:\SmartBoxAdmin)
+INFO  21-06-10 10:00:56:544[restartedMain] [AdminSmartboxApplication:664] - The following profiles are active: prod
+INFO  21-06-10 10:00:56:599[restartedMain] [DevToolsPropertyDefaultsPostProcessor:255] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+INFO  21-06-10 10:00:56:600[restartedMain] [DevToolsPropertyDefaultsPostProcessor:255] - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+INFO  21-06-10 10:00:57:452[restartedMain] [TomcatWebServer:108] - Tomcat initialized with port(s): 8888 (http)
+INFO  21-06-10 10:00:57:458[restartedMain] [Http11NioProtocol:173] - Initializing ProtocolHandler ["http-nio-8888"]
+INFO  21-06-10 10:00:57:458[restartedMain] [StandardService:173] - Starting service [Tomcat]
+INFO  21-06-10 10:00:57:458[restartedMain] [StandardEngine:173] - Starting Servlet engine: [Apache Tomcat/9.0.41]
+INFO  21-06-10 10:00:57:649[restartedMain] [TldScanner:173] - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+INFO  21-06-10 10:00:57:653[restartedMain] [[/]:173] - Initializing Spring embedded WebApplicationContext
+INFO  21-06-10 10:00:57:654[restartedMain] [ServletWebServerApplicationContext:289] - Root WebApplicationContext: initialization completed in 1053 ms
+INFO  21-06-10 10:00:57:991[restartedMain] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
+INFO  21-06-10 10:00:58:352[restartedMain] [OptionalLiveReloadServer:58] - LiveReload server is running on port 35729
+INFO  21-06-10 10:00:58:364[restartedMain] [Http11NioProtocol:173] - Starting ProtocolHandler ["http-nio-8888"]
+INFO  21-06-10 10:00:58:379[restartedMain] [TomcatWebServer:220] - Tomcat started on port(s): 8888 (http) with context path ''
+INFO  21-06-10 10:00:58:391[restartedMain] [AdminSmartboxApplication:61] - Started AdminSmartboxApplication in 2.234 seconds (JVM running for 2.753)
+INFO  21-06-10 10:01:01:500[http-nio-8888-exec-8] [[/]:173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+INFO  21-06-10 10:01:01:500[http-nio-8888-exec-8] [DispatcherServlet:525] - Initializing Servlet 'dispatcherServlet'
+INFO  21-06-10 10:01:01:500[http-nio-8888-exec-8] [DispatcherServlet:547] - Completed initialization in 0 ms
+INFO  21-06-10 10:01:01:528[http-nio-8888-exec-8] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:01:49:697[http-nio-8888-exec-1] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:03:20:852[http-nio-8888-exec-1] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:03:57:354[http-nio-8888-exec-5] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:04:27:033[http-nio-8888-exec-7] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:04:29:605[http-nio-8888-exec-4] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:05:19:780[restartedMain] [AdminSmartboxApplication:55] - Starting AdminSmartboxApplication using Java 14.0.2 on DESKTOP-O9DMHOH with PID 14628 (C:\SmartBoxAdmin\target\classes started by vd in C:\SmartBoxAdmin)
+INFO  21-06-10 10:05:19:783[restartedMain] [AdminSmartboxApplication:664] - The following profiles are active: prod
+INFO  21-06-10 10:05:19:828[restartedMain] [DevToolsPropertyDefaultsPostProcessor:255] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+INFO  21-06-10 10:05:19:828[restartedMain] [DevToolsPropertyDefaultsPostProcessor:255] - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+INFO  21-06-10 10:05:20:742[restartedMain] [TomcatWebServer:108] - Tomcat initialized with port(s): 8888 (http)
+INFO  21-06-10 10:05:20:748[restartedMain] [Http11NioProtocol:173] - Initializing ProtocolHandler ["http-nio-8888"]
+INFO  21-06-10 10:05:20:748[restartedMain] [StandardService:173] - Starting service [Tomcat]
+INFO  21-06-10 10:05:20:748[restartedMain] [StandardEngine:173] - Starting Servlet engine: [Apache Tomcat/9.0.41]
+INFO  21-06-10 10:05:20:950[restartedMain] [TldScanner:173] - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+INFO  21-06-10 10:05:20:956[restartedMain] [[/]:173] - Initializing Spring embedded WebApplicationContext
+INFO  21-06-10 10:05:20:956[restartedMain] [ServletWebServerApplicationContext:289] - Root WebApplicationContext: initialization completed in 1127 ms
+INFO  21-06-10 10:05:21:317[restartedMain] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
+INFO  21-06-10 10:05:21:700[restartedMain] [OptionalLiveReloadServer:58] - LiveReload server is running on port 35729
+INFO  21-06-10 10:05:21:714[restartedMain] [Http11NioProtocol:173] - Starting ProtocolHandler ["http-nio-8888"]
+INFO  21-06-10 10:05:21:730[restartedMain] [TomcatWebServer:220] - Tomcat started on port(s): 8888 (http) with context path ''
+INFO  21-06-10 10:05:21:741[restartedMain] [AdminSmartboxApplication:61] - Started AdminSmartboxApplication in 2.417 seconds (JVM running for 3.039)
+INFO  21-06-10 10:05:23:222[http-nio-8888-exec-1] [[/]:173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+INFO  21-06-10 10:05:23:222[http-nio-8888-exec-1] [DispatcherServlet:525] - Initializing Servlet 'dispatcherServlet'
+INFO  21-06-10 10:05:23:223[http-nio-8888-exec-1] [DispatcherServlet:547] - Completed initialization in 1 ms
+INFO  21-06-10 10:05:23:238[http-nio-8888-exec-1] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:07:59:275[http-nio-8888-exec-6] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:08:28:616[http-nio-8888-exec-7] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:10:13:591[http-nio-8888-exec-1] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:12:50:345[http-nio-8888-exec-6] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:16:23:567[http-nio-8888-exec-9] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:18:19:039[http-nio-8888-exec-6] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:19:40:672[http-nio-8888-exec-8] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:20:05:573[http-nio-8888-exec-9] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:20:23:619[http-nio-8888-exec-6] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:22:28:442[http-nio-8888-exec-3] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:24:05:333[http-nio-8888-exec-4] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:25:26:187[http-nio-8888-exec-2] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:30:41:572[http-nio-8888-exec-6] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:33:30:548[restartedMain] [AdminSmartboxApplication:55] - Starting AdminSmartboxApplication using Java 14.0.2 on DESKTOP-O9DMHOH with PID 3148 (C:\SmartBoxAdmin\target\classes started by vd in C:\SmartBoxAdmin)
+INFO  21-06-10 10:33:30:553[restartedMain] [AdminSmartboxApplication:664] - The following profiles are active: prod
+INFO  21-06-10 10:33:30:604[restartedMain] [DevToolsPropertyDefaultsPostProcessor:255] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+INFO  21-06-10 10:33:30:605[restartedMain] [DevToolsPropertyDefaultsPostProcessor:255] - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+INFO  21-06-10 10:33:31:451[restartedMain] [TomcatWebServer:108] - Tomcat initialized with port(s): 8888 (http)
+INFO  21-06-10 10:33:31:456[restartedMain] [Http11NioProtocol:173] - Initializing ProtocolHandler ["http-nio-8888"]
+INFO  21-06-10 10:33:31:457[restartedMain] [StandardService:173] - Starting service [Tomcat]
+INFO  21-06-10 10:33:31:457[restartedMain] [StandardEngine:173] - Starting Servlet engine: [Apache Tomcat/9.0.41]
+INFO  21-06-10 10:33:31:647[restartedMain] [TldScanner:173] - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+INFO  21-06-10 10:33:31:652[restartedMain] [[/]:173] - Initializing Spring embedded WebApplicationContext
+INFO  21-06-10 10:33:31:652[restartedMain] [ServletWebServerApplicationContext:289] - Root WebApplicationContext: initialization completed in 1047 ms
+INFO  21-06-10 10:33:31:989[restartedMain] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
+INFO  21-06-10 10:33:32:379[restartedMain] [OptionalLiveReloadServer:58] - LiveReload server is running on port 35729
+INFO  21-06-10 10:33:32:391[restartedMain] [Http11NioProtocol:173] - Starting ProtocolHandler ["http-nio-8888"]
+INFO  21-06-10 10:33:32:408[restartedMain] [TomcatWebServer:220] - Tomcat started on port(s): 8888 (http) with context path ''
+INFO  21-06-10 10:33:32:420[restartedMain] [AdminSmartboxApplication:61] - Started AdminSmartboxApplication in 2.401 seconds (JVM running for 3.018)
+INFO  21-06-10 10:33:37:576[http-nio-8888-exec-1] [[/]:173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+INFO  21-06-10 10:33:37:576[http-nio-8888-exec-1] [DispatcherServlet:525] - Initializing Servlet 'dispatcherServlet'
+INFO  21-06-10 10:33:37:578[http-nio-8888-exec-1] [DispatcherServlet:547] - Completed initialization in 1 ms
+INFO  21-06-10 10:33:37:592[http-nio-8888-exec-1] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:33:41:558[http-nio-8888-exec-8] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:34:36:061[http-nio-8888-exec-6] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:37:26:353[http-nio-8888-exec-10] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:39:45:911[http-nio-8888-exec-4] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:40:47:483[http-nio-8888-exec-1] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:41:37:796[http-nio-8888-exec-1] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:41:55:105[http-nio-8888-exec-2] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:42:31:013[http-nio-8888-exec-9] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:42:51:190[http-nio-8888-exec-3] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:43:01:087[restartedMain] [AdminSmartboxApplication:55] - Starting AdminSmartboxApplication using Java 14.0.2 on DESKTOP-O9DMHOH with PID 17524 (C:\SmartBoxAdmin\target\classes started by vd in C:\SmartBoxAdmin)
+INFO  21-06-10 10:43:01:090[restartedMain] [AdminSmartboxApplication:664] - The following profiles are active: prod
+INFO  21-06-10 10:43:01:138[restartedMain] [DevToolsPropertyDefaultsPostProcessor:255] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+INFO  21-06-10 10:43:01:138[restartedMain] [DevToolsPropertyDefaultsPostProcessor:255] - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+INFO  21-06-10 10:43:01:979[restartedMain] [TomcatWebServer:108] - Tomcat initialized with port(s): 8888 (http)
+INFO  21-06-10 10:43:01:985[restartedMain] [Http11NioProtocol:173] - Initializing ProtocolHandler ["http-nio-8888"]
+INFO  21-06-10 10:43:01:986[restartedMain] [StandardService:173] - Starting service [Tomcat]
+INFO  21-06-10 10:43:01:986[restartedMain] [StandardEngine:173] - Starting Servlet engine: [Apache Tomcat/9.0.41]
+INFO  21-06-10 10:43:02:188[restartedMain] [TldScanner:173] - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+INFO  21-06-10 10:43:02:194[restartedMain] [[/]:173] - Initializing Spring embedded WebApplicationContext
+INFO  21-06-10 10:43:02:194[restartedMain] [ServletWebServerApplicationContext:289] - Root WebApplicationContext: initialization completed in 1055 ms
+INFO  21-06-10 10:43:02:554[restartedMain] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
+INFO  21-06-10 10:43:02:925[restartedMain] [OptionalLiveReloadServer:58] - LiveReload server is running on port 35729
+INFO  21-06-10 10:43:02:939[restartedMain] [Http11NioProtocol:173] - Starting ProtocolHandler ["http-nio-8888"]
+INFO  21-06-10 10:43:02:954[restartedMain] [TomcatWebServer:220] - Tomcat started on port(s): 8888 (http) with context path ''
+INFO  21-06-10 10:43:02:967[restartedMain] [AdminSmartboxApplication:61] - Started AdminSmartboxApplication in 2.248 seconds (JVM running for 3.502)
+INFO  21-06-10 10:43:18:147[http-nio-8888-exec-1] [[/]:173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+INFO  21-06-10 10:43:18:147[http-nio-8888-exec-1] [DispatcherServlet:525] - Initializing Servlet 'dispatcherServlet'
+INFO  21-06-10 10:43:18:148[http-nio-8888-exec-1] [DispatcherServlet:547] - Completed initialization in 0 ms
+INFO  21-06-10 10:43:18:166[http-nio-8888-exec-1] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 10:43:34:909[restartedMain] [AdminSmartboxApplication:55] - Starting AdminSmartboxApplication using Java 14.0.2 on DESKTOP-O9DMHOH with PID 16076 (C:\SmartBoxAdmin\target\classes started by vd in C:\SmartBoxAdmin)
+INFO  21-06-10 10:43:34:913[restartedMain] [AdminSmartboxApplication:664] - The following profiles are active: prod
+INFO  21-06-10 10:43:34:964[restartedMain] [DevToolsPropertyDefaultsPostProcessor:255] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+INFO  21-06-10 10:43:34:964[restartedMain] [DevToolsPropertyDefaultsPostProcessor:255] - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+INFO  21-06-10 10:43:35:793[restartedMain] [TomcatWebServer:108] - Tomcat initialized with port(s): 8888 (http)
+INFO  21-06-10 10:43:35:802[restartedMain] [Http11NioProtocol:173] - Initializing ProtocolHandler ["http-nio-8888"]
+INFO  21-06-10 10:43:35:802[restartedMain] [StandardService:173] - Starting service [Tomcat]
+INFO  21-06-10 10:43:35:802[restartedMain] [StandardEngine:173] - Starting Servlet engine: [Apache Tomcat/9.0.41]
+INFO  21-06-10 10:43:35:998[restartedMain] [TldScanner:173] - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+INFO  21-06-10 10:43:36:003[restartedMain] [[/]:173] - Initializing Spring embedded WebApplicationContext
+INFO  21-06-10 10:43:36:004[restartedMain] [ServletWebServerApplicationContext:289] - Root WebApplicationContext: initialization completed in 1039 ms
+INFO  21-06-10 10:43:36:327[restartedMain] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
+INFO  21-06-10 10:43:36:704[restartedMain] [OptionalLiveReloadServer:58] - LiveReload server is running on port 35729
+INFO  21-06-10 10:43:36:716[restartedMain] [Http11NioProtocol:173] - Starting ProtocolHandler ["http-nio-8888"]
+INFO  21-06-10 10:43:36:733[restartedMain] [TomcatWebServer:220] - Tomcat started on port(s): 8888 (http) with context path ''
+INFO  21-06-10 10:43:36:744[restartedMain] [AdminSmartboxApplication:61] - Started AdminSmartboxApplication in 2.273 seconds (JVM running for 2.859)

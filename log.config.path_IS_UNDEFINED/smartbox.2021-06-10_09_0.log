@@ -1,0 +1,31 @@
+INFO  21-06-10 09:34:41:166[restartedMain] [AdminSmartboxApplication:55] - Starting AdminSmartboxApplication using Java 14.0.2 on DESKTOP-O9DMHOH with PID 13648 (C:\SmartBoxAdmin\target\classes started by vd in C:\SmartBoxAdmin)
+INFO  21-06-10 09:34:41:171[restartedMain] [AdminSmartboxApplication:664] - The following profiles are active: prod
+INFO  21-06-10 09:34:41:244[restartedMain] [DevToolsPropertyDefaultsPostProcessor:255] - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+INFO  21-06-10 09:34:41:245[restartedMain] [DevToolsPropertyDefaultsPostProcessor:255] - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+INFO  21-06-10 09:34:42:037[restartedMain] [TomcatWebServer:108] - Tomcat initialized with port(s): 8888 (http)
+INFO  21-06-10 09:34:42:044[restartedMain] [Http11NioProtocol:173] - Initializing ProtocolHandler ["http-nio-8888"]
+INFO  21-06-10 09:34:42:044[restartedMain] [StandardService:173] - Starting service [Tomcat]
+INFO  21-06-10 09:34:42:044[restartedMain] [StandardEngine:173] - Starting Servlet engine: [Apache Tomcat/9.0.41]
+INFO  21-06-10 09:34:42:239[restartedMain] [TldScanner:173] - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+INFO  21-06-10 09:34:42:244[restartedMain] [[/]:173] - Initializing Spring embedded WebApplicationContext
+INFO  21-06-10 09:34:42:244[restartedMain] [ServletWebServerApplicationContext:289] - Root WebApplicationContext: initialization completed in 998 ms
+INFO  21-06-10 09:34:42:565[restartedMain] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
+INFO  21-06-10 09:34:42:941[restartedMain] [OptionalLiveReloadServer:58] - LiveReload server is running on port 35729
+INFO  21-06-10 09:34:42:954[restartedMain] [Http11NioProtocol:173] - Starting ProtocolHandler ["http-nio-8888"]
+INFO  21-06-10 09:34:42:968[restartedMain] [TomcatWebServer:220] - Tomcat started on port(s): 8888 (http) with context path ''
+INFO  21-06-10 09:34:42:980[restartedMain] [AdminSmartboxApplication:61] - Started AdminSmartboxApplication in 2.164 seconds (JVM running for 2.646)
+INFO  21-06-10 09:34:51:985[http-nio-8888-exec-6] [[/]:173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+INFO  21-06-10 09:34:51:985[http-nio-8888-exec-6] [DispatcherServlet:525] - Initializing Servlet 'dispatcherServlet'
+INFO  21-06-10 09:34:51:987[http-nio-8888-exec-6] [DispatcherServlet:547] - Completed initialization in 2 ms
+INFO  21-06-10 09:34:52:001[http-nio-8888-exec-6] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 09:36:23:271[http-nio-8888-exec-5] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 09:37:02:068[http-nio-8888-exec-4] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 09:37:21:680[http-nio-8888-exec-6] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 09:38:03:562[http-nio-8888-exec-10] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 09:38:35:749[http-nio-8888-exec-10] [DefaultController:47] - [WEB][webController][mainPage] url:/default/userApp
+INFO  21-06-10 09:44:37:971[http-nio-8888-exec-1] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 09:48:45:465[http-nio-8888-exec-1] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 09:50:40:014[http-nio-8888-exec-1] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 09:51:34:862[http-nio-8888-exec-8] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 09:53:38:126[http-nio-8888-exec-10] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
+INFO  21-06-10 09:55:23:490[http-nio-8888-exec-2] [HomeController:35] - [WEB][webController][mainPage] url:/home/dashboard
