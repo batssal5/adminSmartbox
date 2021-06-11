@@ -31,9 +31,138 @@
     <div class="app-inner-layout__wrapper">
         <div class="app-inner-layout__content">
             <div class="container-fluid">
-                <div class="row">
-                    aaaa
+                <div class="col-sm-12 col-lg-12 mb-3">
+                    <h5>결제수단관리 > 카드설정</h5>
                 </div>
+                <form actoion="#" method="post">
+                    <div class="row card mb-3">
+                        <div class="col-sm-12 col-lg-12">
+                            <div class="card-body col-sm-12 col-lg-12">
+                                <table class="mb-0 table">
+                                    <thead>
+                                    <tr>
+                                        <th style="border: none"></th>
+                                        <th style="border: none">어플 등록 카드</th>
+                                        <th style="border: none">실물 플라스틱 카드</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th>신용카드</th>
+                                        <td>
+                                            <div class="position-relative form-group">
+                                                <div>
+                                                    <div class="custom-radio custom-control"
+                                                         style="display: inline-block; margin-right: 50px">
+                                                        <input type="radio"
+                                                               id="creditcard_radio"
+                                                               name="creditcard_app"
+                                                               class="custom-control-input">
+                                                        <label
+                                                                class="custom-control-label"
+                                                                for="creditcard_radio">on</label></div>
+                                                    <div class="custom-radio custom-control"
+                                                         style="display: inline-block">
+                                                        <input type="radio"
+                                                               id="creditcard_radio2"
+                                                               name="creditcard_app"
+                                                               class="custom-control-input">
+                                                        <label
+                                                                class="custom-control-label"
+                                                                for="creditcard_radio2">off</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="position-relative form-group">
+                                                <div>
+                                                    <div class="custom-radio custom-control"
+                                                         style="display: inline-block; margin-right: 50px">
+                                                        <input type="radio"
+                                                               id="creditcard_radio3"
+                                                               name="creditcard_real"
+                                                               class="custom-control-input">
+                                                        <label
+                                                                class="custom-control-label"
+                                                                for="creditcard_radio3">on</label></div>
+                                                    <div class="custom-radio custom-control"
+                                                         style="display: inline-block">
+                                                        <input type="radio"
+                                                               id="creditcard_radio4"
+                                                               name="creditcard_real"
+                                                               class="custom-control-input">
+                                                        <label
+                                                                class="custom-control-label"
+                                                                for="creditcard_radio4">off</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>체크카드</th>
+                                        <td>
+                                            <div class="position-relative form-group">
+                                                <div>
+                                                    <div class="custom-radio custom-control"
+                                                         style="display: inline-block; margin-right: 50px">
+                                                        <input type="radio"
+                                                               id="checkcard_radio"
+                                                               name="checkcard_app"
+                                                               class="custom-control-input"><label
+                                                            class="custom-control-label"
+                                                            for="checkcard_radio">on</label></div>
+                                                    <div class="custom-radio custom-control"
+                                                         style="display: inline-block; margin-right: 50px">
+                                                        <input type="radio"
+                                                               id="checkcard_radio2"
+                                                               name="checkcard_app"
+                                                               class="custom-control-input"><label
+                                                            class="custom-control-label"
+                                                            for="checkcard_radio2">off</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="position-relative form-group">
+                                                <div>
+                                                    <div class="custom-radio custom-control"
+                                                         style="display: inline-block; margin-right: 50px">
+                                                        <input type="radio"
+                                                               id="checkcard_radio3"
+                                                               name="checkcard_real"
+                                                               class="custom-control-input"><label
+                                                            class="custom-control-label"
+                                                            for="checkcard_radio3">on</label></div>
+                                                    <div class="custom-radio custom-control"
+                                                         style="display: inline-block">
+                                                        <input type="radio"
+                                                               id="checkcard_radio4"
+                                                               name="checkcard_real"
+                                                               class="custom-control-input"><label
+                                                            class="custom-control-label"
+                                                            for="checkcard_radio4">off</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-12" style="text-align: center; margin-top: 20px">
+                            <button type="button" class="btn btn-danger" style="width: 100px">취소</button>
+                            <input type="submit" class="btn btn-success" value="저장" style="width: 100px"/>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
