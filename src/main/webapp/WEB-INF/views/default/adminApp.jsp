@@ -35,10 +35,10 @@ response.setDateHeader("Expires", 0);
 	<div class="app-inner-layout__wrapper">
 		<div class="app-inner-layout__content">
 			<div class="container-fluid">
-				<form action="">
+				<form action="" method="post">
 					<div class="row">
 						<div class="col-sm-12 col-lg-12">
-							<h5>약관관리 > 관리자APP > </h5>
+							<h5>약관관리 > 관리자APP</h5>
 						</div>
 						<div class="col-sm-12 col-lg-6">
 							<div class="mb-3 card">

@@ -38,7 +38,7 @@ response.setDateHeader("Expires", 0);
 				<form action="">
 					<div class="row">
 						<div class="col-sm-12 col-lg-12">
-							<h5>약관관리 > 유저APP ></h5>
+							<h5>약관관리 > 유저APP</h5>
 						</div>
 						<div class="col-sm-12 col-lg-6">
 							<div class="mb-3 card">
