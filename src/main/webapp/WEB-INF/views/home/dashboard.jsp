@@ -1,11 +1,12 @@
+<!DOCTYPE html>
+<%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
     response.setHeader("Pragma","no-cache");
     response.setHeader("Cache-Control","no-cache");
     response.addHeader("Cache-Control","no-store");
     response.setDateHeader("Expires",0);
 %>
-<!DOCTYPE html>
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <jsp:include page = '<%="../common/vd_header.jsp" %>'/>
 <div class="header-mobile-wrapper">
     <div class="app-header__logo">
@@ -57,12 +58,14 @@
                                             <div class="icon-wrapper-bg opacity-10 bg-warning"></div>
                                             <i class="lnr-laptop-phone text-dark opacity-8"></i></div>
                                         <div class="widget-chart-content">
-                                            <div class="widget-numbers">10건</div>
+                                            <div class="widget-numbers">${todayPayCount}건</div>
                                             <div class="widget-description opacity-8 text-focus">
                                                 <div class="d-inline text-danger pr-1">
                                                     <i class="fa fa-angle-up"></i>
                                                     <span class="pl-1">
-                                                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="첫구매 : 1건" >1건</a>
+                                                        <a href="#" data-toggle="tooltip" data-placement="bottom"
+                                                           title="&nbsp;&nbsp;&nbsp;&nbsp;전일대비증감 : ${rateChangeCount}건&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                           신규결재 : ${rateChangeCount}건(추가개발필요)" >${rateChangeCount}건</a>
                                                     </span>
                                                 </div>
                                             </div>
@@ -209,31 +212,21 @@
                                 <table class="mb-0 table">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Username</th>
+                                        <th class="text-center">날짜</th>
+                                        <th class="text-right pr-lg-4">결제금액</th>
+                                        <th class="text-center">객수</th>
+                                        <th class="text-right pr-lg-4">객단가</th>
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <c:forEach items="${paymentPerDayListInfo}" var="rows" varStatus="paymentPerDayList">
                                     <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
+                                        <td scope="row" class="text-center">${rows.daytime}</td>
+                                        <td class="text-right pr-lg-4">${rows.amount_per_day_form}</td>
+                                        <td class="text-center">${rows.customer_cnt}</td>
+                                        <td class="text-right pr-lg-4">${rows.amount_per_customer_form}</td>
                                     </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
+                                    </c:forEach>
                                     </tbody>
                                 </table>
                             </div>
@@ -276,31 +269,21 @@
                                 <table class="mb-0 table">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Username</th>
+                                        <th class="text-center">월</th>
+                                        <th class="text-right pr-lg-4">결제금액</th>
+                                        <th class="text-center">객수</th>
+                                        <th class="text-right pr-lg-4">객단가</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
+                                    <c:forEach items="${paymentPerMonthListInfo}" var="rows" varStatus="paymentPerMonthList">
+                                        <tr>
+                                            <td scope="row" class="text-center">${rows.daytime}</td>
+                                            <td class="text-right pr-lg-4">${rows.amount_per_month_form}</td>
+                                            <td class="text-center">${rows.customer_cnt}</td>
+                                            <td class="text-right pr-lg-4">${rows.amount_per_customer_form}</td>
+                                        </tr>
+                                    </c:forEach>
                                     </tbody>
                                 </table>
                             </div>
@@ -345,31 +328,19 @@
                                 <table class="mb-0 table">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Username</th>
+                                        <th>순위</th>
+                                        <th class="text-center">상품명</th>
+                                        <th>판매량</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
+                                    <c:forEach items="${lastMonthSalesTopListInfo}" var="rows" varStatus="lastMonthSalesTopList">
+                                        <tr>
+                                            <td scope="row" class="text-center">${lastMonthSalesTopList.count}</td>
+                                            <td class="pl-lg-5">${rows.goods_name}</td>
+                                            <td class="text-right pr-lg-4">${rows.sales_cnt}</td>
+                                        </tr>
+                                    </c:forEach>
                                     </tbody>
                                 </table>
                             </div>

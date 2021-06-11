@@ -51,8 +51,8 @@ response.setDateHeader("Expires",0);
                     <div class="app-sidebar__inner">
                         <ul class="vertical-nav-menu">
                             <li class="app-sidebar__heading">${pageInfo.pageTitle}</li>
+                            <c:forEach items="${leftMenuInfo.leftMenuList}" var="row" varStatus="leftMenuInfos">
                             <li class="mm-active">
-                                <c:forEach items="${leftMenuInfo.leftMenuList}" var="row" varStatus="leftMenuInfo">
                                 <a href="#" aria-expanded="true">
                                     <i class="metismenu-icon ${row.menu_icon}"></i>
                                         ${row.menu_name}
@@ -63,8 +63,8 @@ response.setDateHeader("Expires",0);
                                         <li><a href="${subrow.link_url}">${subrow.menu_name}</a></li>
                                     </ul>
                                     </c:forEach>
-                                </c:forEach>
                             </li>
+                            </c:forEach>
 
                         </ul>
                     </div>
