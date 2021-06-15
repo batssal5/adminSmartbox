@@ -166,6 +166,18 @@ public class DefaultController {
 		mav.addObject("pageInfo", pageinfo);
 		mav.addObject("leftMenuInfo", leftMenuListVO);
 
+		int agency_idx = 0;
+		if(request.getParameter("agency_idx") != null) {
+			agency_idx = Integer.parseInt(request.getParameter("agency_idx"));
+		}
+
+		// agency_idx 가 0일경우 전체 지점 리스트가 나온다
+		List<AgencyStoreVO> storeList = agencyService.getStoreList(agency_idx);
+		model.addAttribute("storeList", storeList);
+
+		List<AgencyVO> agencyList = agencyService.getAgencyList();
+		model.addAttribute("agencyList", agencyList);
+
 		return mav;
 	}
 
@@ -183,6 +195,8 @@ public class DefaultController {
 
 		mav.addObject("pageInfo", pageinfo);
 		mav.addObject("leftMenuInfo", leftMenuListVO);
+
+
 
 		return mav;
 	}
@@ -276,25 +290,38 @@ public class DefaultController {
 			
 			List<AgencyStoreVO> storeList = new ArrayList<>();
 			storeList = agencyService.getStoreList(Integer.parseInt(temp));
-			
+
 			ObjectMapper mapper = new ObjectMapper();
-			response.getWriter().print(mapper.writeValueAsString(storeList)); 
+			response.getWriter().print(mapper.writeValueAsString(storeList));
 		}
 		
-		System.out.println("--------------------------");
-		System.out.println("agency_idx : " + temp );
-		System.out.println("--------------------------");
+//		System.out.println("--------------------------");
+//		System.out.println("agency_idx : " + temp );
+//		System.out.println("--------------------------");
 	}
 	
 	@RequestMapping("/ajax_search")
 	private void ajax_search( HttpServletResponse response, HttpServletRequest request, AgencySearchVO search ) throws JsonProcessingException, IOException  {
+
+		int agency_idx = 0;
+		if(request.getParameter("agency_idx") != null) {
+			agency_idx = Integer.parseInt(request.getParameter("agency_idx"));
+		}
+		int store_idx = 0;
+		if(request.getParameter("store_idx") != null) {
+			store_idx = Integer.parseInt(request.getParameter("store_idx"));
+		}
+
+		search.setAgc_idx(agency_idx);
+		search.setIdx(store_idx);
 		System.out.println("search : " + search );
 
 		List<AgencyStoreVO> storeList = new ArrayList<>();
 		storeList = agencyService.getSearchStoreList(search);
+		System.out.println("result : " + storeList);
 
+		response.setContentType("text/html;charset=UTF-8");
 		ObjectMapper mapper = new ObjectMapper();
-		response.setContentType("text/html;charset=UTF-8"); 
 		response.getWriter().print(mapper.writeValueAsString(storeList));
 		
 	}
@@ -400,28 +427,28 @@ public class DefaultController {
 	}
 
 	private String validStore(List<AgencyStoreVO> list) {
-		
+
 		String errorLog = "";
-		
+
 		for(int i = 0 ; i < list.size() ; i++) {
 			AgencyStoreVO store = list.get(i);
-			
+
 			if(store.getStore_name() != null && store.getStore_name() == "") {
 				errorLog = (i+1)+"번째 지점의"+" 지점명을 입력하세요.";
 			} else if(store.getStore_num() != null && store.getStore_num() == ""){
 				errorLog = (i+1)+"번째 지점의"+" 지점사업자번호를 입력하세요.";
 			} else if(store.getCate() == 0){
 				errorLog = (i+1)+"번째 지점의"+" 상권을 선택하세요."+store.getCate();
-			} else if(store.getCommission_pg() != null && store.getCommission_pg() == ""){
+			} else if(store.getPg_comm() != null && store.getPg_comm() == ""){
 				errorLog = (i+1)+"번째 지점의"+" PG수수료를 입력하세요.";
-			} else if(store.getCommission_vd() != null && store.getCommission_vd() == ""){
+			} else if(store.getVd_comm() != null && store.getVd_comm() == ""){
 				errorLog = (i+1)+"번째 지점의"+" VD수수료를 입력하세요.";
 			}
 			if(errorLog != "") {
 				break;
 			}
 		}
-		
+
 		if(list.size() == 0) {
 			errorLog = "지점데이터가 없습니다.";
 		}
@@ -443,7 +470,7 @@ public class DefaultController {
 		for (AgencyStoreVO store :storeList) {
 			for (CategoryVO cate :cateList) {
 				if(store.getCate() == Integer.parseInt(cate.getCate_vu()) ) {
-					store.setCate_name(cate.getCate_nm());
+//					store.setCate_name(cate.getCate_nm());
 					break;
 				}
 			}
