@@ -8,6 +8,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:include page='<%="../common/vd_header.jsp"%>'/>
 <div class="header-mobile-wrapper">
     <div class="app-header__logo">
@@ -35,7 +36,7 @@
     <div class="app-inner-layout__wrapper">
         <div class="app-inner-layout__content">
             <div class="container-fluid">
-                <form action="#">
+<%--                <form action="/">--%>
                     <div class="row">
                         <div class="col-sm-12 col-lg-12">
                             <h5>사업관리자 > 사업자설정</h5>
@@ -47,49 +48,49 @@
                                     <tr>
                                         <th>본사명</th>
                                         <td>
-                                                <select class="multiselect-dropdown form-control" data-select2-id="1" style="width: 100%">
-                                                    <option selected>전체</option>
-                                                    <option value="1">One</option>
-                                                    <option value="2">Two</option>
-                                                    <option value="3">Three</option>
+                                                <select id="agency_select" class="form-control" style="width: 100%" onchange="agencySelect()">
+                                                        <option value="0">전체</option>
+                                                    <c:forEach var="ag" items="${agencyList}">
+                                                        <option value="${ag.idx}">${ag.company_name}</option>
+                                                    </c:forEach>
                                                 </select>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>본사사업자번호</th>
-                                        <td><input name="" type="text"
+                                        <td><input name="agency_num" type="text"
                                                    class="form-control"></td>
                                     </tr>
-                                    <tr>
-                                        <th>담당자명</th>
-                                        <td><input name="" type="text"
-                                                   class="form-control"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>휴대전화</th>
-                                        <td><input name="" type="text"
-                                                   class="form-control"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>일반전화</th>
-                                        <td><input name="" type="text"
-                                                   class="form-control"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>주소</th>
-                                        <td><input name="" type="text"
-                                                   class="form-control"></td>
-                                    </tr>
+<%--                                    <tr>--%>
+<%--                                        <th>담당자명</th>--%>
+<%--                                        <td><input name="rep_nm" type="text"--%>
+<%--                                                   class="form-control"></td>--%>
+<%--                                    </tr>--%>
+<%--                                    <tr>--%>
+<%--                                        <th>휴대전화</th>--%>
+<%--                                        <td><input name="rep_mobile" type="text"--%>
+<%--                                                   class="form-control"></td>--%>
+<%--                                    </tr>--%>
+<%--                                    <tr>--%>
+<%--                                        <th>일반전화</th>--%>
+<%--                                        <td><input name="rep_tel" type="text"--%>
+<%--                                                   class="form-control"></td>--%>
+<%--                                    </tr>--%>
+<%--                                    <tr>--%>
+<%--                                        <th>주소</th>--%>
+<%--                                        <td><input name="zipcode" type="text"--%>
+<%--                                                   class="form-control"></td>--%>
+<%--                                    </tr>--%>
                                     <tr>
                                         <th>등록일자</th>
-                                        <td><input name="" type="text"
+                                        <td><input name="regdate" type="text"
                                                    class="form-control"></td>
                                     </tr>
-                                    <tr>
-                                        <th>메모</th>
-                                        <td><input name="" type="text"
-                                                   class="form-control"></td>
-                                    </tr>
+<%--                                    <tr>--%>
+<%--                                        <th>메모</th>--%>
+<%--                                        <td><input name="" type="text"--%>
+<%--                                                   class="form-control"></td>--%>
+<%--                                    </tr>--%>
                                     </tbody>
                                 </table>
                             </div>
@@ -101,12 +102,7 @@
                                     <tr>
                                         <th>지점명</th>
                                         <td>
-                                            <select class="multiselect-dropdown form-control" data-select2-id="1" style="width: 100%">
-                                                <option selected>전체</option>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
-                                            </select>
+                                            <select id="store_select" class="form-control" style="width: 100%"></select>
                                         </td>
                                     </tr>
                                     <tr>
@@ -114,17 +110,16 @@
                                         <td><input name="" type="text"
                                                    class="form-control"></td>
                                     </tr>
-                                    <tr>
-                                        <th>상권</th>
-                                        <td>
-                                            <select class="multiselect-dropdown form-control" data-select2-id="1" style="width: 100%">
-                                                <option selected>전체</option>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
-                                            </select>
-                                        </td>
-                                    </tr>
+<%--                                    <tr>--%>
+<%--                                        <th>상권</th>--%>
+<%--                                        <td>--%>
+<%--                                            <select id="store_contract" class="form-control" style="width: 100%">--%>
+<%--                                                <option value="0">전체</option>--%>
+<%--                                                <option value="1">전체</option>--%>
+<%--                                                <option value="2">전체</option>--%>
+<%--                                            </select>--%>
+<%--                                        </td>--%>
+<%--                                    </tr>--%>
                                     <tr>
                                         <th>PG수수료</th>
                                         <td><input name="" type="text"
@@ -135,19 +130,17 @@
                                         <td><input name="" type="text"
                                                    class="form-control"></td>
                                     </tr>
-                                    <tr>
-                                        <th>이메일</th>
-                                        <td><input name="" type="text"
-                                                   class="form-control"></td>
-                                    </tr>
+<%--                                    <tr>--%>
+<%--                                        <th>이메일</th>--%>
+<%--                                        <td><input name="" type="text"--%>
+<%--                                                   class="form-control"></td>--%>
+<%--                                    </tr>--%>
                                     <tr>
                                         <th>계약여부</th>
                                         <td>
-                                            <select class="multiselect-dropdown form-control" data-select2-id="1" style="width: 100%">
-                                                <option selected>전체</option>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
+                                            <select class="form-control" style="width: 100%">
+                                                <option value="0">Y</option>
+                                                <option value="1">N</option>
                                             </select>
                                         </td>
                                     </tr>
@@ -159,13 +152,13 @@
                     <div class="row">
                         <div class="col-sm-12 col-lg-12" style="text-align: center;">
                             <button type="button" class="btn btn-secondary">초기화</button>
-                            <input type="submit" class="btn btn-secondary" value="조회">
+                            <button type="button" class="btn btn-secondary" onclick="store_search()">조회</button>
                             <button type="button" class="btn btn-info" style="float: right;"
-                                    onclick="">등록
+                                    onclick="location.href='/default/agencyAdd'">등록
                             </button>
                         </div>
                     </div>
-                </form>
+<%--                </form>--%>
                 <div class="main-card card">
                     <div class="row">
                         <div class="col-sm-12 col-lg-12">
@@ -185,20 +178,21 @@
                                             <th>등록일자</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        <c:forEach var="list" items="list">
-                                            <tr>
-                                                <td>dd</td>
-                                                <td>dd</td>
-                                                <td>dd</td>
-                                                <td>dd</td>
-                                                <td>dd</td>
-                                                <td>dd</td>
-                                                <td>dd</td>
-                                                <td>dd</td>
-                                                <td>dd</td>
-                                            </tr>
-                                        </c:forEach>
+                                        <tbody id="store_search">
+<%--                                        <c:forEach var="list" items="${storeList}" varStatus="storeListName">--%>
+<%--                                            <tr>--%>
+<%--                                                <td>${storeListName.count}</td>--%>
+<%--&lt;%&ndash;                                                <td style="display:none">${list.agc_idx}</td>&ndash;%&gt;--%>
+<%--                                                <td>${list.company_name}</td>--%>
+<%--                                                <td>${list.company_num}</td>--%>
+<%--                                                <td>${list.store_name}</td>--%>
+<%--                                                <td>${list.store_num}</td>--%>
+<%--                                                <td>${list.vd_comm}</td>--%>
+<%--                                                <td>${list.vd_comm}</td>--%>
+<%--                                                <td>${list.contract == 0 ? "N" : "Y"}</td>--%>
+<%--                                                <td><fmt:formatDate value="${list.regdate}" pattern="yyyy.MM.dd HH:mm" /></td>--%>
+<%--                                            </tr>--%>
+<%--                                        </c:forEach>--%>
                                         </tbody>
                                     </table>
                                 </div>

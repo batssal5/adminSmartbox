@@ -4,62 +4,70 @@
 <mapper namespace="com.vdcompany.adminSmartbox.mapper.AgencyStoreMapper">
 
 	<select id="getStoreList" parameterType="java.lang.Integer" resultType="com.vdcompany.adminSmartbox.bean.agency.AgencyStoreVO">
-		SELECT agency.company_name, agency.company_num, store.* 
-        FROM agency_store as store
-        JOIN agency as agency
-        ON store.agc_idx = agency.idx
-        
-        <if test="agency_idx != 0">
-			WHERE store.agc_idx = #{agency_idx,jdbcType=INTEGER}
-        </if>
-		ORDER BY idx 
+		SELECT agency.idx AS agc_idx, store.idx, agency.company_name, agency.company_num, store.name AS store_name, store.company_num AS store_num, store.pg_comm, store.vd_comm, store.contract, store.regdate
+		FROM agency_store AS store,
+		agency AS agency
+		WHERE store.agc_idx = agency.idx
+		<if test="agency_idx != 0">
+			AND store.agc_idx = #{agency_idx,jdbcType=INTEGER}
+		</if>
+		ORDER BY agc_idx;
+
+		<!--SELECT agency.company_name, agency.company_num, store.*
+                FROM agency_store as store
+                JOIN agency as agency
+                ON store.agc_idx = agency.idx
+
+                <if test="agency_idx != 0">
+                    WHERE store.agc_idx = #{agency_idx,jdbcType=INTEGER}
+                </if>
+                ORDER BY idx-->
 	</select>
 
 
 
 	<select id="getSearchStoreList" parameterType="com.vdcompany.adminSmartbox.bean.agency.AgencySearchVO" resultType="com.vdcompany.adminSmartbox.bean.agency.AgencyStoreVO">
-	
-		SELECT agency.company_name, agency.company_num, store.* 
-        FROM agency_store as store
-        JOIN agency as agency
-        ON store.agc_idx = agency.idx
+
+		SELECT store.idx, store.agc_idx, agency.company_name, agency.company_num, store.name AS store_name, store.company_num AS store_num, store.pg_comm, store.vd_comm, store.contract, store.regdate
+		FROM agency_store AS store,
+			agency AS agency
+		WHERE store.agc_idx = agency.idx
+		AND 1=1
+        <if test="agc_idx != 0">
+			AND store.agc_idx = #{agc_idx}
+        </if>
+        <if test="idx != 0">
+			AND store.idx = #{idx}
+        </if>
+<!--        <if test="agency_num != null and !agency_num.equals('')">-->
+<!--			AND agency.company_num LIKE CONCAT('%', #{agency_num}, '%')-->
+<!--        </if>-->
+<!--        <if test="store_num != null and !store_num.equals('')">-->
+<!--			AND store.store_num LIKE CONCAT('%', #{store_num}, '%')-->
+<!--        </if>-->
+        <if test="contract != null and !contract.equals('-1')">
+			AND store.contract = #{contract}
+        </if>
+<!--        <if test="pg1 != null and !pg1.equals('')">-->
+<!--			AND commission_pg >= #{pg1}-->
+<!--        </if>-->
+<!--        <if test="pg2 != null and !pg2.equals('')">-->
+<!--			AND commission_pg <![CDATA[ <= ]]> #{pg2}-->
+<!--        </if>-->
+<!--        <if test="vd1 != null and !vd1.equals('')">-->
+<!--			AND commission_vd >= #{vd1}-->
+<!--        </if>-->
+<!--        <if test="vd2 != null and !vd2.equals('')">-->
+<!--			AND commission_vd <![CDATA[ <= ]]> #{vd2}-->
+<!--        </if>-->
+<!--        <if test="reg1 != null and !reg1.equals('')">-->
+<!--			AND store.regdate >= str_to_date(#{reg1}, '%Y-%m-%d')-->
+<!--        </if>-->
+<!--        <if test="reg2 != null and !reg2.equals('')">-->
+<!--			AND store.regdate <![CDATA[ <= ]]> str_to_date(#{reg2}, '%Y-%m-%d')-->
+<!--        </if>-->
         
-        WHERE 1=1
-        <if test="agency_idx != 0">
-			AND store.agc_idx = #{agency_idx}
-        </if>
-        <if test="store_idx != 0">
-			AND store.idx = #{store_idx}
-        </if>
-        <if test="agency_num != null and !agency_num.equals('')">
-			AND agency.company_num LIKE CONCAT('%', #{agency_num}, '%')
-        </if>
-        <if test="store_num != null and !store_num.equals('')">
-			AND store.store_num LIKE CONCAT('%', #{store_num}, '%')
-        </if>
-        <if test="contract_idx != null and !contract_idx.equals('-1')">
-			AND store.contract = #{contract_idx}
-        </if>
-        <if test="pg1 != null and !pg1.equals('')">
-			AND commission_pg >= #{pg1}
-        </if>
-        <if test="pg2 != null and !pg2.equals('')">
-			AND commission_pg <![CDATA[ <= ]]> #{pg2}
-        </if>
-        <if test="vd1 != null and !vd1.equals('')">
-			AND commission_vd >= #{vd1}
-        </if>
-        <if test="vd2 != null and !vd2.equals('')">
-			AND commission_vd <![CDATA[ <= ]]> #{vd2}
-        </if>
-        <if test="reg1 != null and !reg1.equals('')">
-			AND store.regdate >= str_to_date(#{reg1}, '%Y-%m-%d')
-        </if>
-        <if test="reg2 != null and !reg2.equals('')">
-			AND store.regdate <![CDATA[ <= ]]> str_to_date(#{reg2}, '%Y-%m-%d')
-        </if>
-        
-		ORDER BY idx 
+		ORDER BY idx
 	
 	</select>
 

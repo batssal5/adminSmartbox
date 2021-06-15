@@ -912,5 +912,93 @@
 </div>
 <div class="app-drawer-overlay d-none animated fadeIn"></div>
 <script type="text/javascript" src="/bootstrab/js/vd-js-engine-min.js"></script>
+<script>
+
+        function agencySelect(){
+            var selectdeValue = $('#agency_select option:selected').val();
+            console.log(selectdeValue);
+
+            $('#store_select').empty();
+            getStoreList();
+        };
+
+        function getStoreList() {
+
+            var agency_idx = $('#agency_select option:selected').val();
+            var url="/default/ajax_store";
+            var form_data = {
+                agency_idx: agency_idx,
+                is_ajax: 1
+            };
+
+            var ajax = $.ajax({
+                url : url
+                , type: "GET"
+                // , dataType : "json"
+                , contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+                , data : form_data
+                , beforeSend:function(response){
+
+                }
+                , success : function(responseData){
+                    console.log(responseData)
+                    var data = JSON.parse(responseData);
+                    var option = '<option value="0">전체</option>';
+
+                    $.each(data, function(index, item){
+                        option += '<option value="'+item.idx+'">'+item.store_name+'</option>';
+                    });
+
+                    $("#store_select").append(option);
+                }
+                ,complete: function(response){
+                }
+                , error:function(e) {
+                }
+                , fail: function(){
+                }
+            });
+            jQuery.ajax.done;
+        };
+
+        function store_search(){
+            var agency_idx = $('#agency_select option:selected').val();
+            var store_idx = $('#store_select option:selected').val();
+            console.log(agency_idx, store_idx);
+
+            $.ajax({
+                url: "/default/ajax_search",
+                type: "GET",
+                data: {agency_idx : agency_idx,
+                        store_idx : store_idx},
+                // dataType: "json",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                success: function (responseData){
+                    // console.log(responseData)
+                    var data = JSON.parse(responseData);
+                    var html = '';
+                    $.each(data, function (index, item){
+                        html += '<tr>';
+                        html += '<td>'+(index+1)+'</td>';
+                        html += '<td style="display:none;">'+item.agc_idx+'</td>';
+                        html += '<td>'+item.company_name+'</td>';
+                        html += '<td>'+item.company_num+'</td>';
+                        html += '<td>'+item.store_name+'</td>';
+                        html += '<td>'+item.store_num+'</td>';
+                        html += '<td>'+item.pg_comm+'</td>';
+                        html += '<td>'+item.vd_comm+'</td>';
+                        item.contract == 0 ? html += '<td>N</td>' : html += '<td>Y</td>';
+                        html += '<td>'+item.regdate+'</td>';
+                        html += '</tr>';
+                    });
+
+                    var store_search = document.getElementById('store_search');
+                    store_search.innerHTML = html;
+
+                }
+            });
+        };
+
+</script>
 </body>
 </html>
