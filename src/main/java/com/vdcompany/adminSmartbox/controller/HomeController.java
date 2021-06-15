@@ -76,7 +76,54 @@ public class HomeController {
 		}
 		//전일 대비 증감 건수
 		int rateChangeCount = Integer.parseInt(todayPayCount) - Integer.parseInt(yesterdayPayCount);
+		//환불 카운트 정보
+		List<PaymentPerDayVO> lastWeekRefoundVOList = homeService.getRefundInfoPerDay();
+		//logger.info("lastWeekRefoundVOList:"+new GsonBuilder().setPrettyPrinting().create().toJson(lastWeekRefoundVOList));
+		int todayRefoundCount = 0;
+		int yesterdayRefoundCount = 0;
+		if(lastWeekRefoundVOList.size()>0&&lastWeekRefoundVOList.get(0).getDaytime().equals(new SimpleDateFormat("yy-MM-dd").format(new Date()))){
+			todayRefoundCount = lastWeekRefoundVOList.get(0).getCount();
+		}
+		if(lastWeekRefoundVOList.size()>1&&lastWeekRefoundVOList.get(1).getDaytime().equals(yesterday)){
+			yesterdayRefoundCount = lastWeekRefoundVOList.get(1).getCount();
+		}
+		int refoundChangeCount = todayRefoundCount - yesterdayRefoundCount;
 
+		//일단위 사용자 문의 건수 조회
+		List<PaymentPerDayVO> userQuestionInfoList = homeService.getUserQuestionInfoPerDay();
+		//logger.info("userQuestionInfoList:"+new GsonBuilder().setPrettyPrinting().create().toJson(userQuestionInfoList));
+		int todayUserQuestionCount = 0;
+		int yesterdayUserQuestionCount = 0;
+		if(userQuestionInfoList.size()>0&&userQuestionInfoList.get(0).getDaytime().equals(new SimpleDateFormat("yy-MM-dd").format(new Date()))){
+			todayUserQuestionCount = userQuestionInfoList.get(0).getCount();
+		}
+		if(userQuestionInfoList.size()>1&&userQuestionInfoList.get(1).getDaytime().equals(yesterday)){
+			yesterdayRefoundCount = userQuestionInfoList.get(1).getCount();
+		}
+		int userQuestionChangeCount = todayUserQuestionCount - yesterdayRefoundCount;
+
+		//일단위 관리자 문의 건수 조회
+		List<PaymentPerDayVO> agencyQuestionInfoList = homeService.getAgencyQuestionInfoPerDay();
+		//logger.info("agencyQuestionInfoList:"+new GsonBuilder().setPrettyPrinting().create().toJson(agencyQuestionInfoList));
+		int todayAgencyQuestionCount = 0;
+		int yesterdayAgencyQuestionCount = 0;
+		if(agencyQuestionInfoList.size()>0&&agencyQuestionInfoList.get(0).getDaytime().equals(new SimpleDateFormat("yy-MM-dd").format(new Date()))){
+			todayAgencyQuestionCount = agencyQuestionInfoList.get(0).getCount();
+		}
+		if(agencyQuestionInfoList.size()>1&&agencyQuestionInfoList.get(1).getDaytime().equals(yesterday)){
+			yesterdayAgencyQuestionCount = agencyQuestionInfoList.get(1).getCount();
+		}
+		int agencyQuestionChangeCount = todayAgencyQuestionCount - yesterdayAgencyQuestionCount;
+
+		//스마트박스 운용 상태 조회
+		List<PaymentPerDayVO> smartBoxStatusInfoList = homeService.getSmartBoxStatusInfo();
+		logger.info("smartBoxStatusInfoList:"+new GsonBuilder().setPrettyPrinting().create().toJson(smartBoxStatusInfoList));
+		int smartBoxOnlineCount = 0;
+		int smartBoxOfflineCount = 0;
+		if(smartBoxStatusInfoList.size()>0){
+			smartBoxOnlineCount = smartBoxStatusInfoList.get(0).getOnline();
+			smartBoxOfflineCount = smartBoxStatusInfoList.get(0).getOffline();
+		}
 
 		//월단위 매출 정보
 		List<PaymentPerDayVO> paymentPerMonthVOList = homeService.getPaymentInfoPerMonth();
@@ -84,15 +131,29 @@ public class HomeController {
 
 		//지난달 판매순위 탑10
 		List<PaymentPerDayVO> lastMonthSalesTopVOList = homeService.getSalesHitTopList();
-		logger.info("lastMonthSalesTopVOList:"+new GsonBuilder().setPrettyPrinting().create().toJson(lastMonthSalesTopVOList));
+		//logger.info("lastMonthSalesTopVOList:"+new GsonBuilder().setPrettyPrinting().create().toJson(lastMonthSalesTopVOList));
+
+		//지난달 판매순위 탑10 boxinfo
+		List<PaymentPerDayVO> lastMonthSalesTopBoxVOList = homeService.getSalesHitTopPerBoxList();
+		//logger.info("lastMonthSalesTopBoxVOList:"+new GsonBuilder().setPrettyPrinting().create().toJson(lastMonthSalesTopBoxVOList));
 
 		mav.addObject("pageInfo", pageinfo);
 		mav.addObject("todayPayCount", todayPayCount);
+		mav.addObject("todayRefoundCount", todayRefoundCount);
+		mav.addObject("refoundChangeCount", refoundChangeCount);
+		mav.addObject("todayUserQuestionCount", todayUserQuestionCount);
+		mav.addObject("userQuestionChangeCount", userQuestionChangeCount);
+		mav.addObject("todayAgencyQuestionCount", todayAgencyQuestionCount);
+		mav.addObject("agencyQuestionChangeCount", agencyQuestionChangeCount);
+		mav.addObject("smartBoxOnlineCount", smartBoxOnlineCount);
+		mav.addObject("smartBoxOfflineCount", smartBoxOfflineCount);
 		mav.addObject("rateChangeCount", rateChangeCount);
 		mav.addObject("leftMenuInfo", leftMenuListVO);
 		mav.addObject("paymentPerDayListInfo", paymentPerDayVOList);
 		mav.addObject("paymentPerMonthListInfo", paymentPerMonthVOList);
 		mav.addObject("lastMonthSalesTopListInfo", lastMonthSalesTopVOList);
+		mav.addObject("lastMonthSalesTopBoxListInfo", lastMonthSalesTopBoxVOList);
+		mav.addObject("lastWeekRefoundListInfo", lastWeekRefoundVOList);
 
 		return mav;
 	}

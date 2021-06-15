@@ -20,42 +20,42 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a role="tab" data-toggle="tab" class="nav-link" href="#tab-content-2">
+                <a role="tab" data-toggle="tab" class="nav-link" href="#"  onclick="location.href='/box/boxList'">
                     <span>박스</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a role="tab" data-toggle="tab" class="nav-link" href="#tab-content-3">
+                <a role="tab" data-toggle="tab" class="nav-link" href="#"  onclick="location.href='/goods/goodsList'">
                     <span>상품</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a role="tab" data-toggle="tab" class="nav-link" href="#tab-content-4">
+                <a role="tab" data-toggle="tab" class="nav-link" href="#"  onclick="location.href='/sales/paymentList'">
                     <span>판매</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a role="tab" data-toggle="tab" class="nav-link" href="#tab-content-5">
+                <a role="tab" data-toggle="tab" class="nav-link" href="#"  onclick="location.href='/member/userList'">
                     <span>회원</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a role="tab" data-toggle="tab" class="nav-link" href="#tab-content-6">
+                <a role="tab" data-toggle="tab" class="nav-link" href="#"  onclick="location.href='/board/agencyQuestion'">
                     <span>게시판</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a role="tab" data-toggle="tab" class="nav-link" href="#tab-content-7">
+                <a role="tab" data-toggle="tab" class="nav-link" href="#"  onclick="location.href='/promotion/userList'">
                     <span>프로모션</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a role="tab" data-toggle="tab" class="nav-link" href="#tab-content-8">
+                <a role="tab" data-toggle="tab" class="nav-link" href="#"  onclick="location.href='/marketing/bannerUserApp'">
                     <span>마케팅</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a role="tab" data-toggle="tab" class="nav-link" href="#tab-content-9">
+                <a role="tab" data-toggle="tab" class="nav-link" href="#"  onclick="location.href='/statistics/bannerUserApp'">
                     <span>통계</span>
                 </a>
             </li>

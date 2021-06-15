@@ -3,6 +3,61 @@
 
 <mapper namespace="com.vdcompany.adminSmartbox.mapper.HomeMapper">
 
+	<select id="getRefundInfoPerDay" resultType="com.vdcompany.adminSmartbox.bean.home.PaymentPerDayVO">
+		SELECT SUM(cnt) as count, daytime
+		FROM (
+			select 1 as cnt,
+			DATE_FORMAT(regdate, '%y-%m-%d') AS daytime
+			from sb_refund
+			where regdate >= date_format(now(), '%Y-%m-%d') - INTERVAL 7 DAY
+			) a
+		GROUP BY daytime
+		ORDER BY daytime desc
+			limit 2
+	</select>
+
+
+	<select id="getUserQuestionInfoPerDay" resultType="com.vdcompany.adminSmartbox.bean.home.PaymentPerDayVO">
+		SELECT SUM(cnt) as count,
+       			daytime
+		FROM (select 1 as cnt,
+			DATE_FORMAT(regdate, '%y-%m-%d') AS daytime
+			FROM notice_que
+			WHERE regdate >= date_format(now(), '%Y-%m-%d') - INTERVAL 2 DAY
+			) a
+		GROUP BY daytime
+		ORDER BY daytime desc
+			limit 2
+	</select>
+
+	<select id="getAgencyQuestionInfoPerDay" resultType="com.vdcompany.adminSmartbox.bean.home.PaymentPerDayVO">
+		SELECT SUM(cnt) as count,
+       			daytime
+		FROM (select 1 as cnt,
+			DATE_FORMAT(regdate, '%y-%m-%d') AS daytime
+			FROM notice_agency_que
+			WHERE regdate >= date_format(now(), '%Y-%m-%d') - INTERVAL 2 DAY
+			) a
+		GROUP BY daytime
+		ORDER BY daytime desc
+			limit 2
+	</select>
+
+
+	<select id="getSmartBoxStatusInfo" resultType="com.vdcompany.adminSmartbox.bean.home.PaymentPerDayVO">
+		SELECT sum(online_cnt) as online, sum(offline_cnt) as offline
+		FROM (select 1 as online_cnt, 0 as offline_cnt
+				from sb_box
+				where used = 0
+				and status = 0
+			union all
+			  select 0 as online_cnt, 1 as offline_cnt
+				from sb_box
+				where used <![CDATA[<>]]> 0
+				or status <![CDATA[<>]]> 0
+		    ) a
+	</select>
+
 	<select id="getPaymentInfoPerDay" resultType="com.vdcompany.adminSmartbox.bean.home.PaymentPerDayVO">
 		SELECT g.daytime,
 			   SUM(g.customer)                                        as customer_cnt,
@@ -126,49 +181,128 @@
 	<select id="getSalesHitTopList" resultType="com.vdcompany.adminSmartbox.bean.home.PaymentPerDayVO">
 		SELECT *
 		FROM (
-		SELECT sum(cnt) as sales_cnt,
-		daytime,
-		name     as goods_name
-		FROM (select 1                             as cnt,
-		idx,
-		DATE_FORMAT(regdate, '%y-%m') AS daytime
-		from sb_order
-		where regdate >= date_format(now(), '%Y-%m-01') - INTERVAL 1 MONTH
-		and regdate <![CDATA[<]]> date_format(now(), '%Y-%m-01')
+				 SELECT sum(cnt) as sales_cnt,
+						daytime,
+						name     as goods_name
+				 FROM (select 1                             as cnt,
+							  idx,
+							  DATE_FORMAT(regdate, '%y-%m') AS daytime
+					   from sb_order
+					   where regdate >= date_format(now(), '%Y-%m-01') - INTERVAL 1 MONTH
+						 and regdate <![CDATA[<]]> date_format(now()
+						   , '%Y-%m-01')
 
-		order by regdate desc) a,
-		(select ord_idx, skuid
-		from sb_order_detail
-		where regdate >= date_format(now(), '%Y-%m-01') - INTERVAL 1 MONTH
-		and regdate <![CDATA[<]]> date_format(now(), '%Y-%m-01')
-		order by regdate desc) b,
-		(select skuid, name from sb_goods) c
-		WHERE a.idx = b.ord_idx
-		AND b.skuid = c.skuid
-		GROUP BY b.skuid, daytime
-		UNION
-		SELECT sum(cnt) as sales_cnt,
-		daytime,
-		name     as goods_name
-		FROM (select 1                             as cnt,
-		idx,
-		DATE_FORMAT(regdate, '%y-%m') AS daytime
-		from sb_card_order
-		where regdate >= date_format(now(), '%Y-%m-01') - INTERVAL 1 MONTH
-		and regdate <![CDATA[<]]> date_format(now(), '%Y-%m-01')
+					   order by regdate desc) a,
+					  (select ord_idx, skuid
+					   from sb_order_detail
+					   where regdate >= date_format(now(), '%Y-%m-01') - INTERVAL 1 MONTH
+						 and regdate <![CDATA[<]]> date_format(now()
+						   , '%Y-%m-01')
+					   order by regdate desc) b,
+					  (select skuid, name from sb_goods) c
+				 WHERE a.idx = b.ord_idx
+				   AND b.skuid = c.skuid
+				 GROUP BY b.skuid, daytime
+				 UNION
+				 SELECT sum(cnt) as sales_cnt,
+						daytime,
+						name     as goods_name
+				 FROM (select 1                             as cnt,
+							  idx,
+							  DATE_FORMAT(regdate, '%y-%m') AS daytime
+					   from sb_card_order
+					   where regdate >= date_format(now(), '%Y-%m-01') - INTERVAL 1 MONTH
+						 and regdate <![CDATA[<]]> date_format(now()
+						   , '%Y-%m-01')
 
-		order by regdate desc) a,
-		(select ord_idx, skuid
-		from sb_card_order_detail
-		where regdate >= date_format(now(), '%Y-%m-01') - INTERVAL 1 MONTH
-		and regdate <![CDATA[<]]> date_format(now(), '%Y-%m-01')
-		order by regdate desc) b,
-		(select skuid, name from sb_goods) c
-		WHERE a.idx = b.ord_idx
-		AND b.skuid = c.skuid
-		GROUP BY b.skuid, daytime
-		) g
-		order by g.sales_cnt desc, goods_name asc
-		limit 10
+					   order by regdate desc) a,
+					  (select ord_idx, skuid
+					   from sb_card_order_detail
+					   where regdate >= date_format(now(), '%Y-%m-01') - INTERVAL 1 MONTH
+						 and regdate <![CDATA[<]]> date_format(now()
+						   , '%Y-%m-01')
+					   order by regdate desc) b,
+					  (select skuid, name from sb_goods) c
+				 WHERE a.idx = b.ord_idx
+				   AND b.skuid = c.skuid
+				 GROUP BY b.skuid, daytime
+			 ) g
+		order by g.sales_cnt desc, goods_name asc limit 10
+	</select>
+
+
+	<select id="getSalesHitTopPerBoxList" resultType="com.vdcompany.adminSmartbox.bean.home.PaymentPerDayVO">
+		SELECT sum(sales_cnt)                   as sales_cnt,
+			   daytime,
+			   sb_box_idx,
+			   alias,
+			   sum(amount_per_month)            as amount_per_month,
+			   FORMAT(SUM(amount_per_month), 0) as amount_per_day_form
+
+		FROM (
+				 SELECT sum(cnt)   as sales_cnt,
+						daytime,
+						sb_box_idx,
+						alias,
+						sum(price) as amount_per_month
+				 FROM (select 1                             as cnt,
+							  idx,
+							  box_idx,
+							  DATE_FORMAT(regdate, '%y-%m') AS daytime
+					   from sb_order
+					   where regdate >= date_format(now(), '%Y-%m-01') - INTERVAL 1 MONTH
+						 and regdate<![CDATA[
+						<]]> date_format(now()
+						   , '%Y-%m-01')
+
+					   order by regdate desc) a,
+					  (select ord_idx, skuid, price
+					   from sb_order_detail
+					   where regdate >= date_format(now(), '%Y-%m-01') - INTERVAL 1 MONTH
+						 and regdate<![CDATA[
+						<]]> date_format(now()
+						   , '%Y-%m-01')
+					   order by regdate desc) b,
+					  (select idx, skuid, name from sb_goods) c,
+					  (select idx, id as sb_box_idx, status, used from sb_box) d,
+					  (select box_idx, alias, agc_idx, agc_sto_idx from sb_box_info) e
+				 WHERE a.idx = b.ord_idx
+				   AND b.skuid = c.skuid
+				   AND a.box_idx = d.idx
+				   AND a.box_idx = e.box_idx
+				 UNION
+				 SELECT sum(cnt)   as sales_cnt,
+						daytime,
+						sb_box_idx,
+						alias,
+						sum(price) as amount_per_month
+				 FROM (select 1                             as cnt,
+							  idx,
+							  box_idx,
+							  DATE_FORMAT(regdate, '%y-%m') AS daytime
+					   from sb_card_order
+					   where regdate >= date_format(now(), '%Y-%m-01') - INTERVAL 1 MONTH
+						 and regdate<![CDATA[
+						<]]> date_format(now()
+						   , '%Y-%m-01')
+
+					   order by regdate desc) a,
+					  (select ord_idx, skuid, price
+					   from sb_card_order_detail
+					   where regdate >= date_format(now(), '%Y-%m-01') - INTERVAL 1 MONTH
+						 and regdate<![CDATA[
+						<]]> date_format(now()
+						   , '%Y-%m-01')
+					   order by regdate desc) b,
+					  (select idx, skuid, name from sb_goods) c,
+					  (select idx, id as sb_box_idx, status, used from sb_box) d,
+					  (select box_idx, alias, agc_idx, agc_sto_idx from sb_box_info) e
+				 WHERE a.idx = b.ord_idx
+				   AND b.skuid = c.skuid
+				   AND a.box_idx = d.idx
+				   AND a.box_idx = e.box_idx
+			 ) g
+		GROUP BY g.sb_box_idx
+		order by g.sales_cnt desc limit 10
 	</select>
 </mapper>

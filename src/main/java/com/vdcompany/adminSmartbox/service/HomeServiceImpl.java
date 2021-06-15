@@ -21,6 +21,26 @@ public class HomeServiceImpl implements HomeService {
 	LogMapper logMapper;
 
 	@Override
+	public List<PaymentPerDayVO> getRefundInfoPerDay() {
+		// TODO Auto-generated method stub
+		return homeMapper.getRefundInfoPerDay();
+	}
+	@Override
+	public List<PaymentPerDayVO> getUserQuestionInfoPerDay() {
+		// TODO Auto-generated method stub
+		return homeMapper.getUserQuestionInfoPerDay();
+	}
+	@Override
+	public List<PaymentPerDayVO> getAgencyQuestionInfoPerDay() {
+		// TODO Auto-generated method stub
+		return homeMapper.getAgencyQuestionInfoPerDay();
+	}
+	@Override
+	public List<PaymentPerDayVO> getSmartBoxStatusInfo() {
+		// TODO Auto-generated method stub
+		return homeMapper.getSmartBoxStatusInfo();
+	}
+	@Override
 	public List<PaymentPerDayVO> getPaymentInfoPerDay() {
 		// TODO Auto-generated method stub
 		return homeMapper.getPaymentInfoPerDay();
@@ -37,6 +57,11 @@ public class HomeServiceImpl implements HomeService {
 	public List<PaymentPerDayVO> getSalesHitTopList() {
 		// TODO Auto-generated method stub
 		return homeMapper.getSalesHitTopList();
+	}
+	@Override
+	public List<PaymentPerDayVO> getSalesHitTopPerBoxList() {
+		// TODO Auto-generated method stub
+		return homeMapper.getSalesHitTopPerBoxList();
 	}
 
 }

@@ -20,4 +20,8 @@ public class PaymentPerDayVO {
 	private String amount_per_customer_form;
 	private int sales_cnt;
 	private String goods_name;
+	private String alias;
+	private int count;
+	private int online;
+	private int offline;
 }
