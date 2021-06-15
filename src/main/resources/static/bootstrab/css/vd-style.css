@@ -22600,7 +22600,10 @@ legend {
 
 .widget-chart {
     text-align: center;
-    padding: 0.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-right: 0.5rem;
+    padding-left: 2rem;
     position: relative
 }
 

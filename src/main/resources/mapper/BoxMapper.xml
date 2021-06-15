@@ -80,7 +80,7 @@
 			box.serial,
 			store.name as store_name,
 			store.idx as store_num,
-			agency.company_name as agency_name,
+			agency.company_nm as agency_name,
 			info.regdate
 		FROM sb_box_info as info
 				 JOIN sb_box as box

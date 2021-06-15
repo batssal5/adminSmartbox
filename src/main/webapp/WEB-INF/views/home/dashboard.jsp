@@ -1,11 +1,12 @@
+<!DOCTYPE html>
+<%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
     response.setHeader("Pragma","no-cache");
     response.setHeader("Cache-Control","no-cache");
     response.addHeader("Cache-Control","no-store");
     response.setDateHeader("Expires",0);
 %>
-<!DOCTYPE html>
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <jsp:include page = '<%="../common/vd_header.jsp" %>'/>
 <div class="header-mobile-wrapper">
     <div class="app-header__logo">
@@ -57,15 +58,31 @@
                                             <div class="icon-wrapper-bg opacity-10 bg-warning"></div>
                                             <i class="lnr-laptop-phone text-dark opacity-8"></i></div>
                                         <div class="widget-chart-content">
-                                            <div class="widget-numbers">10건</div>
-                                            <div class="widget-description opacity-8 text-focus">
-                                                <div class="d-inline text-danger pr-1">
-                                                    <i class="fa fa-angle-up"></i>
-                                                    <span class="pl-1">
-                                                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="첫구매 : 1건" >1건</a>
+                                            <div class="widget-numbers">${todayPayCount}건</div>
+                                            <c:if test="${rateChangeCount>0}">
+                                                <div class="widget-description opacity-8 text-focus">
+                                                    <div class="d-inline text-danger pr-1">
+                                                        <i class="fa fa-angle-up"></i>
+                                                        <span class="pl-1">
+                                                        <a href="#" data-toggle="tooltip" data-placement="bottom"
+                                                           title="&nbsp;&nbsp;&nbsp;&nbsp;전일대비증감 : ${rateChangeCount}건&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                           신규결재 : ${rateChangeCount}건(추가개발필요)" >${rateChangeCount}건</a>
                                                     </span>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </c:if>
+                                            <c:if test="${rateChangeCount<0}">
+                                                <div class="widget-description opacity-8 text-focus">
+                                                    <div class="d-inline text-info pr-1">
+                                                        <i class="fa fa-angle-down"></i>
+                                                        <span class="pl-1">
+                                                        <a href="#" data-toggle="tooltip" data-placement="bottom"
+                                                           title="&nbsp;&nbsp;&nbsp;&nbsp;전일대비증감 : ${rateChangeCount}건&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                           신규결재 : ${rateChangeCount}건(추가개발필요)" >${rateChangeCount}건</a>
+                                                    </span>
+                                                    </div>
+                                                </div>
+                                            </c:if>
                                         </div>
                                     </div>
                                     <div class="divider m-0 d-md-none d-sm-block"></div>
@@ -83,17 +100,29 @@
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
                                         <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg opacity-9 bg-danger"></div>
-                                            <i class="lnr-graduation-hat text-white"></i></div>
+                                            <i class="pe-7s-news-paper text-white"></i></div>
                                         <div class="widget-chart-content">
-                                            <div class="widget-numbers">10건</div>
+                                            <div class="widget-numbers">${todayRefoundCount}건</div>
+                                            <c:if test="${refoundChangeCount>0}">
                                             <div class="widget-description opacity-8 text-focus">
-                                                <div class="d-inline text-info pr-1">
-                                                    <i class="fa fa-angle-down"></i>
+                                                <div class="d-inline text-danger pr-1">
+                                                    <i class="fa fa-angle-up"></i>
                                                     <span class="pl-1">
-                                                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="전일대비 : 1건" >1건</a>
+                                                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="전일대비 : ${refoundChangeCount}건" >${refoundChangeCount}건</a>
                                                     </span>
                                                 </div>
                                             </div>
+                                            </c:if>
+                                            <c:if test="${refoundChangeCount<0}">
+                                            <div class="widget-description opacity-8 text-focus">
+                                                <div class="d-inline text-success pr-1">
+                                                    <i class="fa fa-angle-down"></i>
+                                                    <span class="pl-1">
+                                                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="전일대비 : ${refoundChangeCount}건" >${refoundChangeCount}건</a>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            </c:if>
                                         </div>
                                     </div>
                                     <div class="divider m-0 d-md-none d-sm-block"></div>
@@ -111,9 +140,29 @@
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
                                         <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg opacity-9 bg-info"></div>
-                                            <i class="lnr-question-circle text-white"></i></div>
+                                            <i class="pe-7s-help1 text-white"></i></div>
                                         <div class="widget-chart-content">
-                                            <div class="widget-numbers">10건</div>
+                                            <div class="widget-numbers">${todayUserQuestionCount}건</div>
+                                            <c:if test="${userQuestionChangeCount>0}">
+                                                <div class="widget-description opacity-8 text-focus">
+                                                    <div class="d-inline text-danger pr-1">
+                                                        <i class="fa fa-angle-up"></i>
+                                                        <span class="pl-1">
+                                                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="전일대비 : ${userQuestionChangeCount}건" >${userQuestionChangeCount}건</a>
+                                                    </span>
+                                                    </div>
+                                                </div>
+                                            </c:if>
+                                            <c:if test="${userQuestionChangeCount<0}">
+                                                <div class="widget-description opacity-8 text-focus">
+                                                    <div class="d-inline text-success pr-1">
+                                                        <i class="fa fa-angle-down"></i>
+                                                        <span class="pl-1">
+                                                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="전일대비 : ${userQuestionChangeCount}건" >${userQuestionChangeCount}건</a>
+                                                    </span>
+                                                    </div>
+                                                </div>
+                                            </c:if>
                                         </div>
                                     </div>
                                     <div class="divider m-0 d-md-none d-sm-block"></div>
@@ -133,7 +182,27 @@
                                             <div class="icon-wrapper-bg opacity-9 bg-success"></div>
                                             <i class="lnr-user text-white"></i></div>
                                         <div class="widget-chart-content">
-                                            <div class="widget-numbers">10건</div>
+                                            <div class="widget-numbers">${todayAgencyQuestionCount}건</div>
+                                            <c:if test="${agencyQuestionChangeCount>0}">
+                                                <div class="widget-description opacity-8 text-focus">
+                                                    <div class="d-inline text-danger pr-1">
+                                                        <i class="fa fa-angle-up"></i>
+                                                        <span class="pl-1">
+                                                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="전일대비 : ${agencyQuestionChangeCount}건" >${agencyQuestionChangeCount}건</a>
+                                                    </span>
+                                                    </div>
+                                                </div>
+                                            </c:if>
+                                            <c:if test="${agencyQuestionChangeCount<0}">
+                                                <div class="widget-description opacity-8 text-focus">
+                                                    <div class="d-inline text-success pr-1">
+                                                        <i class="fa fa-angle-down"></i>
+                                                        <span class="pl-1">
+                                                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="전일대비 : ${agencyQuestionChangeCount}건" >${agencyQuestionChangeCount}건</a>
+                                                    </span>
+                                                    </div>
+                                                </div>
+                                            </c:if>
                                         </div>
                                     </div>
                                     <div class="divider m-0 d-md-none d-sm-block"></div>
@@ -154,7 +223,15 @@
                                             <div class="icon-wrapper-bg opacity-9 bg-primary"></div>
                                             <i class="pe-7s-box2 text-white"></i></div>
                                         <div class="widget-chart-content">
-                                            <div class="widget-numbers">10건</div>
+                                            <div class="widget-numbers text-success">Online:${smartBoxOnlineCount}</div>
+                                            <div class="widget-description opacity-8 text-focus">
+                                                <div class="d-inline text-danger pr-1">
+                                                    <i class="fa fa-exclamation-triangle"></i>
+                                                    <span class="pl-1">
+                                                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="Offline : ${smartBoxOfflineCount}개" >${smartBoxOfflineCount}</a>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="divider m-0 d-md-none d-sm-block"></div>
@@ -176,7 +253,7 @@
                         <div class="mb-3 card">
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
-                                    <i class="header-icon lnr-cloud-download icon-gradient bg-happy-itmeo"> </i>
+                                    <i class="header-icon pe-7s-cart icon-gradient bg-happy-itmeo"> </i>
                                     일별결제금액 (최근 7일)
                                 </div>
                                 <div class="btn-actions-pane-right text-capitalize actions-icon-btn">
@@ -209,31 +286,21 @@
                                 <table class="mb-0 table">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Username</th>
+                                        <th class="text-center">날짜</th>
+                                        <th class="text-right pr-lg-4">결제금액</th>
+                                        <th class="text-center">객수</th>
+                                        <th class="text-right pr-lg-4">객단가</th>
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <c:forEach items="${paymentPerDayListInfo}" var="rows" varStatus="paymentPerDayList">
                                     <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
+                                        <td scope="row" class="text-center">${rows.daytime}</td>
+                                        <td class="text-right pr-lg-4">${rows.amount_per_day_form}</td>
+                                        <td class="text-center">${rows.customer_cnt}</td>
+                                        <td class="text-right pr-lg-4">${rows.amount_per_customer_form}</td>
                                     </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
+                                    </c:forEach>
                                     </tbody>
                                 </table>
                             </div>
@@ -243,7 +310,7 @@
                         <div class="mb-3 card">
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
-                                    <i class="header-icon lnr-cloud-download icon-gradient bg-happy-itmeo"> </i>
+                                    <i class="header-icon pe-7s-graph3 icon-gradient bg-mixed-hopes"> </i>
                                     월별결제금액 (최근 6개월)
                                 </div>
                                 <div class="btn-actions-pane-right text-capitalize actions-icon-btn">
@@ -276,31 +343,21 @@
                                 <table class="mb-0 table">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Username</th>
+                                        <th class="text-center">월</th>
+                                        <th class="text-right pr-lg-4">결제금액</th>
+                                        <th class="text-center">객수</th>
+                                        <th class="text-right pr-lg-4">객단가</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
+                                    <c:forEach items="${paymentPerMonthListInfo}" var="rows" varStatus="paymentPerMonthList">
+                                        <tr>
+                                            <td scope="row" class="text-center">${rows.daytime}</td>
+                                            <td class="text-right pr-lg-4">${rows.amount_per_month_form}</td>
+                                            <td class="text-center">${rows.customer_cnt}</td>
+                                            <td class="text-right pr-lg-4">${rows.amount_per_customer_form}</td>
+                                        </tr>
+                                    </c:forEach>
                                     </tbody>
                                 </table>
                             </div>
@@ -312,7 +369,7 @@
                         <div class="mb-3 card">
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
-                                    <i class="header-icon lnr-cloud-download icon-gradient bg-happy-itmeo"> </i>
+                                    <i class="header-icon ion-bag icon-gradient bg-love-kiss"> </i>
                                     5월 상품 판매량 TOP 10
                                 </div>
                                 <div class="btn-actions-pane-right text-capitalize actions-icon-btn">
@@ -345,31 +402,19 @@
                                 <table class="mb-0 table">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Username</th>
+                                        <th>순위</th>
+                                        <th class="text-center">상품명</th>
+                                        <th>판매량</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
+                                    <c:forEach items="${lastMonthSalesTopListInfo}" var="rows" varStatus="lastMonthSalesTopList">
+                                        <tr>
+                                            <td scope="row" class="text-center">${lastMonthSalesTopList.count}</td>
+                                            <td class="pl-lg-5">${rows.goods_name}</td>
+                                            <td class="text-right pr-lg-4">${rows.sales_cnt}</td>
+                                        </tr>
+                                    </c:forEach>
                                     </tbody>
                                 </table>
                             </div>
@@ -379,7 +424,7 @@
                         <div class="mb-3 card">
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
-                                    <i class="header-icon lnr-cloud-download icon-gradient bg-happy-itmeo"> </i>
+                                    <i class="header-icon ion-thumbsup icon-gradient bg-amy-crisp"> </i>
                                     5월 박스 매출 TOP 10
                                 </div>
                                 <div class="btn-actions-pane-right text-capitalize actions-icon-btn">
@@ -412,31 +457,19 @@
                                 <table class="mb-0 table">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Username</th>
+                                        <th class="text-center">순위</th>
+                                        <th class="text-center">지점</th>
+                                        <th class="text-right pr-lg-4">매출</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
+                                    <c:forEach items="${lastMonthSalesTopBoxListInfo}" var="rows" varStatus="lastMonthSalesTopPerBoxList">
+                                        <tr>
+                                            <td scope="row" class="text-center">${lastMonthSalesTopPerBoxList.count}</td>
+                                            <td class="text-center">${rows.alias}</td>
+                                            <td class="text-right pr-lg-4">${rows.amount_per_day_form}</td>
+                                        </tr>
+                                    </c:forEach>
                                     </tbody>
                                 </table>
                             </div>
@@ -445,7 +478,7 @@
                 </div>
 
 
-                <div class="card no-shadow bg-transparent no-border rm-borders mb-3">
+                <%--<div class="card no-shadow bg-transparent no-border rm-borders mb-3">
                     <div class="card">
                         <div class="no-gutters row">
                             <div class="col-md-12 col-lg-4">
@@ -579,7 +612,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>--%>
             </div>
         </div>
     </div>

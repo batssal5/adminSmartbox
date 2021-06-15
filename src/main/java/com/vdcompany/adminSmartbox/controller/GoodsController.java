@@ -12,6 +12,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -49,7 +51,36 @@ public class GoodsController {
 	CategoryService cateService;
 	@Autowired
 	AgencyService agencyService;
-	
+
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	String pageTitle = "상품";
+	String menuListJson = "{\n" +
+			"   \"leftMenuList\":[\n" +
+			"      {\n" +
+			"         \"menu_name\":\"상품리스트\",\n" +
+			"         \"menu_icon\":\"pe-7s-display2\",\n" +
+			"         \"link_url\":\"#\",\n" +
+			"         \"leftMenuSub\":[\n" +
+			"            {\n" +
+			"               \"menu_name\":\"박스리스트\",\n" +
+			"               \"link_url\":\"/box/boxList\"\n" +
+			"            }\n" +
+			"         ]\n" +
+			"      },\n" +
+			"      {\n" +
+			"         \"menu_name\":\"재고관리\",\n" +
+			"         \"menu_icon\":\"pe-7s-display2\",\n" +
+			"         \"link_url\":\"#\",\n" +
+			"         \"leftMenuSub\":[\n" +
+			"            {\n" +
+			"               \"menu_name\":\"재고처리내역\",\n" +
+			"               \"link_url\":\"/box/inventoryInfo\"\n" +
+			"            }\n" +
+			"         ]\n" +
+			"      }\n" +
+			"   ]\n" +
+			"}";
 	
 	@RequestMapping("/goodsList")
 	private String goodsList(Model model, HttpServletRequest request) {

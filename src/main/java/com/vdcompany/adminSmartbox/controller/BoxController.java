@@ -2,13 +2,17 @@ package com.vdcompany.adminSmartbox.controller;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuListVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +34,7 @@ import com.vdcompany.adminSmartbox.bean.goods.GoodsVO;
 import com.vdcompany.adminSmartbox.service.AgencyService;
 import com.vdcompany.adminSmartbox.service.BoxService;
 import com.vdcompany.adminSmartbox.service.CategoryService;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/box")
@@ -41,23 +46,109 @@ public class BoxController {
 	@Autowired
 	CategoryService cateService;
 
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	String pageTitle = "박스";
+	String menuListJson = "{\n" +
+			"   \"leftMenuList\":[\n" +
+			"      {\n" +
+			"         \"menu_name\":\"박스관리\",\n" +
+			"         \"menu_icon\":\"pe-7s-display2\",\n" +
+			"         \"link_url\":\"#\",\n" +
+			"         \"leftMenuSub\":[\n" +
+			"            {\n" +
+			"               \"menu_name\":\"박스리스트\",\n" +
+			"               \"link_url\":\"/box/boxList\"\n" +
+			"            }\n" +
+			"         ]\n" +
+			"      },\n" +
+			"      {\n" +
+			"         \"menu_name\":\"재고관리\",\n" +
+			"         \"menu_icon\":\"pe-7s-display2\",\n" +
+			"         \"link_url\":\"#\",\n" +
+			"         \"leftMenuSub\":[\n" +
+			"            {\n" +
+			"               \"menu_name\":\"재고처리내역\",\n" +
+			"               \"link_url\":\"/box/inventoryInfo\"\n" +
+			"            }\n" +
+			"         ]\n" +
+			"      }\n" +
+			"   ]\n" +
+			"}";
+	//
 	
 	@RequestMapping("/boxList")
-	private String boxList(Model model, HttpServletRequest request) {
+	private ModelAndView boxList(Model model, HttpServletRequest request) {
+		String url = "/box/boxList";
+		ModelAndView mav = new ModelAndView(url);
 
-		
 		// agency_idx 가 0일경우 전체 지점 리스트가 나온다
 		List<BoxVO> boxList = boxService.getBoxList();
-		model.addAttribute("boxList", boxList);
 		
 		List<AgencyVO> agencyList = agencyService.getAgencyList();
-		model.addAttribute("agencyList", agencyList);
 
-		return "/box/boxList";
+
+		Map<String, Object> pageinfo = new HashMap<>();
+		pageinfo.put("pageTitle", pageTitle);
+		pageinfo.put("date", LocalDateTime.now());
+
+		LeftMenuListVO leftMenuListVO = new Gson().fromJson(menuListJson, LeftMenuListVO.class);
+		logger.info("json:"+new GsonBuilder().setPrettyPrinting().create().toJson(leftMenuListVO));
+
+		mav.addObject("pageInfo", pageinfo);
+		mav.addObject("leftMenuInfo", leftMenuListVO);
+		mav.addObject("boxList", boxList);
+		mav.addObject("agencyList", agencyList);
+		return mav;
+	}
+
+	@RequestMapping("/boxList/json")
+	private void boxListJson( HttpServletResponse response, HttpServletRequest request) throws IOException  {
+		String crudType = request.getParameter("type");
+		System.out.println("crudType : " + crudType);
+		logger.info("crudType : " + crudType);
+		switch (crudType){
+			case "get":
+				// agency_idx 가 0일경우 전체 지점 리스트가 나온다
+				List<BoxVO> boxList = boxService.getBoxList();
+
+				Gson gson = new Gson();
+				ObjectMapper mapper = new ObjectMapper();
+				response.setContentType("text/html;charset=UTF-8");
+				response.getWriter().write(gson.toJson(boxList));
+				break;
+		}
+
+
+	}
+
+	@RequestMapping("/inventoryInfo")
+	private ModelAndView inventoryInfo(Model model, HttpServletRequest request) {
+		String url = "/box/inventoryInfo";
+		ModelAndView mav = new ModelAndView(url);
+
+		// agency_idx 가 0일경우 전체 지점 리스트가 나온다
+		List<BoxVO> boxList = boxService.getBoxList();
+
+		List<AgencyVO> agencyList = agencyService.getAgencyList();
+
+
+		Map<String, Object> pageinfo = new HashMap<>();
+		pageinfo.put("pageTitle", pageTitle);
+		pageinfo.put("date", LocalDateTime.now());
+
+		LeftMenuListVO leftMenuListVO = new Gson().fromJson(menuListJson, LeftMenuListVO.class);
+		logger.info("json:"+new GsonBuilder().setPrettyPrinting().create().toJson(leftMenuListVO));
+
+		mav.addObject("pageInfo", pageinfo);
+		mav.addObject("leftMenuInfo", leftMenuListVO);
+		mav.addObject("boxList", boxList);
+		mav.addObject("agencyList", agencyList);
+		return mav;
 	}
 	
 	@RequestMapping("/ajax_search")
-	private void ajax_search( HttpServletResponse response, HttpServletRequest request, BoxVO search ) throws JsonProcessingException, IOException  {
+	private void ajax_search( HttpServletResponse response, HttpServletRequest request, BoxVO search ) throws IOException  {
 		System.out.println("search : " + search );
 
 		List<BoxVO> boxList = boxService.getBoxSearchList(search);
