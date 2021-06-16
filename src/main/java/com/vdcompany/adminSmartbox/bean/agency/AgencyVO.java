@@ -13,6 +13,7 @@ public class AgencyVO {		// 본사
 
 	private int idx = 0;
 	private String company_name;
+	private String company_nm;
 	private String company_num;
 	private String company_type = "0";
 	

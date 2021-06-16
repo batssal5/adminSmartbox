@@ -14,15 +14,44 @@
 <link rel="stylesheet" href=/bootstrab/css/js-datagrid-style.css>
 
 <script language="javascript">
+	var sb_status = [
+		{
+			"value": 0,
+			"name": "정상(online)"
+		},{
+			"value": 1,
+			"name": "비정상(offline)"
+		}, {
+			"value": 2,
+			"name": "미사용(off)"
+		}
+	];
+	var sb_cate = [
+		{
+			"value": 1,
+			"name": "번화가"
+		},{
+			"value": 2,
+			"name": "사무실"
+		}, {
+			"value": -1,
+			"name": "미사용"
+		}, {
+			"value": 0,
+			"name": "미사용2"
+		}
+	];
 	$(function(){
 		var url = "http://localhost:8888/box";
+		var lookup_url = "http://localhost:8888/lookup";
+
 		$("#gridContainer").dxDataGrid({
 			dataSource: DevExpress.data.AspNet.createStore({
-				key: "box_idx",
+				key: "box_id",
 				loadUrl: url + "/boxList/json?type=get",
-				insertUrl: url + "/boxList/json?type=get",
-				updateUrl: url + "/boxList/json?type=get",
-				deleteUrl: url + "/boxList/json?type=get",
+				insertUrl: url + "/boxList/json?type=put",
+				updateUrl: url + "/boxList/json?type=post",
+				deleteUrl: url + "/boxList/json?type=delete",
 				onBeforeSend: function(method, ajaxOptions) {
 					ajaxOptions.xhrFields = { withCredentials: true };
 				}
@@ -44,40 +73,109 @@
    "description":"3c000d",
    "cate":"1"
 }*/
-			columns: [{
-				dataField: "box_idx",
-				caption: "Box Id",
-				validationRules: [{
-					type: "stringLength",
-					message: "The field Customer must be a string with a maximum length of 5.",
-					max: 5
-				}]
-			}, {
-				dataField: "box_name",
-				caption: "박스명"
-			}, {
-				dataField: "ShipCountry",
-				validationRules: [{
-					type: "stringLength",
-					message: "The field ShipCountry must be a string with a maximum length of 15.",
-					max: 15
-				}]
-			}, {
-				dataField: "ShipVia",
-				caption: "Shipping Company"/*,
-				dataType: "number",
-				lookup: {
-					dataSource: DevExpress.data.AspNet.createStore({
-						key: "Value",
-						loadUrl: url + "/ShippersLookup",
-						onBeforeSend: function(method, ajaxOptions) {
-							ajaxOptions.xhrFields = { withCredentials: true };
+			columns: [
+				{
+					caption: '#',
+					cellTemplate: function(cellElement, cellInfo) {
+						cellElement.text(cellInfo.row.rowIndex+1)
+					},
+					width: 40,
+					cssClass: "text-center",
+					allowEditing: false
+				}, {
+					width: 100,
+					dataField: "box_id",
+					caption: "박스ID",
+					cssClass: "text-center",
+					cellTemplate: function(cellElement, cellInfo) {
+						cellElement.text(zerofill(cellInfo.value,10))
+					}/*,
+					validationRules: [{ type: "required" }, {
+						type: "pattern",
+						message: 'Your phone must have "(555) 555-5555" format!',
+						pattern: /^\(\d{3}\) \d{3}-\d{4}$/i
+					}]*/
+				}, {
+					dataField: "box_name",
+					caption: "박스명"
+				}, {
+					dataField: "agency_name",
+					caption: "본사명",
+					lookup: {
+						dataSource: {
+							paginate: true,
+							store: new DevExpress.data.CustomStore({
+								key: "Value",
+								loadMode: "raw",
+								load: function() {
+									return $.getJSON(lookup_url + "/agencyJson");
+								}
+							}),
+							sort: "Text"
+						},
+						valueExpr: "Text",
+						displayExpr: "Text"
+					}
+				}, {
+					dataField: "store_name",
+					caption: "지점명"
+				}, {
+					dataField: "store_company_num",
+					caption: "지점사업자번호"
+				}, {
+					width: 80,
+					dataField: "status",
+					caption: "박스상태",
+					cssClass: "text-center",
+					lookup: {
+						dataSource: sb_status,
+						displayExpr: "name",
+						valueExpr: "value"
+					},
+					cellTemplate: function(container, options) {
+						if (options.value == 0) {
+							//var html =  "<img src=\"/bootstrab/assets/images/workup1.jpg\" width=\"25\" height=\"25\"></img>";
+							var html =  "<div class=\"d-inline text-success pr-1\">\n" +
+									"   <i class=\"ion-locked\"></i>\n" +
+									"</div>";
+							$(html).appendTo(container);
+						} else if (options.value == 1) {
+							var html =  "<div class=\"d-inline text-danger pr-1\">\n" +
+										"   <i class=\"ion-unlocked\"></i>\n" +
+										"</div>";
+							$(html).appendTo(container);
+						} else {
+							var html =  "<div class=\"d-inline text-danger pr-1\">\n" +
+									"   <i class=\"fa fa-exclamation-triangle\"></i>\n" +
+									"</div>";
+							$(html).appendTo(container);
 						}
-					}),
-					valueExpr: "Value",
-					displayExpr: "Text"
-				}*/
-			}
+					}
+				}, {
+					dataField: "serial",
+					caption: "박스시리얼넘버",
+					visible: false
+				}, {
+					dataField: "cate",
+					caption: "상권",
+					visible: false,
+					lookup: {
+						dataSource: sb_cate,
+						displayExpr: "name",
+						valueExpr: "value"
+					}
+				}, {
+					dataField: "regdate",
+					caption: "등록일",
+					width: 80,
+					cssClass: "text-center",
+					dataType: "date",
+					format: "yy-MM-dd"
+				}, {
+					dataField: "description",
+					caption: "메모",
+					visible: false
+				}
 			],
 			/*filterRow: {
 				visible: true
@@ -93,15 +191,15 @@
 			},
 			pager: {
 				visible: true,
-				allowedPageSizes: [10, 25, 'all'],
+				allowedPageSizes: [15, 30, 'all'],
 				showPageSizeSelector: true,
 				showInfo: true,
 				showNavigationButtons: true
 			},
 			paging: {
-				pageSize: 10
+				pageSize: 15
 			},
-			height: 600,
+			height: 650,
 			showBorders: true,
 			/*masterDetail: {
 				enabled: true,
@@ -128,18 +226,42 @@
 			grouping: {
 				autoExpandAll: false
 			},
-			summary: {
-				totalItems: [{
-					column: "Freight",
-					summaryType: "sum"
-				}],
-				groupItems: [{
-					column: "Freight",
-					summaryType: "sum"
-				}, {
-					summaryType: "count"
+			onCellPrepared: function(e, cellInfo) {
+				if (e.rowType == "header") {
+					e.cellElement.css("text-align", "center");
 				}
-				]
+				if (e.rowType == "data") {
+					e.cellElement.css("text-align", "left");
+				}
+			},
+			onEditorPreparing: function(e) {
+
+				if (e.parentType === "dataRow" && e.row.isEditing && !e.row.isNewRow) {//수정일때는 readonly처리
+					if (e.dataField === "box_id") {
+						e.editorOptions.readOnly = true;
+					}
+					if (e.dataField === "regdate") {
+						e.editorOptions.readOnly = true;
+					}
+					if (e.dataField === "agency_name") {
+						e.editorOptions.readOnly = true;
+					}
+					if (e.dataField === "description") {
+						e.editorName = "dxTextArea";
+					}
+				}
+
+				if (e.parentType === "dataRow" && e.row.isEditing && e.row.isNewRow) {//등록일 때 활성화
+					/*if (e.dataField === "agency_name") {
+						e.editorOptions.allowEditing = true;
+					}*/
+					if (e.dataField === "description") {
+						e.editorName = "dxTextArea";
+					}
+					if (e.dataField === "regdate") {
+						e.editorOptions.readOnly = true;
+					}
+				}
 			}
 		});
 	});

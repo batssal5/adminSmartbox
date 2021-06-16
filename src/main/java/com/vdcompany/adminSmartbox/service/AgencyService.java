@@ -1,6 +1,7 @@
 package com.vdcompany.adminSmartbox.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.vdcompany.adminSmartbox.bean.AdminVO;
 import com.vdcompany.adminSmartbox.bean.agency.AgencySearchVO;
@@ -18,5 +19,6 @@ public interface AgencyService {
 	int updateAgency(AgencyVO agency);	// 본사 추가하기
 	int insertStoreList(List<AgencyStoreVO> list);	// 지점 추가하기
 	int updateStoreList(List<AgencyStoreVO> list);	// 지점 업데이트하기
+	int postAgencyStore(Map<String, String> map);
 	
 }

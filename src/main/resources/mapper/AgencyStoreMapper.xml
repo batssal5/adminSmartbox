@@ -91,4 +91,13 @@
 	  	</foreach>
     </update>
 
+	<update id="postAgencyStore" parameterType="hashmap">
+		update agency_store set
+		<if test="cate != null">
+			cate = #{cate},
+		</if>
+		moddate = now()
+		WHERE idx = ${store_num}
+	</update>
+
 </mapper>

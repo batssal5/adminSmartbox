@@ -1,20 +1,23 @@
 package com.vdcompany.adminSmartbox.mapper;
 
 import java.util.List;
+import java.util.Map;
 
+import com.vdcompany.adminSmartbox.bean.web.paging.PagingVO;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.vdcompany.adminSmartbox.bean.AdminVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencyVO;
 import com.vdcompany.adminSmartbox.bean.box.BoxVO;
-import com.vdcompany.adminSmartbox.bean.goods.GoodsVO;
 
 @Mapper
 public interface BoxMapper {
 
 	BoxVO getBoxDetail(int idx);
 
-	List<BoxVO> getBoxList();		// 박스 리스트
+	List<BoxVO> getBoxList(PagingVO pagingVO);		// 박스 리스트
+	int postBox(Map<String, String> map);		// 박스 리스트
+	int postBoxInfo(Map<String, String> map);	// 수정하기
+	int postAgencyStore(Map<String, String> map);	// 수정하기
+	int putBox(BoxVO box);		// 박스 리스트
 	List<BoxVO> getBoxSearchList(BoxVO search);		// 박스 리스트
 
 	int insertBox(BoxVO box);	// 추가하기

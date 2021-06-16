@@ -1,6 +1,7 @@
 package com.vdcompany.adminSmartbox.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,6 +91,14 @@ public class AgencyServiceImpl implements AgencyService {
 			System.out.println("store_idx : " + ret);
 			return ret;
 		}
+	}
+	@Override
+	public int postAgencyStore(Map<String, String> map) {
+		System.out.println("storeMapper.postAgencyStore");
+		int ret = storeMapper.postAgencyStore(map);
+
+		System.out.println("postAgencyStore  ret: " + ret);
+		return ret;
 	}
 }
 

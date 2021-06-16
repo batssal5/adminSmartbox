@@ -64,33 +64,77 @@
     </update>
 
 
+	<insert id="putBox" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
+		insert into sb_box (
+			id, serial, status, used, regdate, moddate
+		)
+		values (
+				   #{box_id}, #{serial},
+				   #{status}, 0, now(), now()
+			   )
+	</insert>
 
-
-	<select id="getBoxList" resultType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
-		SELECT
-			info.agc_idx,
-			info.agc_sto_idx    as store_idx,
-			info.box_idx,
-			info.alias          as box_name,
-			info.description,
-			info.box_idx as cate,
-			box.serial,
-			box.id              as box_id,
-			box.status,
-			box.serial,
-			store.name as store_name,
-			store.idx as store_num,
-			agency.company_nm as agency_name,
-			info.regdate
-		FROM sb_box_info as info
-				 JOIN sb_box as box
-					  ON info.box_idx = box.idx
-				 JOIN agency_store as store
-					  ON info.agc_sto_idx = store.idx
-				 JOIN agency as agency
-					  ON info.agc_idx = agency.idx
+	<select id="getBoxList" parameterType="com.vdcompany.adminSmartbox.bean.web.paging.PagingVO" resultType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
+		SELECT info.agc_idx,
+			   info.agc_sto_idx               as store_idx,
+			   info.box_idx 				  as box_idx,
+			   info.alias                     as box_name,
+			   info.description,
+			   box.serial,
+			   box.id                         as box_id,
+			   box.status,
+			   store.name                     as store_name,
+			   store.idx                      as store_num,
+			   store.cate					  as cate,
+			   IFNULL(store.company_num, '-') as store_company_num,
+			   agency.company_nm              as agency_name,
+			   info.regdate as regdate,
+			   IFNULL(DATE_FORMAT(info.regdate, '%y-%m-%d'), '00-00-00') as regdate_form
+		FROM sb_box_info as info,
+			 sb_box as box,
+			 agency_store as store,
+			 agency as agency
+		WHERE 1 = 1
+		  AND info.box_idx = box.idx
+		  AND info.agc_sto_idx = store.idx
+		  AND info.agc_idx = agency.idx
+		<if test="box_id != null and !box_id.equals('')">
+			AND box.id = #{box_id}
+		</if>
 		ORDER BY info.box_idx
+		<if test="skip > -1 and take > 0">
+		LIMIT #{skip}, #{take}
+		</if>
 	</select>
+
+	<update id="postBox" parameterType="hashmap">
+		UPDATE sb_box SET
+		<if test="serial != null and !serial.equals('')">
+			serial = #{serial},
+		</if>
+		<if test="box_id != null and !box_id.equals('')">
+			id = #{box_id},
+		</if>
+		<if test="status != null and !status.equals('')">
+			status = #{status},
+		</if>
+		moddate = now()
+		WHERE id = #{key}
+	</update>
+
+
+	<update id="postBoxInfo" parameterType="hashmap">
+		update sb_box_info set
+		<if test="box_name != null and !box_name.equals('')">
+			alias = #{box_name},
+		</if>
+		<if test="description != null and !description.equals('')">
+			description = #{description},
+		</if>
+		moddate = now()
+		WHERE box_idx = #{box_idx}
+	</update>
+
 
 	<select id="getBoxSearchList" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO" resultType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
 	

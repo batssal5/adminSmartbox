@@ -1,7 +1,14 @@
 package com.vdcompany.adminSmartbox.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.google.gson.Gson;
+import com.vdcompany.adminSmartbox.bean.web.paging.PagingVO;
+import com.vdcompany.adminSmartbox.mapper.AgencyMapper;
+import com.vdcompany.adminSmartbox.mapper.AgencyStoreMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,16 +20,53 @@ import com.vdcompany.adminSmartbox.mapper.LogMapper;
 
 @Service
 public class BoxServiceImpl implements BoxService {
+	Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	BoxMapper boxMapper;
 	@Autowired
+	AgencyStoreMapper agencyStoreMapper;
+	@Autowired
 	LogMapper logMapper;
 
 	@Override
-	public List<BoxVO> getBoxList() {
+	public List<BoxVO> getBoxList(PagingVO pagingVO) {
 		// TODO Auto-generated method stub
-		return boxMapper.getBoxList();
+		return boxMapper.getBoxList(pagingVO);
+	}
+
+	@Override
+	public int postBox(Map<String, String> map) {
+		// TODO Auto-generated method stub
+		PagingVO pagingVO = new PagingVO();
+		pagingVO.setBox_id(map.get("key"));
+		List<BoxVO> boxVOList = boxMapper.getBoxList(pagingVO);
+		logger.info("boxVOList:"+new Gson().toJson(boxVOList));
+		//BoxVO detail = getBoxDetail(Integer.parseInt(map.get("key")));
+
+		int ret = boxMapper.postBox(map);
+		System.out.println("updateBox ret : " +ret);
+		if(ret < 1) {
+			return ret;
+		}
+		if(!boxVOList.isEmpty()) {
+			System.out.println("boxVOList.get(0).getBox_idx() : " +boxVOList.get(0).getBox_idx());
+			map.put("box_idx",boxVOList.get(0).getBox_idx());
+			ret = boxMapper.postBoxInfo(map);
+			map.put("store_num",boxVOList.get(0).getStore_num());
+			ret = agencyStoreMapper.postAgencyStore(map);
+		}
+		System.out.println("updateBoxInfo ret : " +ret);
+		if(ret > 0) {
+
+		}
+		return ret;
+	}
+
+	@Override
+	public int putBox(BoxVO boxVO) {
+		// TODO Auto-generated method stub
+		return boxMapper.putBox(boxVO);
 	}
 
 	@Override

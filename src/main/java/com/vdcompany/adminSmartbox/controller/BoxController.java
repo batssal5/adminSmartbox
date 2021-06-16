@@ -1,7 +1,7 @@
 package com.vdcompany.adminSmartbox.controller;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuListVO;
+import com.vdcompany.adminSmartbox.bean.web.paging.PagingVO;
+import com.vdcompany.adminSmartbox.utils.StrUtils;
+import com.vdcompany.adminSmartbox.utils.UrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +22,18 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vdcompany.adminSmartbox.bean.BrandVO;
 import com.vdcompany.adminSmartbox.bean.CategoryVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencySearchVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencyStoreListVO;
 import com.vdcompany.adminSmartbox.bean.agency.AgencyStoreVO;
 import com.vdcompany.adminSmartbox.bean.agency.AgencyVO;
 import com.vdcompany.adminSmartbox.bean.box.BoxUpdateLogVO;
 import com.vdcompany.adminSmartbox.bean.box.BoxVO;
-import com.vdcompany.adminSmartbox.bean.goods.GoodsVO;
 import com.vdcompany.adminSmartbox.service.AgencyService;
 import com.vdcompany.adminSmartbox.service.BoxService;
 import com.vdcompany.adminSmartbox.service.CategoryService;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/box")
@@ -45,6 +44,8 @@ public class BoxController {
 	AgencyService agencyService;
 	@Autowired
 	CategoryService cateService;
+
+	StrUtils strUtils = new StrUtils();
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -83,7 +84,6 @@ public class BoxController {
 		ModelAndView mav = new ModelAndView(url);
 
 		// agency_idx 가 0일경우 전체 지점 리스트가 나온다
-		List<BoxVO> boxList = boxService.getBoxList();
 		
 		List<AgencyVO> agencyList = agencyService.getAgencyList();
 
@@ -93,29 +93,95 @@ public class BoxController {
 		pageinfo.put("date", LocalDateTime.now());
 
 		LeftMenuListVO leftMenuListVO = new Gson().fromJson(menuListJson, LeftMenuListVO.class);
-		logger.info("json:"+new GsonBuilder().setPrettyPrinting().create().toJson(leftMenuListVO));
+		//logger.info("json:"+new GsonBuilder().setPrettyPrinting().create().toJson(leftMenuListVO));
 
 		mav.addObject("pageInfo", pageinfo);
 		mav.addObject("leftMenuInfo", leftMenuListVO);
-		mav.addObject("boxList", boxList);
 		mav.addObject("agencyList", agencyList);
 		return mav;
 	}
 
 	@RequestMapping("/boxList/json")
 	private void boxListJson( HttpServletResponse response, HttpServletRequest request) throws IOException  {
-		String crudType = request.getParameter("type");
-		System.out.println("crudType : " + crudType);
-		logger.info("crudType : " + crudType);
-		switch (crudType){
-			case "get":
-				// agency_idx 가 0일경우 전체 지점 리스트가 나온다
-				List<BoxVO> boxList = boxService.getBoxList();
+		PagingVO pagingVO = new PagingVO();
+		pagingVO.setType(request.getParameter("type"));
+		boolean requireTotalCount = false;
+		if(request.getParameter("skip")!=null) {
+			logger.info("skip---------------");
+			pagingVO.setSkip(Integer.parseInt(request.getParameter("skip")));
+		}
+		if(request.getParameter("take")!=null) {
+			logger.info("take---------------");
+			pagingVO.setTake(Integer.parseInt(request.getParameter("take")));
+		}
+		if(request.getParameter("requireTotalCount")!=null && request.getParameter("requireTotalCount").equals("true")) {
+			logger.info("requireTotalCount---------------");
+			requireTotalCount = true;
+			pagingVO.setRequireTotalCount(request.getParameter("requireTotalCount"));
+		}
 
-				Gson gson = new Gson();
-				ObjectMapper mapper = new ObjectMapper();
-				response.setContentType("text/html;charset=UTF-8");
-				response.getWriter().write(gson.toJson(boxList));
+		logger.info("crudType : " + pagingVO.getType());
+		Map<String, Object> mapResp = new HashMap<>();
+		response.setContentType("text/html;charset=UTF-8");
+
+		switch (pagingVO.getType()){
+			case "put":
+				/*
+				{"box_name":"박스명","store_name":"지점명","status":0,"cate":1,"description":"",
+				"box_id":1123,"agency_name":"2","store_company_num":"12345","serial":"67890","regdate":"2021/06/16 00:00:00"}
+				 */
+				String reqValues = request.getParameter("values");
+				//logger.info("values:"+reqValues);
+
+				BoxVO boxVO = new Gson().fromJson(reqValues, BoxVO.class);
+				//logger.info("values:"+new Gson().toJson(boxVO));
+
+				int boxList = boxService.putBox(boxVO);
+
+				mapResp.put("data", boxList);
+				if(requireTotalCount){
+					List<BoxVO> boxListCount = boxService.getBoxList(new PagingVO());
+					mapResp.put("totalCount", boxListCount.size());
+				}
+				response.getWriter().write(new Gson().toJson(mapResp));
+				break;
+			case "get":
+				List<BoxVO> boxListGet = boxService.getBoxList(pagingVO);
+
+				mapResp.put("data", boxListGet);
+				if(requireTotalCount){
+					List<BoxVO> boxListCount = boxService.getBoxList(new PagingVO());
+					mapResp.put("totalCount", boxListCount.size());
+				}
+				response.getWriter().write(new Gson().toJson(mapResp));
+				break;
+			case "post":
+				String postKey = request.getParameter("key");
+				String postDataString = request.getParameter("values");
+				logger.info("postKey:"+postKey);
+				logger.info("postDataString:"+postDataString);
+				Map<String, String> postMap = new HashMap<>();
+				postMap =  new Gson().fromJson(postDataString, HashMap.class);
+				postMap.put("key", postKey);
+				postMap.put("box_id", postKey);
+				List<BoxVO> boxVOList = new ArrayList<>();
+				int postBoxRst = -1;
+				if(postMap.get("box_id")!=null ) {
+					postBoxRst = boxService.postBox(postMap);
+					logger.info("postBoxRst:"+postBoxRst);
+				}
+				//response.getWriter().write(new Gson().toJson(boxVOList.get(0)));
+				break;
+			case "delete":
+				String deleteKey = request.getParameter("key");
+				List<BoxVO> boxListDelete = boxService.getBoxList(pagingVO);
+
+				mapResp.put("data", boxListDelete);
+				if(requireTotalCount){
+					List<BoxVO> boxListCount = boxService.getBoxList(new PagingVO());
+					mapResp.put("totalCount", boxListCount.size());
+				}
+				response.getWriter().write(new Gson().toJson(mapResp));
 				break;
 		}
 
@@ -127,8 +193,6 @@ public class BoxController {
 		String url = "/box/inventoryInfo";
 		ModelAndView mav = new ModelAndView(url);
 
-		// agency_idx 가 0일경우 전체 지점 리스트가 나온다
-		List<BoxVO> boxList = boxService.getBoxList();
 
 		List<AgencyVO> agencyList = agencyService.getAgencyList();
 
@@ -142,7 +206,6 @@ public class BoxController {
 
 		mav.addObject("pageInfo", pageinfo);
 		mav.addObject("leftMenuInfo", leftMenuListVO);
-		mav.addObject("boxList", boxList);
 		mav.addObject("agencyList", agencyList);
 		return mav;
 	}
@@ -259,7 +322,7 @@ public class BoxController {
 			errorLog = "지점을 선택하세요.";
 		} else if(box.getSerial() == null || box.getSerial().equals("")){
 			errorLog = "시리얼넘버를 입력하세요.";
-		} else if(box.getBox_id() == null || box.getBox_id().equals("")){
+		} else if(box.getBox_id() == 0 ){
 			errorLog = "박스ID를 입력하세요.";
 		} else if(box.getBox_name() == null || box.getBox_name().equals("")){
 			errorLog = "박스명을 입력하세요.";

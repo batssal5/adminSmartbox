@@ -1,6 +1,7 @@
 package com.vdcompany.adminSmartbox.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -17,4 +18,5 @@ public interface AgencyStoreMapper {
 	
 	int insertStoreList(List<AgencyStoreVO> list);
 	int updateStoreList(List<AgencyStoreVO> list);
+	int postAgencyStore(Map<String, String> map);
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.vdcompany.adminSmartbox.mapper.LookupMapper">
+
+
+	<select id="getLookupAgency" resultType="com.vdcompany.adminSmartbox.bean.lookup.LookupVO">
+		SELECT idx as Value, company_nm as Text
+      	FROM agency
+		ORDER BY company_nm asc
+	</select>
+
+</mapper>

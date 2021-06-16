@@ -1,6 +1,0 @@
-INFO  21-06-10 12:11:24:390[http-nio-8888-exec-10] [DefaultController:47] - [WEB][webController][mainPage] url:/default/userApp
-INFO  21-06-10 12:12:15:777[http-nio-8888-exec-7] [DefaultController:47] - [WEB][webController][mainPage] url:/default/userApp
-INFO  21-06-10 12:13:46:866[http-nio-8888-exec-1] [DefaultController:47] - [WEB][webController][mainPage] url:/default/userApp
-INFO  21-06-10 12:15:06:275[http-nio-8888-exec-9] [DefaultController:47] - [WEB][webController][mainPage] url:/default/userApp
-INFO  21-06-10 12:16:08:319[http-nio-8888-exec-7] [DefaultController:47] - [WEB][webController][mainPage] url:/default/userApp
-INFO  21-06-10 12:17:33:208[http-nio-8888-exec-4] [DefaultController:47] - [WEB][webController][mainPage] url:/default/userApp
