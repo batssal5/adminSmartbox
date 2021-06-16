@@ -4,13 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.vdcompany.adminSmartbox.bean.CategoryVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencySearchVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencyStoreListVO;
 import com.vdcompany.adminSmartbox.bean.agency.AgencyStoreVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencyVO;
+import com.vdcompany.adminSmartbox.bean.board.BoardAgencySearchVO;
+import com.vdcompany.adminSmartbox.bean.board.BoardAgencyVO;
 import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuListVO;
 import com.vdcompany.adminSmartbox.service.AgencyService;
+import com.vdcompany.adminSmartbox.service.BoardService;
 import com.vdcompany.adminSmartbox.service.CategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +33,10 @@ import java.util.Map;
 public class BoardController {
 	@Autowired
 	AgencyService agencyService;
+
+	@Autowired
+	BoardService boardService;
+
 	@Autowired
 	CategoryService cateService;
 
@@ -107,8 +110,53 @@ public class BoardController {
 		mav.addObject("pageInfo", pageinfo);
 		mav.addObject("leftMenuInfo", leftMenuListVO);
 
+		int agency_idx = 0;
+		if (request.getParameter("agency_idx") != null){
+			agency_idx = Integer.parseInt(request.getParameter("agency_idx"));
+		}
+
+		List<BoardAgencyVO> agcList = boardService.getBoardAgency();
+		model.addAttribute("agcList", agcList);
+
+
+
+		List<BoardAgencyVO> agency_quelist = boardService.getBoardAgencyList(agency_idx);
+		model.addAttribute("agency_quelist",agency_quelist);
+		System.out.println(agency_quelist);
+
 		return mav;
 	}
+
+	@RequestMapping("/ajax_search")
+	private void ajax_search(HttpServletResponse response, HttpServletRequest request, BoardAgencySearchVO search) throws JsonProcessingException, IOException{
+
+		int agc_idx = 0;
+		if(request.getParameter("agc_idx") != null) {
+			agc_idx = Integer.parseInt(request.getParameter("agc_idx"));
+		}
+
+		int store_idx = 0;
+		if(request.getParameter("store_idx") != null) {
+			store_idx = Integer.parseInt(request.getParameter("store_idx"));
+		}
+
+		String company_num = request.getParameter("company_num");
+		System.out.println("company_num:" + company_num);
+
+		search.setAgc_idx(agc_idx);
+		search.setStore_idx(store_idx);
+		search.setCompany_num(company_num);
+		System.out.println("^^^^^^^^^^^^^^^^^^^" + search);
+
+		List<BoardAgencyVO> queList = new ArrayList<>();
+		queList = boardService.getBoardAgencySearchList(search);
+		System.out.println("result : " + queList);
+
+		response.setContentType("text/html;charset=UTF-8");
+		ObjectMapper mapper = new ObjectMapper();
+		response.getWriter().print(mapper.writeValueAsString(queList));
+	}
+
 
 	@RequestMapping("/agencyFAQ")
 	private ModelAndView agencyFAQ(Model model, HttpServletRequest request) {

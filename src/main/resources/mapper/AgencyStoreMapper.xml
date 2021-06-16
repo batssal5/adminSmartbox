@@ -67,7 +67,7 @@
 <!--			AND store.regdate <![CDATA[ <= ]]> str_to_date(#{reg2}, '%Y-%m-%d')-->
 <!--        </if>-->
         
-		ORDER BY idx
+		ORDER BY agc_idx
 	
 	</select>
 

@@ -916,7 +916,7 @@
 
         function agencySelect(){
             var selectdeValue = $('#agency_select option:selected').val();
-            console.log(selectdeValue);
+            console.log("selectdeValue: "+selectdeValue);
 
             $('#store_select').empty();
             getStoreList();
@@ -999,6 +999,90 @@
             });
         };
 
+        <%--function te(){--%>
+        <%--    var formData = $('#que_form').serialize();--%>
+        <%--    $.ajax({--%>
+        <%--        cache:false,--%>
+        <%--        url:"${pageContext.request.contextPath}/board/ajax_search",--%>
+        <%--        processData:false,--%>
+        <%--        contentType:false,--%>
+        <%--        type:'POST',--%>
+        <%--        data: formData,--%>
+        <%--        dataType: 'json',--%>
+        <%--        success:function (responseData){--%>
+        <%--            console.log(responseData);--%>
+        <%--            var data = JSON.parse(responseData);--%>
+        <%--            // console.log(data);--%>
+        <%--        }--%>
+        <%--    });--%>
+        <%--};--%>
+
+        function que_search(){
+
+            var agc_idx = $('#agency_select option:selected').val();
+            var store_idx = $('#store_select option:selected').val();
+            var company_num = $('#company_num').val();
+            var id = $('#id').val();
+            var name = $('#name').val();
+            var mobile = $('#mobile').val();
+            var email = $('#email').val();
+            var memo = $('#memo').val();
+            var store_num = $('#store_num').val();
+            var tel = $('#tel').val();
+            var title = $('#title').val();
+            var contents = $('#contents').val();
+
+            $.ajax({
+                url: "/board/ajax_search",
+                type: "GET",
+                data: {agc_idx : agc_idx,
+                    store_idx : store_idx,
+                    company_num : company_num,
+                    id : id,
+                    name : name,
+                    mobile : mobile,
+                    email : email,
+                    memo : memo,
+                    store_num : store_num,
+                    tel : tel,
+                    title : title,
+                    contents : contents
+                    },
+                // dataType: "json",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                success: function (responseData){
+                    console.log("que : " + responseData)
+                    var data = JSON.parse(responseData);
+                    var html = '';
+                    $.each(data, function (index, item){
+                        html += '<tr>';
+                        html += '<td>'+1+'</td>';
+                        html += '<td style="display:none;">'+item.agency_idx+'</td>';
+                        html += '<td>'+item.id+'</td>';
+                        html += '<td>'+item.name+'</td>';
+                        html += '<td>'+item.company_name+'</td>';
+                        html += '<td>'+item.store_name+'</td>';
+                        html += '<td>'+item.cate+'</td>';
+                        html += '<td>'+item.title+'</td>';
+                        item.status == 0 ? html += '<td>N</td>' : html += '<td>Y</td>';
+                        html += '<td>'+item.regdate+'</td>';
+                        html += '</tr>';
+                    });
+
+                    var que_search = document.getElementById('que_search');
+                    que_search.innerHTML = html;
+                }
+            });
+        };
+
+        function mainFluidHidden(){
+            $('.main_fluid').hide();
+            $('.sub_fluid').show();
+        };
+        function subFluidHidden(){
+            $('.sub_fluid').hide();
+            $('.main_fluid').show();
+        };
 </script>
 </body>
 </html>
