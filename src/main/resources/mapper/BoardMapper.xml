@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.vdcompany.adminSmartbox.mapper.BoardMapper">
+
+    <select id="getBoardAgency" resultType="com.vdcompany.adminSmartbox.bean.board.BoardAgencyVO">
+        SELECT idx AS agc_idx, company_name
+        FROM agency
+    </select>
+
+    <select id="getBoardAgencyList" parameterType="java.lang.Integer" resultType="com.vdcompany.adminSmartbox.bean.board.BoardAgencyVO">
+        SELECT que.idx, mem.id, mem.name, mem.agc_idx, agency.company_name, store.name AS store_name, que.cate, que.title, que.contents, que.status, que.regdate
+        FROM notice_agency_que AS que,
+        agency_member AS mem,
+        agency AS agency,
+        agency_store AS store
+        WHERE que.agc_mem_idx = mem.idx
+        AND mem.agc_idx = agency.idx
+        AND agency.idx = store.agc_idx
+
+        <if test="agc_idx != 0">
+            AND agency.idx = #{agc_idx}
+        </if>
+
+        GROUP BY que.idx
+        ORDER BY que.idx DESC
+    </select>
+
+   <select id="getBoardAgencySearchList" parameterType="com.vdcompany.adminSmartbox.bean.board.BoardAgencySearchVO" resultType="com.vdcompany.adminSmartbox.bean.board.BoardAgencyVO">
+
+       SELECT que.idx, mem.id, mem.name, mem.agc_idx, agency.company_name, store.name AS store_name, que.cate, que.title, que.contents, que.status, que.regdate
+       FROM notice_agency_que AS que,
+       agency_member AS mem,
+       agency AS agency,
+       agency_store AS store
+       WHERE que.agc_mem_idx = mem.idx
+       AND mem.agc_idx = agency.idx
+       AND agency.idx = store.agc_idx
+
+       <if test="agc_idx != 0">
+           AND agency.idx = #{agc_idx}
+       </if>
+       <if test="store_idx != 0">
+           AND store.idx = #{store_idx}
+       </if>
+       <if test="company_num != null and !company_num.equals('')">
+           AND agency.company_num LIKE CONCAT('%', #{company_num}, '%')
+       </if>
+
+       ORDER BY que.idx DESC
+  </select>
+
+</mapper>
