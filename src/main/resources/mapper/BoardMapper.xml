@@ -4,12 +4,12 @@
 <mapper namespace="com.vdcompany.adminSmartbox.mapper.BoardMapper">
 
     <select id="getBoardAgency" resultType="com.vdcompany.adminSmartbox.bean.board.BoardAgencyVO">
-        SELECT idx AS agc_idx, company_name
+        SELECT idx AS agc_idx, company_nm
         FROM agency
     </select>
 
     <select id="getBoardAgencyList" parameterType="java.lang.Integer" resultType="com.vdcompany.adminSmartbox.bean.board.BoardAgencyVO">
-        SELECT que.idx, mem.id, mem.name, mem.agc_idx, agency.company_name, store.name AS store_name, que.cate, que.title, que.contents, que.status, que.regdate
+        SELECT que.idx, mem.id, mem.name, mem.agc_idx, agency.company_nm, store.name AS store_name, que.cate, que.title, que.contents, que.status, que.regdate
         FROM notice_agency_que AS que,
         agency_member AS mem,
         agency AS agency,
@@ -28,7 +28,7 @@
 
    <select id="getBoardAgencySearchList" parameterType="com.vdcompany.adminSmartbox.bean.board.BoardAgencySearchVO" resultType="com.vdcompany.adminSmartbox.bean.board.BoardAgencyVO">
 
-       SELECT que.idx, mem.id, mem.name, mem.agc_idx, agency.company_name, store.name AS store_name, que.cate, que.title, que.contents, que.status, que.regdate
+       SELECT que.idx, mem.id, mem.name, mem.agc_idx, agency.company_nm, store.name AS store_name, que.cate, que.title, que.contents, que.status, que.regdate
        FROM notice_agency_que AS que,
        agency_member AS mem,
        agency AS agency,
