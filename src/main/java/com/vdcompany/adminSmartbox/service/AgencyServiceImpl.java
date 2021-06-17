@@ -3,6 +3,7 @@ package com.vdcompany.adminSmartbox.service;
 import java.util.List;
 import java.util.Map;
 
+import com.vdcompany.adminSmartbox.bean.web.paging.PagingVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,16 @@ public class AgencyServiceImpl implements AgencyService {
 	AgencyMapper agencyMapper;
 	@Autowired
 	AgencyStoreMapper storeMapper;
-	
+
+	@Override
+	public List<AgencyVO> getAgencyInfo(PagingVO pagingVO) {
+		return agencyMapper.getAgencyInfo(pagingVO);
+	}
+
+
+
+
+
 	@Override
 	public AgencyVO getAgencyDetail(int idx) {
 		return agencyMapper.getAgencyDetail(idx);
@@ -32,7 +42,8 @@ public class AgencyServiceImpl implements AgencyService {
 	public List<AgencyVO> getAgencyList() {
 		return agencyMapper.getAgencyList();
 	}
-	
+
+
 	@Override
 	public List<AgencyStoreVO> getStoreList(int agency_idx) {
 		return storeMapper.getStoreList(agency_idx);

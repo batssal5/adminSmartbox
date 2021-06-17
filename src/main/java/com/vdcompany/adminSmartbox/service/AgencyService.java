@@ -7,9 +7,11 @@ import com.vdcompany.adminSmartbox.bean.AdminVO;
 import com.vdcompany.adminSmartbox.bean.agency.AgencySearchVO;
 import com.vdcompany.adminSmartbox.bean.agency.AgencyStoreVO;
 import com.vdcompany.adminSmartbox.bean.agency.AgencyVO;
+import com.vdcompany.adminSmartbox.bean.web.paging.PagingVO;
 
 public interface AgencyService {
-	
+	List<AgencyVO> getAgencyInfo(PagingVO pagingVO);
+
 	AgencyVO getAgencyDetail(int idx);
 	List<AgencyVO> getAgencyList();		// 본사 리스트
 	List<AgencyStoreVO> getStoreList(int agencyIdx);		// 지점 리스트

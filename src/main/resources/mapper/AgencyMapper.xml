@@ -13,6 +13,44 @@
 		ORDER BY idx
 	</select>
 
+
+	<select id="getAgencyInfo" parameterType="com.vdcompany.adminSmartbox.bean.web.paging.PagingVO" resultType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO" >
+		SELECT a.idx          as idx,
+		a.company_nm   as company_nm,
+		a.company_num  as company_num,
+		a.company_type as company_type,
+		a.rep_nm       as rep_nm,
+		a.rep_tel      as rep_tel,
+		a.rep_email    as rep_email,
+		a.zipcode      as zipcode,
+		a.address      as address,
+		a.addr_detail  as addr_detail,
+		a.regdate      as regdate,
+		a.description  as description,
+		b.idx          as store_idx,
+		b.agc_idx      as agc_idx,
+		b.name         as store_name,
+		b.company_num  as store_company_num,
+		b.address      as store_address,
+		b.addr_detail  as store_addr_detail,
+		b.zipcode      as store_zipcode,
+		b.cate         as cate,
+		b.contract     as contract,
+		b.used         as used,
+		b.pg_comm      as pg_comm,
+		b.vd_comm      as vd_comm
+		FROM agency a,
+		agency_store b
+		WHERE a.idx = b.agc_idx
+		<if test="store_idx != null and !store_idx.equals('')">
+			AND b.idx = #{store_idx}
+		</if>
+		ORDER BY store_name
+		<if test="skip > -1 and take > 0">
+			LIMIT #{skip}, #{take}
+		</if>
+	</select>
+
 	<insert id="insertAgency" useGeneratedKeys="true" keyProperty="idx" parameterType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
 	  	insert into agency (
 	  		company_name, company_num, company_type,

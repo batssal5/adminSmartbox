@@ -4,7 +4,8 @@
 <mapper namespace="com.vdcompany.adminSmartbox.mapper.AgencyStoreMapper">
 
 	<select id="getStoreList" parameterType="java.lang.Integer" resultType="com.vdcompany.adminSmartbox.bean.agency.AgencyStoreVO">
-		SELECT agency.idx AS agc_idx, store.idx, agency.company_name, agency.company_num, store.name AS store_name, store.company_num AS store_num, store.pg_comm, store.vd_comm, store.contract, store.regdate
+		SELECT agency.idx AS agc_idx, store.idx, agency.company_nm, agency.company_num, store.name AS store_name,
+		store.company_num AS store_num,/* store.pg_comm, store.vd_comm,*/ store.contract, store.regdate
 		FROM agency_store AS store,
 		agency AS agency
 		WHERE store.agc_idx = agency.idx

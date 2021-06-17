@@ -42,16 +42,13 @@
 		}
 	];
 	$(function(){
-		var url = "http://localhost:8888/box";
-		var lookup_url = "http://localhost:8888/lookup";
-
 		$("#gridContainer").dxDataGrid({
 			dataSource: DevExpress.data.AspNet.createStore({
 				key: "box_id",
-				loadUrl: url + "/boxList/json?type=get",
-				insertUrl: url + "/boxList/json?type=put",
-				updateUrl: url + "/boxList/json?type=post",
-				deleteUrl: url + "/boxList/json?type=delete",
+				loadUrl:   "./boxList/json?type=get",
+				insertUrl: "./boxList/json?type=put",
+				updateUrl: "./boxList/json?type=post",
+				deleteUrl: "./boxList/json?type=delete",
 				onBeforeSend: function(method, ajaxOptions) {
 					ajaxOptions.xhrFields = { withCredentials: true };
 				}
@@ -112,7 +109,7 @@
 								key: "agc_idx",
 								loadMode: "raw",
 								load: function() {
-									return $.getJSON(lookup_url + "/agencyJson");
+									return $.getJSON("/lookup/agencyJson");
 								}
 							}),
 							sort: "agency_name"
@@ -131,7 +128,7 @@
 									key: "store_idx",
 									loadMode: "raw",
 									load: function() {
-										return $.getJSON(lookup_url + "/storeJson");
+										return $.getJSON("/lookup/storeJson");
 									}
 								}),
 								filter: options.data ? ["agc_idx", "=", options.data.agc_idx] : null,
