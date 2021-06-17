@@ -33,7 +33,6 @@
     <div class="app-inner-layout__wrapper">
         <div class="app-inner-layout__content">
             <div class="container-fluid">
-                <form id="que_form" name="que_form" method="post">
                     <div class="row">
                         <div class="col-sm-12 col-lg-12">
                             <h5>관리자 > 관리자1:1문의</h5>
@@ -168,7 +167,6 @@
                             <button type="button" class="btn btn-secondary" onclick="que_search()">조회</button>
                         </div>
                     </div>
-                </form>
                 <div class="main-card card">
                     <div class="row">
                         <div class="col-sm-12 col-lg-12">

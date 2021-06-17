@@ -1,39 +1,35 @@
 package com.vdcompany.adminSmartbox.controller;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.vdcompany.adminSmartbox.bean.CategoryVO;
+import com.vdcompany.adminSmartbox.bean.agency.AgencySearchVO;
+import com.vdcompany.adminSmartbox.bean.agency.AgencyStoreListVO;
+import com.vdcompany.adminSmartbox.bean.agency.AgencyStoreVO;
+import com.vdcompany.adminSmartbox.bean.agency.AgencyVO;
+import com.vdcompany.adminSmartbox.bean.policy.PolicyVO;
 import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuListVO;
-import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuSubVO;
-import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuVO;
+import com.vdcompany.adminSmartbox.service.AgencyService;
+import com.vdcompany.adminSmartbox.service.CategoryService;
+import com.vdcompany.adminSmartbox.service.PolicyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vdcompany.adminSmartbox.bean.CategoryVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencySearchVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencyStoreListVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencyStoreVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencyVO;
-import com.vdcompany.adminSmartbox.service.AgencyService;
-import com.vdcompany.adminSmartbox.service.CategoryService;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/default")
@@ -42,6 +38,8 @@ public class DefaultController {
 	AgencyService agencyService;
 	@Autowired
 	CategoryService cateService;
+	@Autowired
+	PolicyService policyService;
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -149,6 +147,70 @@ public class DefaultController {
 		mav.addObject("leftMenuInfo", leftMenuListVO);
 
 		return mav;
+	}
+
+	@RequestMapping("/ajax_adminApp")
+	private void ajax_adminApp(HttpServletResponse response, PolicyVO policy) throws JsonProcessingException, IOException {
+		response.setContentType("text/html;charset=UTF-8");
+
+		policy.setApp_type(0);
+		List<PolicyVO> policyList = policyService.getPolicyList(policy);
+		System.out.println("policyList :"+ policyList);
+
+		ObjectMapper mapper = new ObjectMapper();
+		response.getWriter().print(mapper.writeValueAsString(policyList));
+
+	}
+
+	@RequestMapping("/ajax_post_adminApp")
+	private void ajax_post_adminApp(HttpServletRequest request, HttpServletResponse response, PolicyVO policy){
+		response.setContentType("text/html;charset=UTF-8");
+
+		logger.info("terms:"+request.getParameter("terms"));
+
+		List<Map<String, String>> listMap = new ArrayList<Map<String, String>>();
+
+		if(request.getParameter("terms")!= null){
+			Map<String,String> tempMap = new HashMap<>();
+			tempMap.put("catagory", "이용약관");
+			tempMap.put("context",request.getParameter("terms"));
+			listMap.add(tempMap);
+		}
+
+		if(request.getParameter("policy") != null){
+			Map<String, String> tempMap = new HashMap<>();
+			tempMap.put("catagory", "개인정보처리방침");
+			tempMap.put("context",request.getParameter("policy"));
+			listMap.add(tempMap);
+		}
+
+		if(request.getParameter("subinfo") != null){
+			Map<String, String> tempMap = new HashMap<>();
+			tempMap.put("catagory", "가입안내");
+			tempMap.put("context",request.getParameter("subinfo"));
+			listMap.add(tempMap);
+		}
+
+		if(request.getParameter("secession") != null){
+			Map<String, String> tempMap = new HashMap<>();
+			tempMap.put("catagory", "탈퇴안내");
+			tempMap.put("context",request.getParameter("secession"));
+			listMap.add(tempMap);
+		}
+
+		System.out.println("listMap : " + listMap);
+
+		policy.setListMap(listMap);
+		policy.setApp_type(Integer.parseInt(request.getParameter("appType")));
+
+		System.out.println(policy);
+
+		for (Object obj : policy.getListMap()){
+			System.out.println(obj);
+		}
+
+		policyService.postPolicyList(policy);
+
 	}
 
 	@RequestMapping("/agencyMng")
