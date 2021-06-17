@@ -104,8 +104,16 @@
 		<if test="cate != null">
 			cate = #{cate},
 		</if>
+		<if test="store_name != null and !store_name.equals('')">
+			name = #{store_name},
+		</if>
+		<if test="store_company_num != null and !store_company_num.equals('')">
+			company_num = #{store_company_num},
+		</if>
 		moddate = now()
 		WHERE idx = ${store_num}
 	</update>
+
+
 
 </mapper>

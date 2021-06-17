@@ -14,10 +14,12 @@ public interface BoxMapper {
 	BoxVO getBoxDetail(int idx);
 
 	List<BoxVO> getBoxList(PagingVO pagingVO);		// 박스 리스트
-	int postBox(Map<String, String> map);		// 박스 리스트
-	int postBoxInfo(Map<String, String> map);	// 수정하기
-	int postAgencyStore(Map<String, String> map);	// 수정하기
+	int postBox(Map<String, Object> map);		// 박스 리스트
+	int postBoxInfo(Map<String, Object> map);	// 수정하기
+	int deleteBox(Map<String, Object> map);	// 삭제하기
+	int deleteBoxInfo(Map<String, Object> map);	// 삭제하기
 	int putBox(BoxVO box);		// 박스 리스트
+	int putBoxInfo(BoxVO box);		// 박스 리스트
 	List<BoxVO> getBoxSearchList(BoxVO search);		// 박스 리스트
 
 	int insertBox(BoxVO box);	// 추가하기

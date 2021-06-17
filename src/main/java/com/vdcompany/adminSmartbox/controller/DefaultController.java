@@ -469,7 +469,7 @@ public class DefaultController {
 		List<AgencyStoreVO>storeList = agencyService.getStoreList(idx);
 		for (AgencyStoreVO store :storeList) {
 			for (CategoryVO cate :cateList) {
-				if(store.getCate() == Integer.parseInt(cate.getCate_vu()) ) {
+				if(store.getCate() == cate.getCate_vu() ) {
 //					store.setCate_name(cate.getCate_nm());
 					break;
 				}

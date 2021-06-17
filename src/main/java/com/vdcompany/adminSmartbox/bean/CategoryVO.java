@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class CategoryVO {
 
 	private String cate;
-	private String cate_vu;
+	private int cate_vu;
 	private String cate_nm;
 	private String description;
 

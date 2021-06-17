@@ -10,16 +10,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoxVO {
-	private String box_idx;
-	private String agc_idx;
-	private String store_idx;
+	private int idx;
+	private int box_id;
+	private int box_idx;
+	private int agc_idx;
+	private int store_idx;
 	
 	private String serial;
-	private int box_id;
 	private String box_name;
 	private String agency_name;
 	private String store_name;
-	private String store_num;
+	private int store_num;
 	private String store_company_num;
 	
 	private int status = -1;
@@ -32,7 +33,7 @@ public class BoxVO {
 	private Date moddate = new Date();
 
 	private String description;		// 메모?
-	private String cate;	
+	private int cate;
 	private String cate_name;	
 
 }

@@ -64,13 +64,25 @@
     </update>
 
 
-	<insert id="putBox" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
+	<insert id="putBox" useGeneratedKeys="true" keyColumn="idx"  keyProperty="box_idx"  parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
 		insert into sb_box (
 			id, serial, status, used, regdate, moddate
 		)
 		values (
 				   #{box_id}, #{serial},
 				   #{status}, 0, now(), now()
+			   )
+	</insert>
+
+
+	<insert id="putBoxInfo" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
+		insert into sb_box_info (
+			box_idx, agc_idx, agc_sto_idx, alias, description, regdate, moddate
+		)
+		values (
+				   #{box_idx,jdbcType=VARCHAR}, #{agc_idx,jdbcType=VARCHAR}, #{store_num,jdbcType=VARCHAR},
+				   #{box_name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+				   now(), now()
 			   )
 	</insert>
 
@@ -88,6 +100,7 @@
 			   store.cate					  as cate,
 			   IFNULL(store.company_num, '-') as store_company_num,
 			   agency.company_nm              as agency_name,
+			   agency.idx                     as agc_idx,
 			   info.regdate as regdate,
 			   IFNULL(DATE_FORMAT(info.regdate, '%y-%m-%d'), '00-00-00') as regdate_form
 		FROM sb_box_info as info,
@@ -135,6 +148,12 @@
 		WHERE box_idx = #{box_idx}
 	</update>
 
+	<delete id="deleteBox" parameterType="hashmap">
+		DELETE FROM sb_box WHERE id = #{box_id}
+	</delete>
+	<delete id="deleteBoxInfo" parameterType="hashmap">
+		DELETE FROM sb_box_info WHERE box_idx = #{box_idx}
+	</delete>
 
 	<select id="getBoxSearchList" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO" resultType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
 	

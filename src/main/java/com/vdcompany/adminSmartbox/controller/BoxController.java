@@ -127,8 +127,8 @@ public class BoxController {
 		switch (pagingVO.getType()){
 			case "put":
 				/*
-				{"box_name":"박스명","store_name":"지점명","status":0,"cate":1,"description":"",
-				"box_id":1123,"agency_name":"2","store_company_num":"12345","serial":"67890","regdate":"2021/06/16 00:00:00"}
+				{"agc_idx":"2","store_num":"9","box_id":333333,"box_name":"박스명",
+				"status":0,"cate":-1,"description":"ssss","serial":"e3344444","store_company_num":"65555555"}
 				 */
 				String reqValues = request.getParameter("values");
 				//logger.info("values:"+reqValues);
@@ -138,11 +138,11 @@ public class BoxController {
 
 				int boxList = boxService.putBox(boxVO);
 
-				mapResp.put("data", boxList);
 				if(requireTotalCount){
 					List<BoxVO> boxListCount = boxService.getBoxList(new PagingVO());
 					mapResp.put("totalCount", boxListCount.size());
 				}
+				mapResp.put("data", boxList);
 				response.getWriter().write(new Gson().toJson(mapResp));
 				break;
 			case "get":
@@ -160,7 +160,7 @@ public class BoxController {
 				String postDataString = request.getParameter("values");
 				logger.info("postKey:"+postKey);
 				logger.info("postDataString:"+postDataString);
-				Map<String, String> postMap = new HashMap<>();
+				Map<String, Object> postMap = new HashMap<>();
 				postMap =  new Gson().fromJson(postDataString, HashMap.class);
 				postMap.put("key", postKey);
 				postMap.put("box_id", postKey);
@@ -174,14 +174,12 @@ public class BoxController {
 				break;
 			case "delete":
 				String deleteKey = request.getParameter("key");
-				List<BoxVO> boxListDelete = boxService.getBoxList(pagingVO);
+				logger.info("deleteKey:"+deleteKey);
+				Map<String, Object> deleteMap = new HashMap<>();
+				deleteMap.put("box_id", deleteKey);
+				int delBoxRst = boxService.deleteBox(deleteMap);
+				logger.info("delBoxRst:"+delBoxRst);
 
-				mapResp.put("data", boxListDelete);
-				if(requireTotalCount){
-					List<BoxVO> boxListCount = boxService.getBoxList(new PagingVO());
-					mapResp.put("totalCount", boxListCount.size());
-				}
-				response.getWriter().write(new Gson().toJson(mapResp));
 				break;
 		}
 
@@ -269,14 +267,14 @@ public class BoxController {
 		model.addAttribute("boxLogList", boxLogList);
 
 
-		List<AgencyStoreVO> storeList = agencyService.getStoreList(Integer.parseInt(box.getAgc_idx()));
+		List<AgencyStoreVO> storeList = agencyService.getStoreList(box.getAgc_idx());
 		model.addAttribute("storeList", storeList);
 
 		List<CategoryVO> cateList = cateService.getCateList("STOAR");
 		model.addAttribute("cateList", cateList);
 
 		for (CategoryVO cate :cateList) {
-			if(box.getCate() != null && box.getCate().equals(cate.getCate_vu()))  {
+			if(box.getCate()==cate.getCate_vu())  {
 				box.setCate_name(cate.getCate_nm());
 				break;
 			}
@@ -316,9 +314,9 @@ public class BoxController {
 		
 		String errorLog = "";
 		
-		if(box.getAgc_idx() == null || box.getAgc_idx().equals("") || box.getAgc_idx().equals("0")) {
+		if(box.getAgc_idx()==0) {
 			errorLog = "본사를 선택하세요.";
-		} else if(box.getStore_idx() == null || box.getStore_idx().equals("") || box.getStore_idx().equals("0")){
+		} else if(box.getStore_idx()==0){
 			errorLog = "지점을 선택하세요.";
 		} else if(box.getSerial() == null || box.getSerial().equals("")){
 			errorLog = "시리얼넘버를 입력하세요.";

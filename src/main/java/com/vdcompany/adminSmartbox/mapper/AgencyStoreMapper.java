@@ -18,5 +18,6 @@ public interface AgencyStoreMapper {
 	
 	int insertStoreList(List<AgencyStoreVO> list);
 	int updateStoreList(List<AgencyStoreVO> list);
-	int postAgencyStore(Map<String, String> map);
+	int postAgencyStore(Map<String, Object> map);
+	int putAgencyStore(Map<String, Object> map);
 }

@@ -19,7 +19,8 @@ public interface BoxService {
 	
 	List<BoxVO> getBoxList(PagingVO pagingVO);		// 박스 리스트
 	int putBox(BoxVO boxVO);		// 박스 리스트
-	int postBox(Map<String, String> map);						// 박스 정보 수정
+	int postBox(Map<String, Object> map);
+	int deleteBox(Map<String, Object> map);
 
 
 	List<BoxVO> getBoxSearchList(BoxVO search);		// 박스 리스트

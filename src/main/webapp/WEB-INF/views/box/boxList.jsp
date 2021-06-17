@@ -28,17 +28,17 @@
 	];
 	var sb_cate = [
 		{
+			"value": -1,
+			"name": "미사용"
+		},{
+			"value": 0,
+			"name": "미사용2"
+		},{
 			"value": 1,
 			"name": "번화가"
 		},{
 			"value": 2,
 			"name": "사무실"
-		}, {
-			"value": -1,
-			"name": "미사용"
-		}, {
-			"value": 0,
-			"name": "미사용2"
 		}
 	];
 	$(function(){
@@ -99,26 +99,48 @@
 					dataField: "box_name",
 					caption: "박스명"
 				}, {
-					dataField: "agency_name",
+					dataField: "agc_idx",
 					caption: "본사명",
+					setCellValue: function(rowData, value) {
+						rowData.agc_idx = value;
+						rowData.store_num = null;
+					},
 					lookup: {
 						dataSource: {
 							paginate: true,
 							store: new DevExpress.data.CustomStore({
-								key: "Value",
+								key: "agc_idx",
 								loadMode: "raw",
 								load: function() {
 									return $.getJSON(lookup_url + "/agencyJson");
 								}
 							}),
-							sort: "Text"
+							sort: "agency_name"
 						},
-						valueExpr: "Text",
-						displayExpr: "Text"
+						valueExpr: "agc_idx",
+						displayExpr: "agency_name"
 					}
 				}, {
-					dataField: "store_name",
-					caption: "지점명"
+					dataField: "store_num",
+					caption: "지점명",
+					lookup: {
+						dataSource: function(options) {
+							return {
+								paginate: true,
+								store: new DevExpress.data.CustomStore({
+									key: "store_idx",
+									loadMode: "raw",
+									load: function() {
+										return $.getJSON(lookup_url + "/storeJson");
+									}
+								}),
+								filter: options.data ? ["agc_idx", "=", options.data.agc_idx] : null,
+								sort: "store_name"
+							};
+						},
+						valueExpr: "store_idx",
+						displayExpr: "store_name"
+					}
 				}, {
 					dataField: "store_company_num",
 					caption: "지점사업자번호"
@@ -155,16 +177,17 @@
 					dataField: "serial",
 					caption: "박스시리얼넘버",
 					visible: false
-				}, {
+				}, /*{
 					dataField: "cate",
 					caption: "상권",
 					visible: false,
+					allowEditing: false,
 					lookup: {
-						dataSource: sb_cate,
 						displayExpr: "name",
-						valueExpr: "value"
+						valueExpr: "value",
+						dataSource: sb_cate
 					}
-				}, {
+				},*/ {
 					dataField: "regdate",
 					caption: "등록일",
 					width: 80,
@@ -186,6 +209,20 @@
 			groupPanel: {
 				visible: true
 			},*/
+			showBorders: true,
+			/*allowColumnReordering: true,
+			grouping: {
+				autoExpandAll: true,
+			},
+			searchPanel: {
+				visible: true
+			},
+			paging: {
+				pageSize: 10
+			},
+			groupPanel: {
+				visible: true
+			},*/
 			scrolling: {
 				rowRenderingMode: 'virtual'
 			},
@@ -200,7 +237,6 @@
 				pageSize: 15
 			},
 			height: 650,
-			showBorders: true,
 			/*masterDetail: {
 				enabled: true,
 				template: function(container, options) {
@@ -219,9 +255,13 @@
 			},*/
 			editing: {
 				mode: "form",
+				useIcons: true,
 				allowAdding: true,
 				allowUpdating: true,
-				allowDeleting: true
+				allowDeleting: true,
+				texts: {
+					confirmDeleteMessage: "해당 데이터를 삭제 합니다."
+				}
 			},
 			grouping: {
 				autoExpandAll: false
@@ -261,6 +301,10 @@
 					if (e.dataField === "regdate") {
 						e.editorOptions.readOnly = true;
 					}
+				}
+				//회사 미선택시 지점 선택 불가처리
+				if(e.parentType === "dataRow" && e.dataField === "store_num") {
+					e.editorOptions.disabled = (typeof e.row.data.agc_idx !== "number");
 				}
 			}
 		});

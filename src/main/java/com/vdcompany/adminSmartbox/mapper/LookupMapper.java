@@ -9,5 +9,6 @@ import java.util.List;
 public interface LookupMapper {
 
 	List<LookupVO> getLookupAgency();
+	List<LookupVO> getLookupStoreInfo();
 
 }

@@ -38,9 +38,18 @@ public class LockupController {
 		mapResp.put("data", agencyVOList);
 
 		response.getWriter().write(new Gson().toJson(agencyVOList));
+	}
 
+	@RequestMapping("/storeJson")
+	private void storeJson( HttpServletResponse response, HttpServletRequest request) throws IOException  {
 
+		response.setContentType("text/html;charset=UTF-8");
 
+		List<LookupVO> agencyVOList = lookupService.getLookupStoreInfo();
+		Map<String, Object> mapResp = new HashMap<>();
+		mapResp.put("data", agencyVOList);
+
+		response.getWriter().write(new Gson().toJson(agencyVOList));
 	}
 
 }

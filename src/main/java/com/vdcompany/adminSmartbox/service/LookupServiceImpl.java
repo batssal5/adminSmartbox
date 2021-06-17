@@ -20,6 +20,11 @@ public class LookupServiceImpl implements LookupService {
 		return lookupMapper.getLookupAgency();
 	}
 
+	@Override
+	public List<LookupVO> getLookupStoreInfo() {
+		// TODO Auto-generated method stub
+		return lookupMapper.getLookupStoreInfo();
+	}
 	
 }
 

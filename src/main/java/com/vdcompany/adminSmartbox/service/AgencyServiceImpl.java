@@ -92,8 +92,9 @@ public class AgencyServiceImpl implements AgencyService {
 			return ret;
 		}
 	}
+
 	@Override
-	public int postAgencyStore(Map<String, String> map) {
+	public int postAgencyStore(Map<String, Object> map) {
 		System.out.println("storeMapper.postAgencyStore");
 		int ret = storeMapper.postAgencyStore(map);
 
