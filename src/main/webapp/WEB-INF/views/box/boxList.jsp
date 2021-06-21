@@ -32,7 +32,7 @@
 			"name": "미사용"
 		},{
 			"value": 0,
-			"name": "미사용2"
+			"name": "미지정"
 		},{
 			"value": 1,
 			"name": "번화가"
@@ -54,22 +54,6 @@
 				}
 			}),
 			remoteOperations: true,
-/*{
-   "box_idx":"1",
-   "agc_idx":"1",
-   "store_idx":"1",
-   "serial":"e8ba572d803fbf264dec51774c03804_",
-   "box_id":"1930",
-   "box_name":"휘닉스밴딩박스_1",
-   "agency_name":"(주)휘닉스밴딩",
-   "store_name":"성무관1층 지점",
-   "store_num":"1",
-   "status":2,
-   "regdate":"Jun 23, 2020, 11:42:27 PM",
-   "moddate":"Jun 15, 2021, 2:44:03 PM",
-   "description":"3c000d",
-   "cate":"1"
-}*/
 			columns: [
 				{
 					caption: '#',

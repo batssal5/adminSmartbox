@@ -79,7 +79,7 @@ public class DefaultController {
 			"               \"link_url\":\"/default/agencyMng\"\n" +
 			"            },\n" +
 			"            {\n" +
-			"               \"menu_name\":\"매장관리\",\n" +
+			"               \"menu_name\":\"지점관리\",\n" +
 			"               \"link_url\":\"/default/storeMng\"\n" +
 			"            }\n" +
 			"         ]\n" +
@@ -201,27 +201,23 @@ public class DefaultController {
 		logger.info("crudType : " + pagingVO.getType());
 		Map<String, Object> mapResp = new HashMap<>();
 		response.setContentType("text/html;charset=UTF-8");
-
+		AgencyVO agencyVO  = new AgencyVO();
 		switch (pagingVO.getType()){
 			case "put":
-				String reqValues = request.getParameter("values");
-				//logger.info("values:"+reqValues);
-
-				BoxVO boxVO = new Gson().fromJson(reqValues, BoxVO.class);
-				//logger.info("values:"+new Gson().toJson(boxVO));
-
-				int boxList = boxService.putBox(boxVO);
-
-				if(requireTotalCount){
-					List<BoxVO> boxListCount = boxService.getBoxList(new PagingVO());
-					mapResp.put("totalCount", boxListCount.size());
+				String putDataString = request.getParameter("values");
+				logger.info("putDataString:"+putDataString);
+				agencyVO  =  new Gson().fromJson(putDataString, AgencyVO.class);
+				logger.info("agencyVO:"+new Gson().toJson(agencyVO));
+				List<AgencyVO> putRst = new ArrayList<>();
+				putRst = agencyService.putAgencyInfo(agencyVO);
+				if(putRst.size()>0) {
+					response.getWriter().write(new Gson().toJson(putRst.get(0)));
 				}
-				mapResp.put("data", boxList);
-				response.getWriter().write(new Gson().toJson(mapResp));
 				break;
 			case "get":
 				List<AgencyVO> agencyInfoList = agencyService.getAgencyInfo(pagingVO);
 
+				//logger.info("xxxxxxxxxxxxxxxxxxxxx:"+new Gson().toJson(agencyInfoList));
 				mapResp.put("data", agencyInfoList);
 				if(requireTotalCount){
 					List<AgencyVO> agencyInfoCount = agencyService.getAgencyInfo(new PagingVO());
@@ -234,24 +230,22 @@ public class DefaultController {
 				String postDataString = request.getParameter("values");
 				logger.info("postKey:"+postKey);
 				logger.info("postDataString:"+postDataString);
-				Map<String, Object> postMap = new HashMap<>();
-				postMap =  new Gson().fromJson(postDataString, HashMap.class);
-				postMap.put("key", postKey);
-				postMap.put("box_id", postKey);
-				List<BoxVO> boxVOList = new ArrayList<>();
-				int postBoxRst = -1;
-				if(postMap.get("box_id")!=null ) {
-					postBoxRst = boxService.postBox(postMap);
-					logger.info("postBoxRst:"+postBoxRst);
+				agencyVO  =  new Gson().fromJson(postDataString, AgencyVO.class);
+				agencyVO.setIdx(Integer.parseInt(postKey));
+				logger.info("agencyVO:"+new Gson().toJson(agencyVO));
+				List<AgencyVO> postRst = new ArrayList<>();
+				if(postKey!=null && !postKey.equals("")) {
+					postRst = agencyService.postAgencyInfo(agencyVO);
 				}
-				//response.getWriter().write(new Gson().toJson(boxVOList.get(0)));
+				if(postRst.size()>0) {
+					response.getWriter().write(new Gson().toJson(postRst.get(0)));
+				}
 				break;
 			case "delete":
 				String deleteKey = request.getParameter("key");
 				logger.info("deleteKey:"+deleteKey);
-				Map<String, Object> deleteMap = new HashMap<>();
-				deleteMap.put("box_id", deleteKey);
-				int delBoxRst = boxService.deleteBox(deleteMap);
+				agencyVO.setIdx(Integer.parseInt(deleteKey));
+				int delBoxRst = agencyService.delAgencyInfo(agencyVO);
 				logger.info("delBoxRst:"+delBoxRst);
 
 				break;
@@ -296,31 +290,26 @@ public class DefaultController {
 		logger.info("crudType : " + pagingVO.getType());
 		Map<String, Object> mapResp = new HashMap<>();
 		response.setContentType("text/html;charset=UTF-8");
-
+		AgencyVO agencyVO  = new AgencyVO();
 		switch (pagingVO.getType()){
 			case "put":
-				String reqValues = request.getParameter("values");
-				//logger.info("values:"+reqValues);
-
-				BoxVO boxVO = new Gson().fromJson(reqValues, BoxVO.class);
-				//logger.info("values:"+new Gson().toJson(boxVO));
-
-				int boxList = boxService.putBox(boxVO);
-
-				if(requireTotalCount){
-					List<BoxVO> boxListCount = boxService.getBoxList(new PagingVO());
-					mapResp.put("totalCount", boxListCount.size());
+				String putDataString = request.getParameter("values");
+				logger.info("putDataString:"+putDataString);
+				agencyVO  =  new Gson().fromJson(putDataString, AgencyVO.class);
+				logger.info("agencyVO:"+new Gson().toJson(agencyVO));
+				List<AgencyVO> putRst = new ArrayList<>();
+				putRst = agencyService.putAgencyStoreInfo(agencyVO);
+				if(putRst.size()>0) {
+					response.getWriter().write(new Gson().toJson(putRst.get(0)));
 				}
-				mapResp.put("data", boxList);
-				response.getWriter().write(new Gson().toJson(mapResp));
 				break;
 			case "get":
-				List<AgencyVO> agencyInfoList = agencyService.getAgencyInfo(pagingVO);
+				List<AgencyVO> agencyInfoList = agencyService.getAgencyStoreInfo(pagingVO);
 
-				logger.info("xxxxxxxxxxxxxxxxxxxxx:"+new Gson().toJson(agencyInfoList));
+				//logger.info("xxxxxxxxxxxxxxxxxxxxx:"+new Gson().toJson(agencyInfoList));
 				mapResp.put("data", agencyInfoList);
 				if(requireTotalCount){
-					List<AgencyVO> agencyInfoCount = agencyService.getAgencyInfo(new PagingVO());
+					List<AgencyVO> agencyInfoCount = agencyService.getAgencyStoreInfo(new PagingVO());
 					mapResp.put("totalCount", agencyInfoCount.size());
 				}
 				response.getWriter().write(new Gson().toJson(mapResp));
@@ -330,24 +319,22 @@ public class DefaultController {
 				String postDataString = request.getParameter("values");
 				logger.info("postKey:"+postKey);
 				logger.info("postDataString:"+postDataString);
-				Map<String, Object> postMap = new HashMap<>();
-				postMap =  new Gson().fromJson(postDataString, HashMap.class);
-				postMap.put("key", postKey);
-				postMap.put("box_id", postKey);
-				List<BoxVO> boxVOList = new ArrayList<>();
-				int postBoxRst = -1;
-				if(postMap.get("box_id")!=null ) {
-					postBoxRst = boxService.postBox(postMap);
-					logger.info("postBoxRst:"+postBoxRst);
+				agencyVO  =  new Gson().fromJson(postDataString, AgencyVO.class);
+				agencyVO.setStore_idx(Integer.parseInt(postKey));
+				logger.info("agencyVO:"+new Gson().toJson(agencyVO));
+				List<AgencyVO> postRst = new ArrayList<>();
+				if(postKey!=null && !postKey.equals("")) {
+					postRst = agencyService.postAgencyStoreInfo(agencyVO);
 				}
-				//response.getWriter().write(new Gson().toJson(boxVOList.get(0)));
+				if(postRst.size()>0) {
+					response.getWriter().write(new Gson().toJson(postRst.get(0)));
+				}
 				break;
 			case "delete":
 				String deleteKey = request.getParameter("key");
 				logger.info("deleteKey:"+deleteKey);
-				Map<String, Object> deleteMap = new HashMap<>();
-				deleteMap.put("box_id", deleteKey);
-				int delBoxRst = boxService.deleteBox(deleteMap);
+				agencyVO.setStore_idx(Integer.parseInt(deleteKey));
+				int delBoxRst = agencyService.delAgencyStoreInfo(agencyVO);
 				logger.info("delBoxRst:"+delBoxRst);
 
 				break;

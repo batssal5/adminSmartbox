@@ -26,13 +26,31 @@
             "name": "미사용(off)"
         }
     ];
+    var lookup_used = [
+        {
+            "value": 0,
+            "name": "Y"
+        },{
+            "value": 1,
+            "name": "N"
+        }
+    ];
+    var lookup_contract = [
+        {
+            "value": 0,
+            "name": "Y"
+        },{
+            "value": 1,
+            "name": "N"
+        }
+    ];
     var sb_cate = [
         {
             "value": -1,
             "name": "미사용"
         },{
             "value": 0,
-            "name": "미사용2"
+            "name": "미지정"
         },{
             "value": 1,
             "name": "번화가"
@@ -64,24 +82,41 @@
                     cssClass: "text-center",
                     allowEditing: false
                 }, {
-                    width: 100,
+                    dataField: "agc_idx",
+                    caption: "본사명",
+                    setCellValue: function(rowData, value) {
+                        rowData.agc_idx = value;
+                        rowData.store_num = null;
+                    },
+                    lookup: {
+                        dataSource: {
+                            paginate: true,
+                            store: new DevExpress.data.CustomStore({
+                                key: "agc_idx",
+                                loadMode: "raw",
+                                load: function() {
+                                    return $.getJSON("/lookup/agencyJson");
+                                }
+                            }),
+                            sort: "agency_name"
+                        },
+                        valueExpr: "agc_idx",
+                        displayExpr: "agency_name",
+                        visible: false
+                    }
+                }, {
+                    width: 60,
                     dataField: "store_idx",
-                    caption: "매장ID",
+                    caption: "지점ID",
                     cssClass: "text-center",
-                    cellTemplate: function(cellElement, cellInfo) {
-                        cellElement.text(zerofill(cellInfo.value,10))
-                    }/*,
-					validationRules: [{ type: "required" }, {
-						type: "pattern",
-						message: 'Your phone must have "(555) 555-5555" format!',
-						pattern: /^\(\d{3}\) \d{3}-\d{4}$/i
-					}]*/
+                    allowEditing: false,
+                    visible: false
                 }, {
                     dataField: "store_name",
-                    caption: "매장명"
+                    caption: "지점명"
                 }, {
                     dataField: "store_company_num",
-                    caption: "매장사업번호"
+                    caption: "지점사업번호"
                 }, {
                     dataField: "store_address",
                     caption: "주소"
@@ -94,39 +129,52 @@
                     caption: "우편번호",
                     visible: false
                 }, {
-                    dataField: "store_company_num",
-                    caption: "지점사업자번호"
-                }, {
                     dataField: "cate",
                     caption: "상권",
                     visible: false,
-                    allowEditing: false,
                     lookup: {
                         displayExpr: "name",
                         valueExpr: "value",
                         dataSource: sb_cate
                     }
-                },  /*{
-					dataField: "cate",
-					caption: "상권",
-					visible: false,
-					allowEditing: false,
-					lookup: {
-						displayExpr: "name",
-						valueExpr: "value",
-						dataSource: sb_cate
-					}
-				},*/ {
-                    dataField: "regdate",
+                }, {
+                    width: 75,
+                    dataField: "contract",
+                    caption: "계약여부",
+                    cssClass: "text-center",
+                    lookup: {
+                        displayExpr: "name",
+                        valueExpr: "value",
+                        dataSource: lookup_contract
+                    }
+                }, {
+                    width: 75,
+                    dataField: "used",
+                    caption: "사용여부",
+                    cssClass: "text-center",
+                    lookup: {
+                        displayExpr: "name",
+                        valueExpr: "value",
+                        dataSource: lookup_used
+                    }
+                }, {
+                    width: 80,
+                    dataField: "pg_comm",
+                    cssClass: "text-center",
+                    caption: "PG수수료"
+                }, {
+                    width: 80,
+                    dataField: "vd_comm",
+                    cssClass: "text-center",
+                    caption: "VD수수료"
+                }, {
+                    dataField: "store_regdate",
                     caption: "등록일",
                     width: 80,
                     cssClass: "text-center",
                     dataType: "date",
-                    format: "yy-MM-dd"
-                }, {
-                    dataField: "description",
-                    caption: "메모",
-                    visible: false
+                    format: "yy-MM-dd",
+                    allowEditing: false
                 }
             ],
             /*filterRow: {
@@ -269,7 +317,7 @@
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
                                     <i class="header-icon lnr-cloud-download icon-gradient bg-happy-itmeo"> </i>
-                                    기본설정 > 사업자관리 > 매장관리
+                                    기본설정 > 사업자관리 > 지점관리
                                 </div>
                                 <div class="btn-actions-pane-right text-capitalize actions-icon-btn">
                                     <div class="btn-group dropdown">

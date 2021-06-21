@@ -217,9 +217,9 @@ public class GoodsController {
 	private String goodsDisplay(Model model, HttpServletRequest request, GoodsVO search) {
 	
 		System.out.println("displayList Search : " +search);
-
+/*
 		List<AgencyVO> agencyList = agencyService.getAgencyList();
-		model.addAttribute("agencyList", agencyList);
+		model.addAttribute("agencyList", agencyList);*/
 
 		List<BrandVO> brandList = cateService.getBrandList();
 		model.addAttribute("brandList", brandList);

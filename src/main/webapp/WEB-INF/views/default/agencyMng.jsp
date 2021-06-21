@@ -44,7 +44,7 @@
     $(function(){
         $("#gridContainer").dxDataGrid({
             dataSource: DevExpress.data.AspNet.createStore({
-                key: "box_id",
+                key: "idx",
                 loadUrl:   "./agencyMng/json?type=get",
                 insertUrl: "./agencyMng/json?type=put",
                 updateUrl: "./agencyMng/json?type=post",
@@ -56,119 +56,40 @@
             remoteOperations: true,
             columns: [
                 {
-                    caption: '#',
-                    cellTemplate: function(cellElement, cellInfo) {
-                        cellElement.text(cellInfo.row.rowIndex+1)
-                    },
-                    width: 40,
-                    cssClass: "text-center",
-                    allowEditing: false
-                }, {
                     width: 100,
-                    dataField: "box_id",
-                    caption: "박스ID",
+                    dataField: "idx",
+                    caption: "사업자ID",
                     cssClass: "text-center",
-                    cellTemplate: function(cellElement, cellInfo) {
-                        cellElement.text(zerofill(cellInfo.value,10))
-                    }/*,
-					validationRules: [{ type: "required" }, {
-						type: "pattern",
-						message: 'Your phone must have "(555) 555-5555" format!',
-						pattern: /^\(\d{3}\) \d{3}-\d{4}$/i
-					}]*/
+                    visible: false,
+                    allowEditing: false,
+                    visible:false
                 }, {
-                    dataField: "box_name",
-                    caption: "박스명"
+                    dataField: "company_nm",
+                    caption: "사업자명"
                 }, {
-                    dataField: "agc_idx",
-                    caption: "본사명",
-                    setCellValue: function(rowData, value) {
-                        rowData.agc_idx = value;
-                        rowData.store_num = null;
-                    },
-                    lookup: {
-                        dataSource: {
-                            paginate: true,
-                            store: new DevExpress.data.CustomStore({
-                                key: "agc_idx",
-                                loadMode: "raw",
-                                load: function() {
-                                    return $.getJSON("/lookup/agencyJson");
-                                }
-                            }),
-                            sort: "agency_name"
-                        },
-                        valueExpr: "agc_idx",
-                        displayExpr: "agency_name"
-                    }
+                    dataField: "company_num",
+                    caption: "사업자번호"
                 }, {
-                    dataField: "store_num",
-                    caption: "지점명",
-                    lookup: {
-                        dataSource: function(options) {
-                            return {
-                                paginate: true,
-                                store: new DevExpress.data.CustomStore({
-                                    key: "store_idx",
-                                    loadMode: "raw",
-                                    load: function() {
-                                        return $.getJSON("/lookup/storeJson");
-                                    }
-                                }),
-                                filter: options.data ? ["agc_idx", "=", options.data.agc_idx] : null,
-                                sort: "store_name"
-                            };
-                        },
-                        valueExpr: "store_idx",
-                        displayExpr: "store_name"
-                    }
+                    dataField: "rep_nm",
+                    caption: "대표자명"
                 }, {
-                    dataField: "store_company_num",
-                    caption: "지점사업자번호"
+                    dataField: "rep_tel",
+                    caption: "대표번호"
                 }, {
-                    width: 80,
-                    dataField: "status",
-                    caption: "박스상태",
-                    cssClass: "text-center",
-                    lookup: {
-                        dataSource: sb_status,
-                        displayExpr: "name",
-                        valueExpr: "value"
-                    },
-                    cellTemplate: function(container, options) {
-                        if (options.value == 0) {
-                            //var html =  "<img src=\"/bootstrab/assets/images/workup1.jpg\" width=\"25\" height=\"25\"></img>";
-                            var html =  "<div class=\"d-inline text-success pr-1\">\n" +
-                                "   <i class=\"ion-locked\"></i>\n" +
-                                "</div>";
-                            $(html).appendTo(container);
-                        } else if (options.value == 1) {
-                            var html =  "<div class=\"d-inline text-danger pr-1\">\n" +
-                                "   <i class=\"ion-unlocked\"></i>\n" +
-                                "</div>";
-                            $(html).appendTo(container);
-                        } else {
-                            var html =  "<div class=\"d-inline text-danger pr-1\">\n" +
-                                "   <i class=\"fa fa-exclamation-triangle\"></i>\n" +
-                                "</div>";
-                            $(html).appendTo(container);
-                        }
-                    }
+                    dataField: "rep_email",
+                    caption: "이메일"
                 }, {
-                    dataField: "serial",
-                    caption: "박스시리얼넘버",
+                    dataField: "address",
+                    caption: "주소"
+                }, {
+                    dataField: "addr_detail",
+                    caption: "주소상세",
                     visible: false
-                }, /*{
-					dataField: "cate",
-					caption: "상권",
-					visible: false,
-					allowEditing: false,
-					lookup: {
-						displayExpr: "name",
-						valueExpr: "value",
-						dataSource: sb_cate
-					}
-				},*/ {
+                }, {
+                    dataField: "zipcode",
+                    caption: "우편번호",
+                    visible: false
+                }, {
                     dataField: "regdate",
                     caption: "등록일",
                     width: 80,
@@ -177,7 +98,7 @@
                     format: "yy-MM-dd"
                 }, {
                     dataField: "description",
-                    caption: "메모",
+                    caption: "소개글",
                     visible: false
                 }
             ],
@@ -258,13 +179,7 @@
             onEditorPreparing: function(e) {
 
                 if (e.parentType === "dataRow" && e.row.isEditing && !e.row.isNewRow) {//수정일때는 readonly처리
-                    if (e.dataField === "box_id") {
-                        e.editorOptions.readOnly = true;
-                    }
                     if (e.dataField === "regdate") {
-                        e.editorOptions.readOnly = true;
-                    }
-                    if (e.dataField === "agency_name") {
                         e.editorOptions.readOnly = true;
                     }
                     if (e.dataField === "description") {
@@ -282,10 +197,6 @@
                     if (e.dataField === "regdate") {
                         e.editorOptions.readOnly = true;
                     }
-                }
-                //회사 미선택시 지점 선택 불가처리
-                if(e.parentType === "dataRow" && e.dataField === "store_num") {
-                    e.editorOptions.disabled = (typeof e.row.data.agc_idx !== "number");
                 }
             }
         });
@@ -321,7 +232,7 @@
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
                                     <i class="header-icon lnr-cloud-download icon-gradient bg-happy-itmeo"> </i>
-                                    기본설정 > 사업자관리 > 사업자설정
+                                    기본설정 > 사업자관리 > 매장관리
                                 </div>
                                 <div class="btn-actions-pane-right text-capitalize actions-icon-btn">
                                     <div class="btn-group dropdown">

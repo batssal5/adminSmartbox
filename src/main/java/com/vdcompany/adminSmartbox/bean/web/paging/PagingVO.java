@@ -15,6 +15,7 @@ public class PagingVO {
 	private String requireTotalCount;
 	private String totalSummary;
 	private String box_id;
+	private String idx;
 	private String store_idx;
 
 }
