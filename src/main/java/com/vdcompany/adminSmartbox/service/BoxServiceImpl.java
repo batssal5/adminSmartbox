@@ -1,12 +1,14 @@
 package com.vdcompany.adminSmartbox.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.vdcompany.adminSmartbox.bean.agency.AgencyVO;
+import com.vdcompany.adminSmartbox.bean.box.InventoryVO;
 import com.vdcompany.adminSmartbox.bean.web.paging.PagingVO;
-import com.vdcompany.adminSmartbox.mapper.AgencyMapper;
-import com.vdcompany.adminSmartbox.mapper.AgencyStoreMapper;
+import com.vdcompany.adminSmartbox.mapper.*;
 import com.vdcompany.adminSmartbox.utils.LoggingLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 import com.vdcompany.adminSmartbox.bean.box.BoxUpdateLogVO;
 import com.vdcompany.adminSmartbox.bean.box.BoxVO;
-import com.vdcompany.adminSmartbox.mapper.BoxMapper;
-import com.vdcompany.adminSmartbox.mapper.LogMapper;
 
 import javax.swing.text.Utilities;
 
@@ -31,6 +31,9 @@ public class BoxServiceImpl implements BoxService {
 	AgencyStoreMapper agencyStoreMapper;
 	@Autowired
 	LogMapper logMapper;
+	@Autowired
+	InventoryMapper inventoryMapper;
+
 
 	@Override
 	public List<BoxVO> getBoxList(PagingVO pagingVO) {
@@ -105,6 +108,54 @@ public class BoxServiceImpl implements BoxService {
 		logger.info(LoggingLine.LOG_CONTE_LINE);
 		return ret;
 	}
+
+
+	@Override
+	public List<InventoryVO> getInventoryInfo(PagingVO pagingVO) {
+		return inventoryMapper.getInventoryInfo(pagingVO);
+	}
+
+
+	@Override
+	public List<InventoryVO> postInventoryInfo(InventoryVO inventoryVO) {
+		int ret = inventoryMapper.postInventoryInfo(inventoryVO);
+		List<InventoryVO> rtn = new ArrayList<>();
+		if(ret>-1){
+			PagingVO pagingVO = new PagingVO();
+			pagingVO.setIdx(String.valueOf(inventoryVO.getIdx()));
+			rtn = inventoryMapper.getInventoryInfo(pagingVO);
+		}
+
+		return rtn;
+	}
+
+
+	@Override
+	public List<InventoryVO> putInventoryInfo(InventoryVO inventoryVO) {
+		int ret = inventoryMapper.putInventoryInfo(inventoryVO);
+		List<InventoryVO> rtn = new ArrayList<>();
+		if(ret>-1){
+			PagingVO pagingVO = new PagingVO();
+			pagingVO.setIdx(String.valueOf(inventoryVO.getIdx()));
+			rtn = inventoryMapper.getInventoryInfo(pagingVO);
+		}
+
+		return rtn;
+	}
+
+
+	@Override
+	public int delInventoryInfo(InventoryVO inventoryVO) {
+		int ret = inventoryMapper.delInventoryInfo(inventoryVO);
+		return ret;
+	}
+
+
+	@Override
+	public List<InventoryVO> getInventoryDetailInfo(PagingVO pagingVO) {
+		return inventoryMapper.getInventoryDetailInfo(pagingVO);
+	}
+
 
 	@Override
 	public List<BoxVO> getBoxSearchList(BoxVO search) {

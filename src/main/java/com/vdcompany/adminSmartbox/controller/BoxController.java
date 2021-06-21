@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.vdcompany.adminSmartbox.bean.box.InventoryVO;
 import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuListVO;
 import com.vdcompany.adminSmartbox.bean.web.paging.PagingVO;
 import com.vdcompany.adminSmartbox.utils.StrUtils;
@@ -171,6 +172,135 @@ public class BoxController {
 
 				break;
 		}
+	}
+
+
+
+	@RequestMapping("/inventoryInfo")
+	private ModelAndView inventoryInfo(Model model, HttpServletRequest request) {
+		String page_url = "/box/inventoryInfo";
+		ModelAndView mav = new ModelAndView(page_url);
+
+		Map<String, Object> pageinfo = new HashMap<>();
+		pageinfo.put("pageTitle", pageTitle);
+		pageinfo.put("date", LocalDateTime.now());
+
+		LeftMenuListVO leftMenuListVO = new Gson().fromJson(menuListJson, LeftMenuListVO.class);
+		//logger.info("json:"+new GsonBuilder().setPrettyPrinting().create().toJson(leftMenuListVO));
+
+		mav.addObject("pageInfo", pageinfo);
+		mav.addObject("leftMenuInfo", leftMenuListVO);
+		return mav;
+	}
+
+
+	@RequestMapping("/inventoryInfo/json")
+	private void inventoryInfoJson( HttpServletResponse response, HttpServletRequest request) throws IOException  {
+		PagingVO pagingVO = new PagingVO();
+		pagingVO.setType(request.getParameter("type"));
+		boolean requireTotalCount = false;
+		if(request.getParameter("skip")!=null) {
+			logger.info("skip---------------");
+			pagingVO.setSkip(Integer.parseInt(request.getParameter("skip")));
+		}
+		if(request.getParameter("take")!=null) {
+			logger.info("take---------------");
+			pagingVO.setTake(Integer.parseInt(request.getParameter("take")));
+		}
+		if(request.getParameter("requireTotalCount")!=null && request.getParameter("requireTotalCount").equals("true")) {
+			logger.info("requireTotalCount---------------");
+			requireTotalCount = true;
+			pagingVO.setRequireTotalCount(request.getParameter("requireTotalCount"));
+		}
+
+		logger.info("crudType : " + pagingVO.getType());
+		Map<String, Object> mapResp = new HashMap<>();
+		response.setContentType("text/html;charset=UTF-8");
+		AgencyVO agencyVO  = new AgencyVO();
+		switch (pagingVO.getType()){
+			case "put":
+				String putDataString = request.getParameter("values");
+				logger.info("putDataString:"+putDataString);
+				agencyVO  =  new Gson().fromJson(putDataString, AgencyVO.class);
+				logger.info("agencyVO:"+new Gson().toJson(agencyVO));
+				List<AgencyVO> putRst = new ArrayList<>();
+				putRst = agencyService.putAgencyInfo(agencyVO);
+				if(putRst.size()>0) {
+					response.getWriter().write(new Gson().toJson(putRst.get(0)));
+				}
+				break;
+			case "get":
+				List<InventoryVO> agencyInfoList = boxService.getInventoryInfo(pagingVO);
+
+				//logger.info("xxxxxxxxxxxxxxxxxxxxx:"+new Gson().toJson(agencyInfoList));
+				mapResp.put("data", agencyInfoList);
+				if(requireTotalCount){
+					List<InventoryVO> countList = boxService.getInventoryInfo(new PagingVO());
+					mapResp.put("totalCount", countList.size());
+				}
+				response.getWriter().write(new Gson().toJson(mapResp));
+				break;
+			case "post":
+				String postKey = request.getParameter("key");
+				String postDataString = request.getParameter("values");
+				logger.info("postKey:"+postKey);
+				logger.info("postDataString:"+postDataString);
+				agencyVO  =  new Gson().fromJson(postDataString, AgencyVO.class);
+				agencyVO.setIdx(Integer.parseInt(postKey));
+				logger.info("agencyVO:"+new Gson().toJson(agencyVO));
+				List<AgencyVO> postRst = new ArrayList<>();
+				if(postKey!=null && !postKey.equals("")) {
+					postRst = agencyService.postAgencyInfo(agencyVO);
+				}
+				if(postRst.size()>0) {
+					response.getWriter().write(new Gson().toJson(postRst.get(0)));
+				}
+				break;
+			case "delete":
+				String deleteKey = request.getParameter("key");
+				logger.info("deleteKey:"+deleteKey);
+				agencyVO.setIdx(Integer.parseInt(deleteKey));
+				int delBoxRst = agencyService.delAgencyInfo(agencyVO);
+				logger.info("delBoxRst:"+delBoxRst);
+
+				break;
+		}
+	}
+
+
+	@RequestMapping("/inventoryDetailInfo/json")
+	private void inventoryDetailInfo( HttpServletResponse response, HttpServletRequest request) throws IOException  {
+		PagingVO pagingVO = new PagingVO();
+		pagingVO.setType(request.getParameter("type"));
+		boolean requireTotalCount = false;
+		if(request.getParameter("skip")!=null) {
+			logger.info("skip---------------");
+			pagingVO.setSkip(Integer.parseInt(request.getParameter("skip")));
+		}
+		if(request.getParameter("take")!=null) {
+			logger.info("take---------------");
+			pagingVO.setTake(Integer.parseInt(request.getParameter("take")));
+		}
+		if(request.getParameter("requireTotalCount")!=null && request.getParameter("requireTotalCount").equals("true")) {
+			logger.info("requireTotalCount---------------");
+			requireTotalCount = true;
+			pagingVO.setRequireTotalCount(request.getParameter("requireTotalCount"));
+		}
+
+		logger.info("crudType : " + pagingVO.getType());
+		Map<String, Object> mapResp = new HashMap<>();
+		response.setContentType("text/html;charset=UTF-8");
+		AgencyVO agencyVO  = new AgencyVO();
+		pagingVO.setIdx(request.getParameter("inv_idx"));
+		List<InventoryVO> agencyInfoList = boxService.getInventoryDetailInfo(pagingVO);
+
+		mapResp.put("data", agencyInfoList);
+		/*if(requireTotalCount){
+			List<InventoryVO> countList = boxService.getInventoryInfo(new PagingVO());
+			mapResp.put("totalCount", countList.size());
+		}*/
+		response.getWriter().write(new Gson().toJson(mapResp));
+
 	}
  
 }
