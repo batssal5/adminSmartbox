@@ -21,6 +21,7 @@ import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuSubVO;
 import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuVO;
 import com.vdcompany.adminSmartbox.bean.web.paging.PagingVO;
 import com.vdcompany.adminSmartbox.service.BoxService;
+import com.vdcompany.adminSmartbox.utils.QueryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,6 +182,8 @@ public class DefaultController {
 
 	@RequestMapping("/agencyMng/json")
 	private void agencyMngJson( HttpServletResponse response, HttpServletRequest request) throws IOException  {
+		QueryUtils queryUtils = new QueryUtils();
+		String WHERE = "";
 		PagingVO pagingVO = new PagingVO();
 		pagingVO.setType(request.getParameter("type"));
 		boolean requireTotalCount = false;
@@ -196,6 +199,14 @@ public class DefaultController {
 			logger.info("requireTotalCount---------------");
 			requireTotalCount = true;
 			pagingVO.setRequireTotalCount(request.getParameter("requireTotalCount"));
+		}
+		if(request.getParameter("filter")!=null && !request.getParameter("filter").equals("")) {
+			String filterStr = request.getParameter("filter");
+			logger.info("filter---------------:"+filterStr);
+			List<Object> fList = new Gson().fromJson(filterStr, List.class);
+			WHERE = queryUtils.whereFilter(fList);
+			logger.info("WHERE:"+WHERE);
+			pagingVO.setFilter(WHERE);
 		}
 
 		logger.info("crudType : " + pagingVO.getType());
@@ -220,7 +231,11 @@ public class DefaultController {
 				//logger.info("xxxxxxxxxxxxxxxxxxxxx:"+new Gson().toJson(agencyInfoList));
 				mapResp.put("data", agencyInfoList);
 				if(requireTotalCount){
-					List<AgencyVO> agencyInfoCount = agencyService.getAgencyInfo(new PagingVO());
+					PagingVO pagingCountVO = new PagingVO();
+					if(!WHERE.equals("")){
+						pagingCountVO.setFilter(WHERE);
+					}
+					List<AgencyVO> agencyInfoCount = agencyService.getAgencyInfo(pagingCountVO);
 					mapResp.put("totalCount", agencyInfoCount.size());
 				}
 				response.getWriter().write(new Gson().toJson(mapResp));
@@ -270,6 +285,8 @@ public class DefaultController {
 	}
 	@RequestMapping("/storeMng/json")
 	private void storeMngJson( HttpServletResponse response, HttpServletRequest request) throws IOException  {
+		QueryUtils queryUtils = new QueryUtils();
+		String WHERE = "";
 		PagingVO pagingVO = new PagingVO();
 		pagingVO.setType(request.getParameter("type"));
 		boolean requireTotalCount = false;
@@ -285,6 +302,15 @@ public class DefaultController {
 			logger.info("requireTotalCount---------------");
 			requireTotalCount = true;
 			pagingVO.setRequireTotalCount(request.getParameter("requireTotalCount"));
+		}
+		if(request.getParameter("filter")!=null && !request.getParameter("filter").equals("")) {
+			String filterStr = request.getParameter("filter");
+			logger.info("filter---------------:"+filterStr);
+			List<Object> fList = new Gson().fromJson(filterStr, List.class);
+			WHERE = queryUtils.whereFilter(fList);
+			logger.info("WHERE:"+WHERE);
+			pagingVO.setFilter(WHERE);
+
 		}
 
 		logger.info("crudType : " + pagingVO.getType());
@@ -309,7 +335,11 @@ public class DefaultController {
 				//logger.info("xxxxxxxxxxxxxxxxxxxxx:"+new Gson().toJson(agencyInfoList));
 				mapResp.put("data", agencyInfoList);
 				if(requireTotalCount){
-					List<AgencyVO> agencyInfoCount = agencyService.getAgencyStoreInfo(new PagingVO());
+					PagingVO pagingCountVO = new PagingVO();
+					if(!WHERE.equals("")){
+						pagingCountVO.setFilter(WHERE);
+					}
+					List<AgencyVO> agencyInfoCount = agencyService.getAgencyStoreInfo(pagingCountVO);
 					mapResp.put("totalCount", agencyInfoCount.size());
 				}
 				response.getWriter().write(new Gson().toJson(mapResp));

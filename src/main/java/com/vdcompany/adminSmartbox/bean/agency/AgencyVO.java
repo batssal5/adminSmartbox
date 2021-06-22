@@ -23,12 +23,12 @@ public class AgencyVO {		// 본사
 	private String zipcode = "";
 	private String address = "";
 	private String addr_detail = "";
-	private Date regdate = new Date();
-	private Date moddate = new Date();
+	private Date regdate = null;
+	private Date moddate = null;
 	private String description = "";
 
 	private int store_idx = -1;
-	private int agc_idx = -1;
+	private int agency_idx = -1;
 	private String store_name = "";
 	private String store_company_num = "";
 	private String store_zipcode = "";

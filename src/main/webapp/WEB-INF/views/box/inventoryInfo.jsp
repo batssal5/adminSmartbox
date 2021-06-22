@@ -41,6 +41,7 @@
 			keyExpr: "idx",
 			columnAutoWidth: true,
 			remoteOperations: true,
+			filterRow: { visible: true },
 			columns: [
 				{
 					caption: '#',

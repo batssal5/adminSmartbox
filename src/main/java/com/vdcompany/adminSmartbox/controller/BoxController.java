@@ -1,7 +1,6 @@
 package com.vdcompany.adminSmartbox.controller;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -9,28 +8,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.vdcompany.adminSmartbox.bean.box.InventoryVO;
 import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuListVO;
 import com.vdcompany.adminSmartbox.bean.web.paging.PagingVO;
+import com.vdcompany.adminSmartbox.utils.QueryUtils;
 import com.vdcompany.adminSmartbox.utils.StrUtils;
-import com.vdcompany.adminSmartbox.utils.UrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vdcompany.adminSmartbox.bean.CategoryVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencyStoreVO;
 import com.vdcompany.adminSmartbox.bean.agency.AgencyVO;
-import com.vdcompany.adminSmartbox.bean.box.BoxUpdateLogVO;
 import com.vdcompany.adminSmartbox.bean.box.BoxVO;
 import com.vdcompany.adminSmartbox.service.AgencyService;
 import com.vdcompany.adminSmartbox.service.BoxService;
@@ -97,6 +88,8 @@ public class BoxController {
 
 	@RequestMapping("/boxList/json")
 	private void boxListJson( HttpServletResponse response, HttpServletRequest request) throws IOException  {
+		QueryUtils queryUtils = new QueryUtils();
+		String WHERE = "";
 		PagingVO pagingVO = new PagingVO();
 		pagingVO.setType(request.getParameter("type"));
 		boolean requireTotalCount = false;
@@ -113,7 +106,15 @@ public class BoxController {
 			requireTotalCount = true;
 			pagingVO.setRequireTotalCount(request.getParameter("requireTotalCount"));
 		}
+		if(request.getParameter("filter")!=null && !request.getParameter("filter").equals("")) {
+			String filterStr = request.getParameter("filter");
+			logger.info("filter---------------:"+filterStr);
+			List<Object> fList = new Gson().fromJson(filterStr, List.class);
+			WHERE = queryUtils.whereFilter(fList);
+			logger.info("WHERE:"+WHERE);
+			pagingVO.setFilter(WHERE);
 
+		}
 		logger.info("crudType : " + pagingVO.getType());
 		Map<String, Object> mapResp = new HashMap<>();
 		response.setContentType("text/html;charset=UTF-8");
@@ -140,7 +141,11 @@ public class BoxController {
 
 				mapResp.put("data", boxListGet);
 				if(requireTotalCount){
-					List<BoxVO> boxListCount = boxService.getBoxList(new PagingVO());
+					PagingVO pagingCountVO = new PagingVO();
+					if(!WHERE.equals("")){
+						pagingCountVO.setFilter(WHERE);
+					}
+					List<BoxVO> boxListCount = boxService.getBoxList(pagingCountVO);
 					mapResp.put("totalCount", boxListCount.size());
 				}
 				response.getWriter().write(new Gson().toJson(mapResp));
@@ -196,9 +201,11 @@ public class BoxController {
 
 	@RequestMapping("/inventoryInfo/json")
 	private void inventoryInfoJson( HttpServletResponse response, HttpServletRequest request) throws IOException  {
+		QueryUtils queryUtils = new QueryUtils();
 		PagingVO pagingVO = new PagingVO();
 		pagingVO.setType(request.getParameter("type"));
 		boolean requireTotalCount = false;
+		String WHERE = "";
 		if(request.getParameter("skip")!=null) {
 			logger.info("skip---------------");
 			pagingVO.setSkip(Integer.parseInt(request.getParameter("skip")));
@@ -212,7 +219,15 @@ public class BoxController {
 			requireTotalCount = true;
 			pagingVO.setRequireTotalCount(request.getParameter("requireTotalCount"));
 		}
+		if(request.getParameter("filter")!=null && !request.getParameter("filter").equals("")) {
+			String filterStr = request.getParameter("filter");
+			logger.info("filter---------------:"+filterStr);
+			List<Object> fList = new Gson().fromJson(filterStr, List.class);
+			WHERE = queryUtils.whereFilter(fList);
+			logger.info("WHERE:"+WHERE);
+			pagingVO.setFilter(WHERE);
 
+		}
 		logger.info("crudType : " + pagingVO.getType());
 		Map<String, Object> mapResp = new HashMap<>();
 		response.setContentType("text/html;charset=UTF-8");
@@ -235,7 +250,11 @@ public class BoxController {
 				//logger.info("xxxxxxxxxxxxxxxxxxxxx:"+new Gson().toJson(agencyInfoList));
 				mapResp.put("data", agencyInfoList);
 				if(requireTotalCount){
-					List<InventoryVO> countList = boxService.getInventoryInfo(new PagingVO());
+					PagingVO pagingCountVO = new PagingVO();
+					if(!WHERE.equals("")){
+						pagingCountVO.setFilter(WHERE);
+					}
+					List<InventoryVO> countList = boxService.getInventoryInfo(pagingCountVO);
 					mapResp.put("totalCount", countList.size());
 				}
 				response.getWriter().write(new Gson().toJson(mapResp));
@@ -286,6 +305,7 @@ public class BoxController {
 			requireTotalCount = true;
 			pagingVO.setRequireTotalCount(request.getParameter("requireTotalCount"));
 		}
+
 
 		logger.info("crudType : " + pagingVO.getType());
 		Map<String, Object> mapResp = new HashMap<>();

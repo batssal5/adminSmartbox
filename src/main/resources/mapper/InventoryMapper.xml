@@ -42,6 +42,9 @@
 		<if test="idx != null and !idx.equals('')">
 			AND a.idx = #{idx}
 		</if>
+		<if test="filter != null and !filter.equals('')">
+			AND ${filter}
+		</if>
 		ORDER BY regdate desc
 		<if test="skip > -1 and take > 0">
 			LIMIT #{skip}, #{take}

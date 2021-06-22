@@ -117,36 +117,64 @@
 
 
 	<select id="getAgencyStoreInfo" parameterType="com.vdcompany.adminSmartbox.bean.web.paging.PagingVO" resultType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO" >
-		SELECT a.idx          as idx,
-		a.company_nm   as company_nm,
-		a.company_num  as company_num,
-		a.company_type as company_type,
-		a.rep_nm       as rep_nm,
-		a.rep_tel      as rep_tel,
-		a.rep_email    as rep_email,
-		a.zipcode      as zipcode,
-		a.address      as address,
-		a.addr_detail  as addr_detail,
-		a.regdate      as regdate,
-		a.description  as description,
-		b.idx          as store_idx,
-		b.agc_idx      as agc_idx,
-		b.name         as store_name,
-		b.company_num  as store_company_num,
-		b.address      as store_address,
-		b.addr_detail  as store_addr_detail,
-		b.zipcode      as store_zipcode,
-		b.cate         as cate,
-		b.contract     as contract,
-		b.used         as used,
-		b.pg_comm      as pg_comm,
-		b.vd_comm      as vd_comm,
-		b.regdate      as store_regdate
-		FROM agency a,
-		agency_store b
-		WHERE a.idx = b.agc_idx
+		SELECT idx,
+			   company_nm,
+			   company_num,
+			   company_type,
+			   rep_nm,
+			   rep_tel,
+			   rep_email,
+			   zipcode,
+			   address,
+			   addr_detail,
+			   regdate,
+			   description,
+			   store_idx,
+			   agency_idx,
+			   store_name,
+			   store_company_num,
+			   store_address,
+			   store_addr_detail,
+			   store_zipcode,
+			   cate,
+			   contract,
+			   used,
+			   pg_comm,
+			   vd_comm,
+			   store_regdate
+		FROM (select idx,
+					 company_nm,
+					 company_num,
+					 company_type,
+					 rep_nm,
+					 rep_tel,
+					 rep_email,
+					 zipcode,
+					 address,
+					 addr_detail,
+					 regdate,
+					 description
+			  from agency) a,
+			 (select idx         as store_idx,
+					 agc_idx     as agency_idx,
+					 name        as store_name,
+					 company_num as store_company_num,
+					 address     as store_address,
+					 addr_detail as store_addr_detail,
+					 zipcode     as store_zipcode,
+					 cate,
+					 contract,
+					 used,
+					 pg_comm,
+					 vd_comm,
+					 regdate     as store_regdate
+			  from agency_store) b
+		WHERE a.idx = agency_idx
 		<if test="store_idx != null and !store_idx.equals('')">
 			AND b.idx = #{store_idx}
+		</if>
+		<if test="filter != null and !filter.equals('')">
+			AND ${filter}
 		</if>
 		ORDER BY store_name
 		<if test="skip > -1 and take > 0">
@@ -171,7 +199,7 @@
 		<if test="store_zipcode != null and !store_zipcode.equals('')">
 			zipcode = #{store_zipcode},
 		</if>
-		<if test="cate != null and cate > -1">
+		<if test="cate != null and cate > -2">
 			cate = #{cate},
 		</if>
 		<if test="contract != null and contract > -1">
@@ -201,7 +229,7 @@
 		    vd_comm, regdate, moddate
 		)
 		values (
-				   #{agc_idx,jdbcType=INTEGER}, #{store_name,jdbcType=VARCHAR}, #{store_company_num,jdbcType=VARCHAR}, #{store_zipcode,jdbcType=VARCHAR}, #{store_address,jdbcType=VARCHAR},
+				   #{agency_idx,jdbcType=INTEGER}, #{store_name,jdbcType=VARCHAR}, #{store_company_num,jdbcType=VARCHAR}, #{store_zipcode,jdbcType=VARCHAR}, #{store_address,jdbcType=VARCHAR},
 				   #{store_addr_detail,jdbcType=VARCHAR}, #{cate,jdbcType=INTEGER}, #{contract,jdbcType=INTEGER}, #{used,jdbcType=INTEGER}, #{pg_comm,jdbcType=FLOAT},
 				   #{vd_comm,jdbcType=FLOAT}, now(), now()
 			   )

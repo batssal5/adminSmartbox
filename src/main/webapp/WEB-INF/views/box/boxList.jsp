@@ -54,6 +54,7 @@
 				}
 			}),
 			remoteOperations: true,
+			filterRow: { visible: true },
 			columns: [
 				{
 					caption: '#',
@@ -80,17 +81,17 @@
 					dataField: "box_name",
 					caption: "박스명"
 				}, {
-					dataField: "agc_idx",
+					dataField: "agency_idx",
 					caption: "본사명",
 					setCellValue: function(rowData, value) {
-						rowData.agc_idx = value;
+						rowData.agency_idx = value;
 						rowData.store_num = null;
 					},
 					lookup: {
 						dataSource: {
 							paginate: true,
 							store: new DevExpress.data.CustomStore({
-								key: "agc_idx",
+								key: "agency_idx",
 								loadMode: "raw",
 								load: function() {
 									return $.getJSON("/lookup/agencyJson");
@@ -98,7 +99,7 @@
 							}),
 							sort: "agency_name"
 						},
-						valueExpr: "agc_idx",
+						valueExpr: "agency_idx",
 						displayExpr: "agency_name"
 					}
 				}, {
@@ -115,7 +116,7 @@
 										return $.getJSON("/lookup/storeJson");
 									}
 								}),
-								filter: options.data ? ["agc_idx", "=", options.data.agc_idx] : null,
+								filter: options.data ? ["agency_idx", "=", options.data.agency_idx] : null,
 								sort: "store_name"
 							};
 						},
@@ -285,7 +286,7 @@
 				}
 				//회사 미선택시 지점 선택 불가처리
 				if(e.parentType === "dataRow" && e.dataField === "store_num") {
-					e.editorOptions.disabled = (typeof e.row.data.agc_idx !== "number");
+					e.editorOptions.disabled = (typeof e.row.data.agency_idx !== "number");
 				}
 			}
 		});

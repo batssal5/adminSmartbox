@@ -15,24 +15,27 @@
 
 
 	<select id="getAgencyInfo" parameterType="com.vdcompany.adminSmartbox.bean.web.paging.PagingVO" resultType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO" >
-		SELECT a.idx          as idx,
-		a.company_nm   as company_nm,
-		a.company_num  as company_num,
-		a.company_type as company_type,
-		a.rep_nm       as rep_nm,
-		a.rep_tel      as rep_tel,
-		a.rep_email    as rep_email,
-		a.zipcode      as zipcode,
-		a.address      as address,
-		a.addr_detail  as addr_detail,
-		a.regdate      as regdate,
-		a.description  as description
-		FROM agency a
+		SELECT idx,
+			company_nm,
+			company_num,
+			company_type,
+			rep_nm,
+			rep_tel,
+			rep_email,
+			zipcode,
+			address,
+			addr_detail,
+			regdate,
+			description
+		FROM agency
 		WHERE 1=1
 		<if test="idx != null and !idx.equals('')">
-			AND a.idx = #{idx}
+			AND idx = #{idx}
 		</if>
-		ORDER BY a.company_nm
+		<if test="filter != null and !filter.equals('')">
+			AND ${filter}
+		</if>
+		ORDER BY company_nm
 		<if test="skip > -1 and take > 0">
 			LIMIT #{skip}, #{take}
 		</if>

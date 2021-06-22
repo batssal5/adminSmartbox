@@ -14,6 +14,7 @@ public class BoxVO {
 	private int box_id;
 	private int box_idx;
 	private int agc_idx;
+	private int agency_idx;
 	private int store_idx;
 	
 	private String serial;

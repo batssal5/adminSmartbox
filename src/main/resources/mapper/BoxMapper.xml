@@ -87,32 +87,35 @@
 	</insert>
 
 	<select id="getBoxList" parameterType="com.vdcompany.adminSmartbox.bean.web.paging.PagingVO" resultType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
-		SELECT info.agc_idx,
-			   info.agc_sto_idx               as store_idx,
-			   info.box_idx 				  as box_idx,
-			   info.alias                     as box_name,
-			   info.description,
-			   box.serial,
-			   box.id                         as box_id,
-			   box.status,
-			   store.name                     as store_name,
-			   store.idx                      as store_num,
-			   store.cate					  as cate,
-			   IFNULL(store.company_num, '-') as store_company_num,
-			   agency.company_nm              as agency_name,
-			   agency.idx                     as agc_idx,
-			   info.regdate as regdate,
-			   IFNULL(DATE_FORMAT(info.regdate, '%y-%m-%d'), '00-00-00') as regdate_form
-		FROM sb_box_info as info,
-			 sb_box as box,
-			 agency_store as store,
-			 agency as agency
+		SELECT  agency_idx,
+				info.store_idx                                            as store_idx,
+				info.box_idx                                              as box_idx,
+				info.box_name                                             as box_name,
+				info.description,
+				box.serial,
+				box.box_id                                                as box_id,
+				box.status,
+				store.store_name                                          as store_name,
+				store.store_num                                           as store_num,
+				store.cate                                                as cate,
+				IFNULL(store.store_company_num, '-')                      as store_company_num,
+				agency.company_nm                                         as agency_name,
+				box.regdate                                               as regdate,
+				IFNULL(DATE_FORMAT(box.regdate, '%y-%m-%d'), '00-00-00')  as regdate_form
+		FROM (select agc_idx as agency_idx, agc_sto_idx as store_idx, box_idx, alias as box_name, description
+				from sb_box_info) as info,
+			 (select idx, serial, id as box_id, status, regdate from sb_box) as box,
+			 (select idx as store_num, name as store_name, cate, company_num as store_company_num from agency_store) as store,
+		 	 (select idx, company_nm from agency) as agency
 		WHERE 1 = 1
-		  AND info.box_idx = box.idx
-		  AND info.agc_sto_idx = store.idx
-		  AND info.agc_idx = agency.idx
+			AND info.box_idx = box.idx
+			AND info.store_idx = store_num
+			AND info.agency_idx = agency.idx
 		<if test="box_id != null and !box_id.equals('')">
-			AND box.id = #{box_id}
+			AND box.box_id = #{box_id}
+		</if>
+		<if test="filter != null and !filter.equals('')">
+			AND ${filter}
 		</if>
 		ORDER BY info.box_idx
 		<if test="skip > -1 and take > 0">

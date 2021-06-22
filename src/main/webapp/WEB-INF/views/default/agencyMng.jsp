@@ -54,6 +54,7 @@
                 }
             }),
             remoteOperations: true,
+            filterRow: { visible: true },
             columns: [
                 {
                     width: 100,
