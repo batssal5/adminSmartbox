@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.vdcompany.adminSmartbox.mapper.InventoryMapper">
+
+	<select id="getInventoryInfo" parameterType="com.vdcompany.adminSmartbox.bean.web.paging.PagingVO" resultType="com.vdcompany.adminSmartbox.bean.box.InventoryVO" >
+		SELECT idx,
+			agc_mem_idx,
+			a.box_idx as box_idx,
+			shp_id,
+			gname,
+			status,
+			regdate,
+			moddate,
+			box_id,
+			box_name,
+			company_nm,
+			agc_sto_name,
+			agc_mem_id,
+			agc_mem_name
+		FROM
+			(select idx,
+				agc_mem_idx,
+				box_idx,
+				shp_id,
+				gname,
+				status,
+				regdate,
+				moddate
+				from sb_inventory) a,
+			(select idx as sb_box_idx, id as box_id from sb_box) b,
+			(select box_idx, alias as box_name, agc_idx, agc_sto_idx from sb_box_info) c,
+			(select idx as agc_idx, company_nm from agency) d,
+			(select idx as agc_sto_idx, agc_idx, name as agc_sto_name from agency_store) e,
+			(select idx as agc_member_idx, id as agc_mem_id, name as agc_mem_name from agency_member) f
+		WHERE a.box_idx = b.sb_box_idx
+			AND a.box_idx = c.box_idx
+			AND c.agc_idx = d.agc_idx
+			AND c.agc_idx = e.agc_idx
+			AND c.agc_sto_idx = e.agc_sto_idx
+			AND a.agc_mem_idx = f.agc_member_idx
+		<if test="idx != null and !idx.equals('')">
+			AND a.idx = #{idx}
+		</if>
+		<if test="filter != null and !filter.equals('')">
+			AND ${filter}
+		</if>
+		ORDER BY regdate desc
+		<if test="skip > -1 and take > 0">
+			LIMIT #{skip}, #{take}
+		</if>
+	</select>
+
+
+	<update id="postInventoryInfo" parameterType="com.vdcompany.adminSmartbox.bean.box.InventoryVO">
+		UPDATE agency SET
+		<if test="company_nm != null and !company_nm.equals('')">
+			company_nm = #{company_nm},
+		</if>
+		<if test="company_num != null and !company_num.equals('')">
+			company_num = #{company_num},
+		</if>
+		<if test="rep_nm != null and !rep_nm.equals('')">
+			rep_nm = #{rep_nm},
+		</if>
+		<if test="rep_tel != null and !rep_tel.equals('')">
+			rep_tel = #{rep_tel},
+		</if>
+		<if test="rep_email != null and !rep_email.equals('')">
+			rep_email = #{rep_email},
+		</if>
+		<if test="rep_mobile != null and !rep_mobile.equals('')">
+			rep_mobile = #{rep_mobile},
+		</if>
+		<if test="zipcode != null and !zipcode.equals('')">
+			zipcode = #{zipcode},
+		</if>
+		<if test="address != null and !address.equals('')">
+			address = #{address},
+		</if>
+		<if test="addr_detail != null and !addr_detail.equals('')">
+			addr_detail = #{addr_detail},
+		</if>
+		<if test="description != null and !description.equals('')">
+			description = #{description},
+		</if>
+		moddate = now()
+		WHERE idx = #{idx}
+	</update>
+
+
+	<insert id="putInventoryInfo" parameterType="com.vdcompany.adminSmartbox.bean.box.InventoryVO">
+		insert into agency (
+			company_nm, company_num, company_type, rep_nm, rep_tel,
+			rep_email, zipcode, address, addr_detail, description,
+			regdate, moddate
+		)
+		values (
+				   #{company_nm,jdbcType=VARCHAR}, #{company_num,jdbcType=VARCHAR}, #{company_type,jdbcType=VARCHAR}, #{rep_nm,jdbcType=VARCHAR}, #{rep_tel,jdbcType=VARCHAR},
+				   #{rep_email,jdbcType=VARCHAR}, #{zipcode,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{addr_detail,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+				    now(), now()
+			   )
+	</insert>
+	<delete id="delInventoryInfo" parameterType="com.vdcompany.adminSmartbox.bean.box.InventoryVO">
+		DELETE FROM agency WHERE idx = #{idx}
+	</delete>
+
+
+
+
+	<select id="getInventoryDetailInfo" parameterType="com.vdcompany.adminSmartbox.bean.web.paging.PagingVO" resultType="com.vdcompany.adminSmartbox.bean.box.InventoryVO" >
+		SELECT idx,
+			   goods_name,
+			   image,
+			   quantity,
+			   IF(box.box_used = 0, box.box_price,
+				  IF(sto.sto_used = 0, sto.sto_price, IF(agc.agc_used = 0, agc.agc_price, base.gds_price))) as price,
+			   FORMAT(IF(box.box_used = 0, box.box_price,
+				  IF(sto.sto_used = 0, sto.sto_price, IF(agc.agc_used = 0, agc.agc_price, base.gds_price))), 0) as price_form
+		FROM (SELECT idx,
+					 box_idx,
+					 agc_mem_idx,
+					 agc_sto_idx,
+					 agc_idx,
+					 goods_skuid,
+					 gds_price,
+					 quantity,
+					 valid,
+					 regdate,
+					 image,
+					 goods_name,
+					 goods_idx
+			  FROM (select idx, box_idx, agc_mem_idx from sb_inventory) a,
+				   (select inv_idx, skuid, quantity, valid, regdate from sb_inventory_detail) b,
+				   (select skuid as goods_skuid, image, name as goods_name, idx as goods_idx, price as gds_price
+					from sb_goods) c,
+				   (select box_idx as inf_box_idx, agc_sto_idx, agc_idx from sb_box_info) d
+			  WHERE 1 = 1
+				<if test="idx != null and !idx.equals('')">
+				AND a.idx = #{idx}
+				</if>
+				AND a.idx = b.inv_idx
+				AND b.skuid = c.goods_skuid
+				AND a.box_idx = d.inf_box_idx
+			 ) base
+				 LEFT OUTER JOIN
+			 (select gds_idx, box_idx, used as box_used, price as box_price from sb_goods_box) box
+			 ON base.goods_idx = box.gds_idx
+				 AND base.box_idx = box.box_idx
+				 LEFT OUTER JOIN
+			 (select gds_idx, agc_sto_idx, used as sto_used, price as sto_price from sb_goods_store) sto
+			 ON base.goods_idx = sto.gds_idx
+				 AND base.agc_sto_idx = sto.agc_sto_idx
+				 LEFT OUTER JOIN
+			 (select gds_idx, agc_idx, used as agc_used, price as agc_price from sb_goods_agency) agc
+			 ON base.goods_idx = agc.gds_idx
+				 AND base.agc_idx = agc.agc_idx
+	</select>
+
+
+</mapper>

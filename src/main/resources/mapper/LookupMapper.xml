@@ -5,14 +5,14 @@
 
 
 	<select id="getLookupAgency" resultType="com.vdcompany.adminSmartbox.bean.lookup.LookupVO">
-		SELECT idx as agc_idx, company_nm as agency_name
+		SELECT idx as agency_idx, company_nm as agency_name
       	FROM agency
 		ORDER BY company_nm asc
 	</select>
 
 
 	<select id="getLookupStoreInfo" resultType="com.vdcompany.adminSmartbox.bean.lookup.LookupVO">
-		SELECT a.agc_idx as agc_idx, b.company_nm as agency_name, a.name as store_name, a.idx as store_idx
+		SELECT a.agc_idx as agency_idx, b.company_nm as agency_name, a.name as store_name, a.idx as store_idx
 		FROM agency_store a,
 			 agency b
 		WHERE a.agc_idx = b.idx

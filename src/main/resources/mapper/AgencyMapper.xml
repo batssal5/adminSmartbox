@@ -13,6 +13,89 @@
 		ORDER BY idx
 	</select>
 
+
+	<select id="getAgencyInfo" parameterType="com.vdcompany.adminSmartbox.bean.web.paging.PagingVO" resultType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO" >
+		SELECT idx,
+			company_nm,
+			company_num,
+			company_type,
+			rep_nm,
+			rep_tel,
+			rep_email,
+			zipcode,
+			address,
+			addr_detail,
+			regdate,
+			description
+		FROM agency
+		WHERE 1=1
+		<if test="idx != null and !idx.equals('')">
+			AND idx = #{idx}
+		</if>
+		<if test="filter != null and !filter.equals('')">
+			AND ${filter}
+		</if>
+		ORDER BY company_nm
+		<if test="skip > -1 and take > 0">
+			LIMIT #{skip}, #{take}
+		</if>
+	</select>
+
+
+	<update id="postAgencyInfo" parameterType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
+		UPDATE agency SET
+		<if test="company_nm != null and !company_nm.equals('')">
+			company_nm = #{company_nm},
+		</if>
+		<if test="company_num != null and !company_num.equals('')">
+			company_num = #{company_num},
+		</if>
+		<if test="rep_nm != null and !rep_nm.equals('')">
+			rep_nm = #{rep_nm},
+		</if>
+		<if test="rep_tel != null and !rep_tel.equals('')">
+			rep_tel = #{rep_tel},
+		</if>
+		<if test="rep_email != null and !rep_email.equals('')">
+			rep_email = #{rep_email},
+		</if>
+		<if test="rep_mobile != null and !rep_mobile.equals('')">
+			rep_mobile = #{rep_mobile},
+		</if>
+		<if test="zipcode != null and !zipcode.equals('')">
+			zipcode = #{zipcode},
+		</if>
+		<if test="address != null and !address.equals('')">
+			address = #{address},
+		</if>
+		<if test="addr_detail != null and !addr_detail.equals('')">
+			addr_detail = #{addr_detail},
+		</if>
+		<if test="description != null and !description.equals('')">
+			description = #{description},
+		</if>
+		moddate = now()
+		WHERE idx = #{idx}
+	</update>
+
+
+	<insert id="putAgencyInfo" parameterType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
+		insert into agency (
+			company_nm, company_num, company_type, rep_nm, rep_tel,
+			rep_email, zipcode, address, addr_detail, description,
+			regdate, moddate
+		)
+		values (
+				   #{company_nm,jdbcType=VARCHAR}, #{company_num,jdbcType=VARCHAR}, #{company_type,jdbcType=VARCHAR}, #{rep_nm,jdbcType=VARCHAR}, #{rep_tel,jdbcType=VARCHAR},
+				   #{rep_email,jdbcType=VARCHAR}, #{zipcode,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{addr_detail,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+				    now(), now()
+			   )
+	</insert>
+	<delete id="delAgencyInfo" parameterType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
+		DELETE FROM agency WHERE idx = #{idx}
+	</delete>
+
+
 	<insert id="insertAgency" useGeneratedKeys="true" keyProperty="idx" parameterType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
 	  	insert into agency (
 	  		company_name, company_num, company_type,

@@ -11,8 +11,8 @@ import java.util.Date;
 @AllArgsConstructor
 public class LookupVO {
 
-	private int agc_idx;
 	private String agency_name;
+	private int agency_idx;
 
 	private int store_idx;
 	private String store_name;

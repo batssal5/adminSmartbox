@@ -14,6 +14,7 @@ public class BoxVO {
 	private int box_id;
 	private int box_idx;
 	private int agc_idx;
+	private int agency_idx;
 	private int store_idx;
 	
 	private String serial;
@@ -25,12 +26,12 @@ public class BoxVO {
 	
 	private int status = -1;
 
-	private Date regdate = new Date();
+	private Date regdate = null;
 	private String regdate_form;
 	private String regdate1;
 	private String regdate2;
 
-	private Date moddate = new Date();
+	private Date moddate = null;
 
 	private String description;		// 메모?
 	private int cate;

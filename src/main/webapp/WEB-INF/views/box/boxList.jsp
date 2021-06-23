@@ -32,7 +32,7 @@
 			"name": "미사용"
 		},{
 			"value": 0,
-			"name": "미사용2"
+			"name": "미지정"
 		},{
 			"value": 1,
 			"name": "번화가"
@@ -42,44 +42,33 @@
 		}
 	];
 	$(function(){
-		var url = "http://localhost:8888/box";
-		var lookup_url = "http://localhost:8888/lookup";
-
 		$("#gridContainer").dxDataGrid({
 			dataSource: DevExpress.data.AspNet.createStore({
 				key: "box_id",
-				loadUrl: url + "/boxList/json?type=get",
-				insertUrl: url + "/boxList/json?type=put",
-				updateUrl: url + "/boxList/json?type=post",
-				deleteUrl: url + "/boxList/json?type=delete",
+				loadUrl:   "./boxList/json?type=get",
+				insertUrl: "./boxList/json?type=put",
+				updateUrl: "./boxList/json?type=post",
+				deleteUrl: "./boxList/json?type=delete",
 				onBeforeSend: function(method, ajaxOptions) {
 					ajaxOptions.xhrFields = { withCredentials: true };
 				}
 			}),
 			remoteOperations: true,
-/*{
-   "box_idx":"1",
-   "agc_idx":"1",
-   "store_idx":"1",
-   "serial":"e8ba572d803fbf264dec51774c03804_",
-   "box_id":"1930",
-   "box_name":"휘닉스밴딩박스_1",
-   "agency_name":"(주)휘닉스밴딩",
-   "store_name":"성무관1층 지점",
-   "store_num":"1",
-   "status":2,
-   "regdate":"Jun 23, 2020, 11:42:27 PM",
-   "moddate":"Jun 15, 2021, 2:44:03 PM",
-   "description":"3c000d",
-   "cate":"1"
-}*/
+			columnAutoWidth: true,
+			filterRow: { visible: true },
 			columns: [
 				{
 					caption: '#',
 					cellTemplate: function(cellElement, cellInfo) {
-						cellElement.text(cellInfo.row.rowIndex+1)
+						cellElement.text(function (){
+							//var cnt       = $("#gridContainer").dxDataGrid("instance").pageCount();
+							var pageSize  = $("#gridContainer").dxDataGrid("instance").pageSize();
+							var pageIndex = $("#gridContainer").dxDataGrid("instance").pageIndex();
+							var rowNum = (pageSize*pageIndex)+cellInfo.row.rowIndex+1;
+
+							return rowNum;
+						})
 					},
-					width: 40,
 					cssClass: "text-center",
 					allowEditing: false
 				}, {
@@ -99,25 +88,25 @@
 					dataField: "box_name",
 					caption: "박스명"
 				}, {
-					dataField: "agc_idx",
+					dataField: "agency_idx",
 					caption: "본사명",
 					setCellValue: function(rowData, value) {
-						rowData.agc_idx = value;
+						rowData.agency_idx = value;
 						rowData.store_num = null;
 					},
 					lookup: {
 						dataSource: {
 							paginate: true,
 							store: new DevExpress.data.CustomStore({
-								key: "agc_idx",
+								key: "agency_idx",
 								loadMode: "raw",
 								load: function() {
-									return $.getJSON(lookup_url + "/agencyJson");
+									return $.getJSON("/lookup/agencyJson");
 								}
 							}),
 							sort: "agency_name"
 						},
-						valueExpr: "agc_idx",
+						valueExpr: "agency_idx",
 						displayExpr: "agency_name"
 					}
 				}, {
@@ -131,10 +120,10 @@
 									key: "store_idx",
 									loadMode: "raw",
 									load: function() {
-										return $.getJSON(lookup_url + "/storeJson");
+										return $.getJSON("/lookup/storeJson");
 									}
 								}),
-								filter: options.data ? ["agc_idx", "=", options.data.agc_idx] : null,
+								filter: options.data ? ["agency_idx", "=", options.data.agency_idx] : null,
 								sort: "store_name"
 							};
 						},
@@ -200,29 +189,7 @@
 					visible: false
 				}
 			],
-			/*filterRow: {
-				visible: true
-			},
-			headerFilter: {
-				visible: true
-			},
-			groupPanel: {
-				visible: true
-			},*/
 			showBorders: true,
-			/*allowColumnReordering: true,
-			grouping: {
-				autoExpandAll: true,
-			},
-			searchPanel: {
-				visible: true
-			},
-			paging: {
-				pageSize: 10
-			},
-			groupPanel: {
-				visible: true
-			},*/
 			scrolling: {
 				rowRenderingMode: 'virtual'
 			},
@@ -236,7 +203,7 @@
 			paging: {
 				pageSize: 15
 			},
-			height: 650,
+			height: 700,
 			/*masterDetail: {
 				enabled: true,
 				template: function(container, options) {
@@ -304,7 +271,7 @@
 				}
 				//회사 미선택시 지점 선택 불가처리
 				if(e.parentType === "dataRow" && e.dataField === "store_num") {
-					e.editorOptions.disabled = (typeof e.row.data.agc_idx !== "number");
+					e.editorOptions.disabled = (typeof e.row.data.agency_idx !== "number");
 				}
 			}
 		});

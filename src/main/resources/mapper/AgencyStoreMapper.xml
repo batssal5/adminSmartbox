@@ -4,7 +4,8 @@
 <mapper namespace="com.vdcompany.adminSmartbox.mapper.AgencyStoreMapper">
 
 	<select id="getStoreList" parameterType="java.lang.Integer" resultType="com.vdcompany.adminSmartbox.bean.agency.AgencyStoreVO">
-		SELECT agency.idx AS agc_idx, store.idx, agency.company_name, agency.company_num, store.name AS store_name, store.company_num AS store_num, store.pg_comm, store.vd_comm, store.contract, store.regdate
+		SELECT agency.idx AS agc_idx, store.idx, agency.company_nm, agency.company_num, store.name AS store_name,
+		store.company_num AS store_num,/* store.pg_comm, store.vd_comm,*/ store.contract, store.regdate
 		FROM agency_store AS store,
 		agency AS agency
 		WHERE store.agc_idx = agency.idx
@@ -115,5 +116,126 @@
 	</update>
 
 
+	<select id="getAgencyStoreInfo" parameterType="com.vdcompany.adminSmartbox.bean.web.paging.PagingVO" resultType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO" >
+		SELECT idx,
+			   company_nm,
+			   company_num,
+			   company_type,
+			   rep_nm,
+			   rep_tel,
+			   rep_email,
+			   zipcode,
+			   address,
+			   addr_detail,
+			   regdate,
+			   description,
+			   store_idx,
+			   agency_idx,
+			   store_name,
+			   store_company_num,
+			   store_address,
+			   store_addr_detail,
+			   store_zipcode,
+			   cate,
+			   contract,
+			   used,
+			   pg_comm,
+			   vd_comm,
+			   store_regdate
+		FROM (select idx,
+					 company_nm,
+					 company_num,
+					 company_type,
+					 rep_nm,
+					 rep_tel,
+					 rep_email,
+					 zipcode,
+					 address,
+					 addr_detail,
+					 regdate,
+					 description
+			  from agency) a,
+			 (select idx         as store_idx,
+					 agc_idx     as agency_idx,
+					 name        as store_name,
+					 company_num as store_company_num,
+					 address     as store_address,
+					 addr_detail as store_addr_detail,
+					 zipcode     as store_zipcode,
+					 cate,
+					 contract,
+					 used,
+					 pg_comm,
+					 vd_comm,
+					 regdate     as store_regdate
+			  from agency_store) b
+		WHERE a.idx = agency_idx
+		<if test="store_idx != null and !store_idx.equals('')">
+			AND b.idx = #{store_idx}
+		</if>
+		<if test="filter != null and !filter.equals('')">
+			AND ${filter}
+		</if>
+		ORDER BY store_name
+		<if test="skip > -1 and take > 0">
+			LIMIT #{skip}, #{take}
+		</if>
+	</select>
+
+	<update id="postAgencyStoreInfo" parameterType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
+		UPDATE agency_store SET
+		<if test="store_name != null and !store_name.equals('')">
+			name = #{store_name},
+		</if>
+		<if test="store_company_num != null and !store_company_num.equals('')">
+			company_num = #{store_company_num},
+		</if>
+		<if test="store_address != null and !store_address.equals('')">
+			address = #{store_address},
+		</if>
+		<if test="store_addr_detail != null and !store_addr_detail.equals('')">
+			addr_detail = #{store_addr_detail},
+		</if>
+		<if test="store_zipcode != null and !store_zipcode.equals('')">
+			zipcode = #{store_zipcode},
+		</if>
+		<if test="cate != null and cate > -2">
+			cate = #{cate},
+		</if>
+		<if test="contract != null and contract > -1">
+			contract = #{contract},
+		</if>
+		<if test="used != null and used > -1">
+			used = #{used},
+		</if>
+		<if test="pg_comm != null and pg_comm > -1">
+			pg_comm = #{pg_comm},
+		</if>
+		<if test="vd_comm != null and vd_comm > -1">
+			vd_comm = #{vd_comm},
+		</if>
+		<if test="store_regdate != null">
+			regdate = #{store_regdate},
+		</if>
+		moddate = now()
+		WHERE idx = #{store_idx}
+	</update>
+
+
+	<insert id="putAgencyStoreInfo" parameterType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
+		insert into agency_store (
+			agc_idx, name, company_num, zipcode, address,
+		    addr_detail, cate, contract, used, pg_comm,
+		    vd_comm, regdate, moddate
+		)
+		values (
+				   #{agency_idx,jdbcType=INTEGER}, #{store_name,jdbcType=VARCHAR}, #{store_company_num,jdbcType=VARCHAR}, #{store_zipcode,jdbcType=VARCHAR}, #{store_address,jdbcType=VARCHAR},
+				   #{store_addr_detail,jdbcType=VARCHAR}, #{cate,jdbcType=INTEGER}, #{contract,jdbcType=INTEGER}, #{used,jdbcType=INTEGER}, #{pg_comm,jdbcType=FLOAT},
+				   #{vd_comm,jdbcType=FLOAT}, now(), now()
+			   )
+	</insert>
+	<delete id="delAgencyStoreInfo" parameterType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
+		DELETE FROM agency_store WHERE idx = #{store_idx}
+	</delete>
 
 </mapper>

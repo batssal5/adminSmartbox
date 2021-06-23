@@ -49,3 +49,7 @@ create table policy_payment
         primary key (idx)
 )
     comment '결제수단설정';
+
+/*사업자 매장 필드추가*/
+alter table agency_store   add pg_comm float default 0.0 NOT NULL COMMENT 'PG수수료';
+alter table agency_store   add vd_comm float default 0.0 NOT NULL COMMENT 'VD수수료';

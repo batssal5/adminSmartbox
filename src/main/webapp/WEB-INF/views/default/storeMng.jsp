@@ -26,13 +26,31 @@
             "name": "미사용(off)"
         }
     ];
+    var lookup_used = [
+        {
+            "value": 0,
+            "name": "Y"
+        },{
+            "value": 1,
+            "name": "N"
+        }
+    ];
+    var lookup_contract = [
+        {
+            "value": 0,
+            "name": "Y"
+        },{
+            "value": 1,
+            "name": "N"
+        }
+    ];
     var sb_cate = [
         {
             "value": -1,
             "name": "미사용"
         },{
             "value": 0,
-            "name": "미사용2"
+            "name": "미지정"
         },{
             "value": 1,
             "name": "번화가"
@@ -44,11 +62,11 @@
     $(function(){
         $("#gridContainer").dxDataGrid({
             dataSource: DevExpress.data.AspNet.createStore({
-                key: "idx",
-                loadUrl:   "./agencyMng/json?type=get",
-                insertUrl: "./agencyMng/json?type=put",
-                updateUrl: "./agencyMng/json?type=post",
-                deleteUrl: "./agencyMng/json?type=delete",
+                key: "store_idx",
+                loadUrl:   "./storeMng/json?type=get",
+                insertUrl: "./storeMng/json?type=put",
+                updateUrl: "./storeMng/json?type=post",
+                deleteUrl: "./storeMng/json?type=delete",
                 onBeforeSend: function(method, ajaxOptions) {
                     ajaxOptions.xhrFields = { withCredentials: true };
                 }
@@ -57,50 +75,113 @@
             filterRow: { visible: true },
             columns: [
                 {
-                    width: 100,
-                    dataField: "idx",
-                    caption: "사업자ID",
+                    caption: '#',
+                    cellTemplate: function(cellElement, cellInfo) {
+                        cellElement.text(function (){
+                            //var cnt       = $("#gridContainer").dxDataGrid("instance").pageCount();
+                            var pageSize  = $("#gridContainer").dxDataGrid("instance").pageSize();
+                            var pageIndex = $("#gridContainer").dxDataGrid("instance").pageIndex();
+                            var rowNum = (pageSize*pageIndex)+cellInfo.row.rowIndex+1;
+
+                            return rowNum;
+                        })
+                    },
                     cssClass: "text-center",
-                    visible: false,
+                    allowEditing: false
+                }, {
+                    dataField: "agency_idx",
+                    caption: "본사명",
+                    setCellValue: function(rowData, value) {
+                        rowData.agency_idx = value;
+                        rowData.store_num = null;
+                    },
+                    lookup: {
+                        dataSource: {
+                            paginate: true,
+                            store: new DevExpress.data.CustomStore({
+                                key: "agency_idx",
+                                loadMode: "raw",
+                                load: function() {
+                                    return $.getJSON("/lookup/agencyJson");
+                                }
+                            }),
+                            sort: "agency_name"
+                        },
+                        valueExpr: "agency_idx",
+                        displayExpr: "agency_name",
+                        visible: false
+                    }
+                }, {
+                    width: 60,
+                    dataField: "store_idx",
+                    caption: "지점ID",
+                    cssClass: "text-center",
                     allowEditing: false,
-                    visible:false
+                    visible: false
                 }, {
-                    dataField: "company_nm",
-                    caption: "사업자명"
+                    dataField: "store_name",
+                    caption: "지점명"
                 }, {
-                    dataField: "company_num",
-                    caption: "사업자번호"
+                    dataField: "store_company_num",
+                    caption: "지점사업번호"
                 }, {
-                    dataField: "rep_nm",
-                    caption: "대표자명"
-                }, {
-                    dataField: "rep_tel",
-                    caption: "대표번호"
-                }, {
-                    dataField: "rep_email",
-                    caption: "이메일"
-                }, {
-                    dataField: "address",
+                    dataField: "store_address",
                     caption: "주소"
                 }, {
-                    dataField: "addr_detail",
+                    dataField: "store_addr_detail",
                     caption: "주소상세",
                     visible: false
                 }, {
-                    dataField: "zipcode",
+                    dataField: "store_zipcode",
                     caption: "우편번호",
                     visible: false
                 }, {
-                    dataField: "regdate",
+                    dataField: "cate",
+                    caption: "상권",
+                    visible: false,
+                    lookup: {
+                        displayExpr: "name",
+                        valueExpr: "value",
+                        dataSource: sb_cate
+                    }
+                }, {
+                    width: 75,
+                    dataField: "contract",
+                    caption: "계약여부",
+                    cssClass: "text-center",
+                    lookup: {
+                        displayExpr: "name",
+                        valueExpr: "value",
+                        dataSource: lookup_contract
+                    }
+                }, {
+                    width: 75,
+                    dataField: "used",
+                    caption: "사용여부",
+                    cssClass: "text-center",
+                    lookup: {
+                        displayExpr: "name",
+                        valueExpr: "value",
+                        dataSource: lookup_used
+                    }
+                }, {
+                    width: 80,
+                    dataField: "pg_comm",
+                    cssClass: "text-center",
+                    caption: "PG수수료"
+                }, {
+                    width: 80,
+                    dataField: "vd_comm",
+                    cssClass: "text-center",
+                    caption: "VD수수료"
+                }, {
+                    dataField: "store_regdate",
                     caption: "등록일",
                     width: 80,
                     cssClass: "text-center",
                     dataType: "date",
-                    format: "yy-MM-dd"
-                }, {
-                    dataField: "description",
-                    caption: "소개글",
-                    visible: false
+                    format: "yy-MM-dd",
+                    allowEditing: false
                 }
             ],
             /*filterRow: {
@@ -139,23 +220,7 @@
             paging: {
                 pageSize: 15
             },
-            height: 650,
-            /*masterDetail: {
-                enabled: true,
-                template: function(container, options) {
-                    $("<div>")
-                            .dxDataGrid({
-                                dataSource: DevExpress.data.AspNet.createStore({
-                                    loadUrl: url + "/OrderDetails",
-                                    loadParams: { orderID : options.data.OrderID },
-                                    onBeforeSend: function(method, ajaxOptions) {
-                                        ajaxOptions.xhrFields = { withCredentials: true };
-                                    }
-                                }),
-                                showBorders: true
-                            }).appendTo(container);
-                }
-            },*/
+            height: 700,
             editing: {
                 mode: "form",
                 useIcons: true,
@@ -180,7 +245,13 @@
             onEditorPreparing: function(e) {
 
                 if (e.parentType === "dataRow" && e.row.isEditing && !e.row.isNewRow) {//수정일때는 readonly처리
+                    if (e.dataField === "box_id") {
+                        e.editorOptions.readOnly = true;
+                    }
                     if (e.dataField === "regdate") {
+                        e.editorOptions.readOnly = true;
+                    }
+                    if (e.dataField === "agency_name") {
                         e.editorOptions.readOnly = true;
                     }
                     if (e.dataField === "description") {
@@ -198,6 +269,10 @@
                     if (e.dataField === "regdate") {
                         e.editorOptions.readOnly = true;
                     }
+                }
+                //회사 미선택시 지점 선택 불가처리
+                if(e.parentType === "dataRow" && e.dataField === "store_num") {
+                    e.editorOptions.disabled = (typeof e.row.data.agency_idx !== "number");
                 }
             }
         });
@@ -233,7 +308,7 @@
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
                                     <i class="header-icon lnr-cloud-download icon-gradient bg-happy-itmeo"> </i>
-                                    기본설정 > 사업자관리 > 매장관리
+                                    기본설정 > 사업자관리 > 지점관리
                                 </div>
                                 <div class="btn-actions-pane-right text-capitalize actions-icon-btn">
                                     <div class="btn-group dropdown">
