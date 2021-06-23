@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.vdcompany.adminSmartbox.mapper.AppMapper">
+
+    <!--    <insert id="putTutorial" parameterType="com.vdcompany.adminSmartbox.bean.app.AppTutorialVO">-->
+
+    <!--        <foreach collection="listMap" item="item" separator=";">-->
+    <!--        INSERT INTO app_tutorial-->
+    <!--        (app_cd, image, sort, used, regdate)-->
+    <!--        VALUES-->
+    <!--        (0, "${item.src}", ${item.sort}, 0, NOW())-->
+    <!--        WHERE-->
+    <!--        </foreach>-->
+    <!--    </insert>-->
+
+    <update id="postTutorialList" parameterType="com.vdcompany.adminSmartbox.bean.app.AppTutorialVO">
+        <foreach collection="list" item="item" separator=";">
+            UPDATE app_tutorial
+            SET image = #{item.src}
+            WHERE os_cd = #{item.os}
+            AND app_cd = #{item.app}
+            AND sort = #{item.sort}
+            AND used = 1
+        </foreach>
+    </update>
+
+    <select id="getPolicyList" parameterType="java.lang.Integer"
+            resultType="com.vdcompany.adminSmartbox.bean.app.AppPolicyVO">
+        SELECT catagory AS cate, a_context, c_context
+        FROM policy_terms_of_service
+        WHERE app_type = #{app_type}
+    </select>
+
+
+    <update id="postPolicyList" parameterType="com.vdcompany.adminSmartbox.bean.app.AppPolicyVO">
+        <foreach collection="listMap" item="item" separator=";">
+            UPDATE policy_terms_of_service
+            <if test="item.a_context != null and !item.a_context.equals('')">
+                SET a_context = #{item.a_context}
+            </if>
+
+            <if test="item.c_context != null and !item.c_context.equals('')">
+                SET c_context = #{item.c_context}
+            </if>
+            WHERE catagory = #{item.catagory}
+            AND app_type = #{app_type}
+        </foreach>
+    </update>
+
+</mapper>

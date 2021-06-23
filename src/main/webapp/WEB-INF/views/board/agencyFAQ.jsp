@@ -7,6 +7,16 @@
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <jsp:include page='<%="../common/vd_header.jsp" %>'/>
+<script>
+    function mainFluidHidden(){
+        $('.main_fluid').hide();
+        $('.sub_fluid').show();
+    };
+    function subFluidHidden(){
+        $('.sub_fluid').hide();
+        $('.main_fluid').show();
+    };
+</script>
 <div class="header-mobile-wrapper">
     <div class="app-header__logo">
         <a href="#" data-toggle="tooltip" data-placement="bottom" title="Smart Box Admin" class="logo-src"></a>

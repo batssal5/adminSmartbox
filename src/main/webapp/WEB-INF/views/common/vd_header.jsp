@@ -1,10 +1,10 @@
 <%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
-response.setHeader("Pragma","no-cache");
-response.setHeader("Cache-Control","no-cache");
-response.addHeader("Cache-Control","no-store");
-response.setDateHeader("Expires",0);
+    response.setHeader("Pragma", "no-cache");
+    response.setHeader("Cache-Control", "no-cache");
+    response.addHeader("Cache-Control", "no-store");
+    response.setDateHeader("Expires", 0);
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +14,8 @@ response.setDateHeader("Expires",0);
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Management - This is an example dashboard created using build-in elements and components.</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
     />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <link rel="icon" href="favicon.ico">
@@ -28,10 +29,13 @@ response.setDateHeader("Expires",0);
     <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
     <script type="text/javascript" src="/bootstrab/js/util.js"></script>
     <script language="javascript">
-        $(function() {
+        $(function () {
             // Handler for .ready() called.
             console.log("sssssssssssss");
+
         });
+
+
     </script>
 </head>
 <body>
@@ -40,7 +44,7 @@ response.setDateHeader("Expires",0);
         <div class="app-sidebar-wrapper">
             <div class="app-sidebar sidebar-shadow">
                 <div class="app-header__logo">
-                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="SmartBox Admin" >
+                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="SmartBox Admin">
                         <img src="/bootstrab/assets/images/logo.png"></a>
                     <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
                                 <span class="hamburger-box">
@@ -53,18 +57,18 @@ response.setDateHeader("Expires",0);
                         <ul class="vertical-nav-menu">
                             <li class="app-sidebar__heading">${pageInfo.pageTitle}</li>
                             <c:forEach items="${leftMenuInfo.leftMenuList}" var="row" varStatus="leftMenuInfos">
-                            <li class="mm-active">
-                                <a href="#" aria-expanded="true">
-                                    <i class="metismenu-icon ${row.menu_icon}"></i>
-                                        ${row.menu_name}
-                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                                </a>
+                                <li class="mm-active">
+                                    <a href="#" aria-expanded="true">
+                                        <i class="metismenu-icon ${row.menu_icon}"></i>
+                                            ${row.menu_name}
+                                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                    </a>
                                     <c:forEach items="${row.leftMenuSub}" var="subrow" varStatus="leftMenuSub">
-                                    <ul class="mm-show">
-                                        <li><a href="${subrow.link_url}">${subrow.menu_name}</a></li>
-                                    </ul>
+                                        <ul class="mm-show">
+                                            <li><a href="${subrow.link_url}">${subrow.menu_name}</a></li>
+                                        </ul>
                                     </c:forEach>
-                            </li>
+                                </li>
                             </c:forEach>
 
                         </ul>
