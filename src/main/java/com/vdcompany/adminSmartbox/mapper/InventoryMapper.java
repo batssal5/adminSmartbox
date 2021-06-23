@@ -20,12 +20,8 @@ public interface InventoryMapper {
 
 	List<InventoryVO> getInventoryInfo(PagingVO pagingVO);
 	int postInventoryInfo(InventoryVO inventoryVO);
-	int putInventoryInfo(InventoryVO inventoryVO);
-	int delInventoryInfo(InventoryVO inventoryVO);
 
 
 	List<InventoryVO> getInventoryDetailInfo(PagingVO pagingVO);
-	
-	int insertAgency(AgencyVO agency);
-	int updateAgency(AgencyVO agency);
+
 }

@@ -40,7 +40,7 @@ public class AgencyVO {		// 본사
 	private int used = -1;
 	private float vd_comm = -1;
 	private float pg_comm = -1;
-	private Date store_regdate = new Date();
+	private Date store_regdate = null;
 
 
 }

@@ -13,31 +13,31 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GoodsVO  {		// 본사
 
-	private int idx = 0;
-	private String skuid;
-	private String name;
-	private String gcode;
-	private String barcode;
-	private String brand;
+	private int idx = -1;
+	private String skuid = "";
+	private String goods_name = "";
+	private String goods_code = "";
+	private String barcode = "";
+	private int brand = -1;
 	private String brand_name;
 	
 	private String image;
 	private MultipartFile imgFile;
-	private String weight;
-	private String status;
-	private String used;
+	private int weight = -1;
+	private int status = -1;
+	private int used = -1;
 
-	private String price;
-	private String price1;
-	private String price2;
+	private int price = -1;
+	private int price1 = -1;
+	private int price2 = -1;
 
-	private Date regdate = new Date();
+	private Date regdate = null;
 	private String regdate1;
 	private String regdate2;
 	
-	private Date moddate = new Date();
+	private Date moddate = null;
 
-	private String description;		// 메모?
+	private String description;
 
 	
 	

@@ -4,87 +4,6 @@
 <mapper namespace="com.vdcompany.adminSmartbox.mapper.BoxMapper">
 
 
-	<select id="getBoxDetail" parameterType="java.lang.Integer" resultType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
-		SELECT info.agc_idx, info.agc_sto_idx as store_idx, info.box_idx, info.alias as box_name,
-		info.description, info.cate, 
-		box.serial, box.id as box_id, box.status, box.serial,
-        store.store_name, store.store_num, agency.company_name as agency_name, info.regdate
-		
-      	FROM sb_box_info as info
-        JOIN sb_box as box
-        ON info.box_idx = box.idx 
-			JOIN agency_store as store 
-			ON info.agc_sto_idx = store.idx
-				JOIN agency as agency
-				ON info.agc_idx = agency.idx
-		
-		WHERE box.idx = #{idx}
-	</select>
-	
-
-	<insert id="insertBox" useGeneratedKeys="true" keyProperty="box_idx" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
-	  	insert into sb_box (
-	  		id, serial, status, regdate
-	    )
-		values (
-			#{box_id,jdbcType=VARCHAR}, #{serial,jdbcType=VARCHAR}, 0, #{regdate,jdbcType=TIMESTAMP}
-		);
-	</insert>
-
-	<insert id="insertBoxInfo" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
-	  	insert into sb_box_info (
-	  		box_idx, agc_idx, agc_sto_idx, alias, description, cate, regdate
-	    )
-		values (
-			#{box_idx,jdbcType=VARCHAR}, #{agc_idx,jdbcType=VARCHAR}, #{store_idx,jdbcType=VARCHAR},
-			#{box_name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{cate,jdbcType=VARCHAR},
-			#{regdate,jdbcType=TIMESTAMP}
-		)
-	</insert>
-
-
-    <update id="updateBox" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
-	  	update sb_box set 
-	  		id = #{box_id},
-	  		serial = #{serial}, 
-	  		status = 0,
-	  		regdate = #{regdate}
-	  	WHERE idx = #{box_idx}
-    </update>
-
-    <update id="updateBoxInfo" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
-	  	update sb_box_info set 
-	  		agc_idx = #{agc_idx}, 
-	  		agc_sto_idx = #{store_idx}, 
-	  		alias = #{box_name}, 
-	  		description = #{description}, 
-	  		cate = #{cate}, 
-	  		regdate = #{regdate}
-	  	WHERE box_idx = #{box_idx}
-    </update>
-
-
-	<insert id="putBox" useGeneratedKeys="true" keyColumn="idx"  keyProperty="box_idx"  parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
-		insert into sb_box (
-			id, serial, status, used, regdate, moddate
-		)
-		values (
-				   #{box_id}, #{serial},
-				   #{status}, 0, now(), now()
-			   )
-	</insert>
-
-
-	<insert id="putBoxInfo" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
-		insert into sb_box_info (
-			box_idx, agc_idx, agc_sto_idx, alias, description, regdate, moddate
-		)
-		values (
-				   #{box_idx,jdbcType=VARCHAR}, #{agc_idx,jdbcType=VARCHAR}, #{store_num,jdbcType=VARCHAR},
-				   #{box_name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
-				   now(), now()
-			   )
-	</insert>
 
 	<select id="getBoxList" parameterType="com.vdcompany.adminSmartbox.bean.web.paging.PagingVO" resultType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
 		SELECT  agency_idx,
@@ -151,56 +70,35 @@
 		WHERE box_idx = #{box_idx}
 	</update>
 
+	<insert id="putBox" useGeneratedKeys="true" keyColumn="idx"  keyProperty="box_idx"  parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
+		insert into sb_box (
+			id, serial, status, used, regdate, moddate
+		)
+		values (
+				   #{box_id}, #{serial},
+				   #{status}, 0, now(), now()
+			   )
+	</insert>
+
 	<delete id="deleteBox" parameterType="hashmap">
 		DELETE FROM sb_box WHERE id = #{box_id}
 	</delete>
+
+
+	<insert id="putBoxInfo" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
+		insert into sb_box_info (
+			box_idx, agc_idx, agc_sto_idx, alias, description, regdate, moddate
+		)
+		values (
+				   #{box_idx,jdbcType=VARCHAR}, #{agc_idx,jdbcType=VARCHAR}, #{store_num,jdbcType=VARCHAR},
+				   #{box_name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+				   now(), now()
+			   )
+	</insert>
+
 	<delete id="deleteBoxInfo" parameterType="hashmap">
 		DELETE FROM sb_box_info WHERE box_idx = #{box_idx}
 	</delete>
 
-	<select id="getBoxSearchList" parameterType="com.vdcompany.adminSmartbox.bean.box.BoxVO" resultType="com.vdcompany.adminSmartbox.bean.box.BoxVO">
-	
-		SELECT info.agc_idx, info.agc_sto_idx as store_idx, info.box_idx, info.alias as box_name,
-		info.description, info.cate, 
-		box.serial, box.id as box_id, box.status, box.serial,
-        store.store_name, store.store_num, agency.company_name as agency_name, info.regdate
-		
-        FROM sb_box_info as info
-        JOIN sb_box as box
-        ON info.box_idx = box.idx 
-			JOIN agency_store as store 
-			ON info.agc_sto_idx = store.idx
-				JOIN agency as agency
-				ON info.agc_idx = agency.idx
-        
-        WHERE 1=1
-        <if test="agc_idx != null and !agc_idx.equals('')">
-			AND agency.idx = #{agc_idx}
-        </if>
-        <if test="store_idx != null and !store_idx.equals('')">
-			AND store.idx = #{store_idx}
-        </if>
-        <if test="store_num != null and !store_num.equals('')">
-			AND store.store_num LIKE CONCAT('%', #{store_num}, '%')
-        </if>
-        <if test="status > -1">
-			AND box.status = #{status}
-        </if>
-        <if test="box_id != null and !box_id.equals('')">
-			AND box.id LIKE CONCAT('%', #{box_id}, '%')
-        </if>
-        <if test="box_name != null and !box_name.equals('')">
-			AND info.alias LIKE CONCAT('%', #{box_name}, '%')
-        </if>
-        <if test="regdate1 != null and !regdate1.equals('')">
-			AND info.regdate >= str_to_date(#{regdate1}, '%Y-%m-%d')
-        </if>
-        <if test="regdate2 != null and !regdate2.equals('')">
-			AND info.regdate <![CDATA[ <= ]]> str_to_date(#{regdate2}, '%Y-%m-%d')
-        </if>
-        
-		ORDER BY info.box_idx 
-	
-	</select>
 
 </mapper>

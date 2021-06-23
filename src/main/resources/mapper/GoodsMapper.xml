@@ -4,132 +4,33 @@
 <mapper namespace="com.vdcompany.adminSmartbox.mapper.GoodsMapper">
 
 
-
-	<select id="getGoodsDetail" parameterType="java.lang.Integer" resultType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
-		SELECT sb_goods_brand.brand as brand_name, sb_goods.* 
-        FROM sb_goods
-        JOIN sb_goods_brand
-        ON sb_goods.brand = sb_goods_brand.idx
-		
-		WHERE sb_goods.idx = #{idx}
-	</select>
-	
-    <update id="updateGoods" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
-	  	update sb_goods set 
-	  		skuid = #{skuid},
-	  		name = #{name}, 
-	  		gcode = #{gcode},
-	  		barcode = #{barcode},
-	  		brand = #{brand},
-	  		price = #{price},
-        <if test="image != null and !image.equals('')">
-	  		image = #{image},
-        </if>
-	  		weight = #{weight},
-	  		status = #{status},
-	  		used = #{used},
-	  		description = #{description},
-	  		regdate = #{regdate},
-	  		moddate = #{moddate}
-	  	WHERE idx = #{idx}
-    </update>
-
-
-	<insert id="insertGoods" useGeneratedKeys="true" keyProperty="idx" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
-	  	insert into sb_goods (
-	  		skuid, name, gcode, barcode,
-	  		brand, price, image,
-	  		regdate, moddate
-	  		
-	    )
-		values (
-	  
-			#{skuid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{gcode,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR},
-			#{brand,jdbcType=FLOAT}, #{price,jdbcType=FLOAT}, #{image,jdbcType=FLOAT},
-		 	#{regdate,jdbcType=TIMESTAMP}, #{moddate,jdbcType=TIMESTAMP}
-		)
-	</insert>
-
-
-	<insert id="insertGoodsDisplay" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsAgencyVO">
-			INSERT INTO sb_goods_agency (
-				gds_idx, agc_idx, used, regdate
-			) VALUES ( 
-				#{gds_idx}, #{agency_idx}, #{used}, NOW()
-			) ON DUPLICATE KEY UPDATE
-				used = #{used}, moddate = NOW()
-	</insert>
-
-	<select id="getGoodsList" resultType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
-		SELECT * FROM sb_goods
+	<select id="getGoodsList" parameterType="com.vdcompany.adminSmartbox.bean.web.paging.PagingVO"  resultType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		SELECT idx, skuid, goods_name, goods_code, barcode,
+			   brand, brand_name, price, image, weight,
+			   status, used, regdate, moddate
+		FROM (select idx, skuid, name as goods_name, gcode as goods_code, barcode, brand, price, image, weight, status, used, regdate, moddate from sb_goods) a,
+			 (select idx as brd_idx, brand as brand_name from sb_goods_brand) b
+		WHERE a.brand = b.brd_idx
+		<if test="idx != null and idx > -1">
+			AND idx = #{idx}
+		</if>
+		<if test="filter != null and !filter.equals('')">
+			AND ${filter}
+		</if>
 		ORDER BY idx
+		<if test="skip > -1 and take > 0">
+			LIMIT #{skip}, #{take}
+		</if>
 	</select>
 
-	<select id="getSearchGoodsList" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO" resultType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
-	
-		SELECT sb_goods_brand.brand as brand_name, sb_goods.* 
-        FROM sb_goods
-        JOIN sb_goods_brand
-        ON sb_goods.brand = sb_goods_brand.idx
-        
-        WHERE 1=1
-        <if test="skuid != null and !skuid.equals('')">
-			AND sb_goods.skuid LIKE CONCAT('%', #{skuid}, '%')
-        </if>
-        <if test="barcode != null and !barcode.equals('')">
-			AND sb_goods.barcode LIKE CONCAT('%', #{barcode}, '%')
-        </if>
-        <if test="brand != null and !brand.equals('') and brand != 0">
-			AND sb_goods.brand = #{brand}
-        </if>
-        <if test="gcode != null and !gcode.equals('')">
-			AND sb_goods.gcode LIKE CONCAT('%', #{gcode}, '%')
-        </if>
-        <if test="name != null and !name.equals('')">
-			AND sb_goods.name LIKE CONCAT('%', #{name}, '%')
-        </if>
-        <if test="price1 != null and !price1.equals('')">
-			AND sb_goods.price >= #{price1}
-        </if>
-        <if test="price2 != null and !price2.equals('')">
-			AND sb_goods.price <![CDATA[ <= ]]> #{price2}
-        </if>
-        <if test="regdate1 != null and !regdate1.equals('')">
-			AND sb_goods.regdate >= str_to_date(#{regdate1}, '%Y-%m-%d')
-        </if>
-        <if test="regdate2 != null and !regdate2.equals('')">
-			AND sb_goods.regdate <![CDATA[ <= ]]> str_to_date(#{regdate2}, '%Y-%m-%d')
-        </if>
-        
-        
-		ORDER BY idx 
-	
-	</select>
-	
-	
-<!-- 	<select id="getGoodsDisplay" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsDisplayVO" resultType="com.vdcompany.adminSmartbox.bean.goods.GoodsDisplayVO">
-		SELECT agency.company_name, sb_goods_agency.used, 
-				sb_goods.*, sb_goods_brand.brand as brand_name
-		
-		FROM sb_goods
-		JOIN sb_goods_agency
-		ON sb_goods.idx = sb_goods_agency.gds_idx
-			JOIN agency
-		    ON agency.idx = sb_goods_agency.agc_idx
-	    		JOIN sb_goods_brand
-    		    ON sb_goods.brand = sb_goods_brand.idx
-	</select>
- -->	
- 
- 	<select id="getGoodsDisplay" parameterType="java.lang.Integer" resultType="com.vdcompany.adminSmartbox.bean.goods.GoodsAgencyVO">
-		SELECT sb_goods_agency.gds_idx, sb_goods_agency.used, agency.idx as agency_idx, agency.*
-		
-		FROM sb_goods_agency
-			JOIN agency
-		    ON agency.idx = sb_goods_agency.agc_idx
-		
-		WHERE gds_idx = #{gdsIdx} 
-	</select>
- 
+
+	<update id="updateGoodsImage" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		UPDATE sb_goods SET
+		<if test="image != null and !image.equals('')">
+			image = #{image},
+		</if>
+		moddate = now()
+		WHERE idx = #{idx}
+	</update>
 
 </mapper>

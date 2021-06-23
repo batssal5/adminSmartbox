@@ -77,9 +77,15 @@
                 {
                     caption: '#',
                     cellTemplate: function(cellElement, cellInfo) {
-                        cellElement.text(cellInfo.row.rowIndex+1)
+                        cellElement.text(function (){
+                            //var cnt       = $("#gridContainer").dxDataGrid("instance").pageCount();
+                            var pageSize  = $("#gridContainer").dxDataGrid("instance").pageSize();
+                            var pageIndex = $("#gridContainer").dxDataGrid("instance").pageIndex();
+                            var rowNum = (pageSize*pageIndex)+cellInfo.row.rowIndex+1;
+
+                            return rowNum;
+                        })
                     },
-                    width: 40,
                     cssClass: "text-center",
                     allowEditing: false
                 }, {
@@ -214,23 +220,7 @@
             paging: {
                 pageSize: 15
             },
-            height: 650,
-            /*masterDetail: {
-                enabled: true,
-                template: function(container, options) {
-                    $("<div>")
-                            .dxDataGrid({
-                                dataSource: DevExpress.data.AspNet.createStore({
-                                    loadUrl: url + "/OrderDetails",
-                                    loadParams: { orderID : options.data.OrderID },
-                                    onBeforeSend: function(method, ajaxOptions) {
-                                        ajaxOptions.xhrFields = { withCredentials: true };
-                                    }
-                                }),
-                                showBorders: true
-                            }).appendTo(container);
-                }
-            },*/
+            height: 700,
             editing: {
                 mode: "form",
                 useIcons: true,

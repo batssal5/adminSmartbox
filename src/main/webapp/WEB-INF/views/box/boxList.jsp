@@ -54,14 +54,21 @@
 				}
 			}),
 			remoteOperations: true,
+			columnAutoWidth: true,
 			filterRow: { visible: true },
 			columns: [
 				{
 					caption: '#',
 					cellTemplate: function(cellElement, cellInfo) {
-						cellElement.text(cellInfo.row.rowIndex+1)
+						cellElement.text(function (){
+							//var cnt       = $("#gridContainer").dxDataGrid("instance").pageCount();
+							var pageSize  = $("#gridContainer").dxDataGrid("instance").pageSize();
+							var pageIndex = $("#gridContainer").dxDataGrid("instance").pageIndex();
+							var rowNum = (pageSize*pageIndex)+cellInfo.row.rowIndex+1;
+
+							return rowNum;
+						})
 					},
-					width: 40,
 					cssClass: "text-center",
 					allowEditing: false
 				}, {
@@ -182,29 +189,7 @@
 					visible: false
 				}
 			],
-			/*filterRow: {
-				visible: true
-			},
-			headerFilter: {
-				visible: true
-			},
-			groupPanel: {
-				visible: true
-			},*/
 			showBorders: true,
-			/*allowColumnReordering: true,
-			grouping: {
-				autoExpandAll: true,
-			},
-			searchPanel: {
-				visible: true
-			},
-			paging: {
-				pageSize: 10
-			},
-			groupPanel: {
-				visible: true
-			},*/
 			scrolling: {
 				rowRenderingMode: 'virtual'
 			},
@@ -218,7 +203,7 @@
 			paging: {
 				pageSize: 15
 			},
-			height: 650,
+			height: 700,
 			/*masterDetail: {
 				enabled: true,
 				template: function(container, options) {

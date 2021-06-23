@@ -26,7 +26,7 @@ response.setDateHeader("Expires",0);
 
 
     <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
-    <script type="text/javascript" src="/bootstrab/js/util.js"></script>
+    <script type="text/javascript" src="/bootstrab/js/util.js?v=0.0.1"></script>
     <script language="javascript">
         $(function() {
             // Handler for .ready() called.

@@ -1,359 +1,340 @@
+<%
+	response.setHeader("Pragma","no-cache");
+	response.setHeader("Cache-Control","no-cache");
+	response.addHeader("Cache-Control","no-store");
+	response.setDateHeader("Expires",0);
+%>
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<jsp:include page = '<%="../common/vd_header.jsp" %>'/>
 
-<html lang="en">
+<script type="text/javascript" src="/bootstrab/js/js-datagrid.js"></script>
+<script type="text/javascript" src="/bootstrab/js/js-aspnet-data.js"></script>
 
-<jsp:include page = '<%="../common/header.jsp" %>'/>
+<link rel="stylesheet" href=/bootstrab/css/js-datagrid-style.css>
 
+<script language="javascript">
+	var sb_status = [
+		{
+			"value": 0,
+			"name": "정상(online)"
+		},{
+			"value": 1,
+			"name": "비정상(offline)"
+		}, {
+			"value": 2,
+			"name": "미사용(off)"
+		}
+	];
+	var sb_cate = [
+		{
+			"value": -1,
+			"name": "미사용"
+		},{
+			"value": 0,
+			"name": "미사용2"
+		},{
+			"value": 1,
+			"name": "번화가"
+		},{
+			"value": 2,
+			"name": "사무실"
+		}
+	];
+	let backendURL = "http://localhost:8888/"
 
-<link rel="stylesheet" href=/bootstrab/css/bootstrap-datepicker.css>
-<script src="/bootstrab/js/bootstrap-datepicker.js"></script>
-<script src="/bootstrab/js/bootstrap-datepicker.ko.min.js"></script> 
+	function cellTemplate(container, options) {
+		let imgElement = document.createElement("img");
+		imgElement.setAttribute("src", options.value);
+		imgElement.setAttribute('width', '30');
+		imgElement.setAttribute('height', '30');
+		container.append(imgElement);
+	}
 
+	function editCellTemplate(cellElement, cellInfo) {
+		let buttonElement = document.createElement("div");
+		buttonElement.classList.add("retryButton");
+		let retryButton = $(buttonElement).dxButton({
+			text: "Retry",
+			visible: false,
+			onClick: function() {
+				// The retry UI/API is not implemented. Use a private API as shown at T611719.
+				for (var i = 0; i < fileUploader._files.length; i++) {
+					delete fileUploader._files[i].uploadStarted;
+				}
+				fileUploader.upload();
+			}
+		}).dxButton("instance");
 
-<body id="page-top">
-	<!-- Page Wrapper -->
-	<div id="wrapper">
-	
-		<!-- SideBar -->
-		<jsp:include page = '<%="../common/sidebar.jsp" %>'/>
-	
-	    <!-- Content Wrapper -->
-	    <div id="content-wrapper" class="d-flex flex-column">
-	        <!-- Main Content -->
-	        <div id="content">
-	        
-	            <!-- Topbar -->
-				<jsp:include page = '<%="../common/toolbar.jsp" %>'/>
-	
-	            <!-- Begin Page Content -->
-	            <div class="container-fluid">
-		
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">상품관리 > 상품리스트</h1>
-                    </div>
-		
-	                <div class="container-fluid">
+		let fileUploaderElement = document.createElement("div");
+		let fileUploader = $(fileUploaderElement).dxFileUploader({
+			name: "filedata",
+			multiple: false,
+			value: [],
+			accept: "image/*",
+			uploadMode: "instantly",
+			uploadUrl: "/goods/goodsList/imageUpload",
+			onValueChanged: function(e) {
+				let reader = new FileReader();
+				reader.onload = function(args) {
+					imageElement.setAttribute('src', args.target.result);
+					console.log("result:"+args.target.result);
+				}
+				//console.log("e.value[0]:"+e.value[0]);
+				reader.readAsDataURL(e.value[0]);
+				this.value = e.value[0];
+			},
+			onUploaded: function(e){
+				cellInfo.setValue(e.request.responseText);
+				//console.log(e.request.responseText)
+				retryButton.option("visible", false);
+			},
+			onUploadError: function(e){
+				let xhttp = e.request;
+				if(xhttp.status === 400){
+					e.message = e.error.responseText;
+				}
+				if(xhttp.readyState === 4 && xhttp.status === 0) {
+					e.message = "Connection refused";
+				}
+				retryButton.option("visible", true);
+			}
+		}).dxFileUploader("instance");
 
-			
-	                    <div class="card shadow mb-4">
-	                        <div class="card-body">
-	                            <div class="table-responsive">
-	                            
-	                            
-                  			        <form action="#" id="searchForm" name="searchForm"> 
-	                            
-	                                <table class="table table-bordered" id="inputTable" width="100%" cellspacing="0">
-	                                    <thead>
-	                                    </thead>
-	                                    <tbody>
-	                                        <tr>
-	                                            <td>skuid</td>
-	                                            <td><input type="text" id="skuid" name="skuid" style="width:100%;"></td>
-	                                            <td>바코드</td>
-	                                            <td><input type="text" id="barcode" name="barcode" style="width:100%;"></td>
-	                                        </tr>
-	                                        <tr>
-	                                            <td>브랜드</td>
-	                                            <td>
-	                                            	<input type="hidden" id="brand" name="brand" value="">
-			                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropBrand" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			                                            전체
-			                                        </button>
-			                                        <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">
-                        			                    <a class="dropdown-item" href="javascript:onBrand(0,'전체')">전체</a>
-                                                        <c:forEach var="sub" items="${brandList}">
-			                                            <a class="dropdown-item" href="javascript:onBrand('${sub.idx}','${sub.brand}')"><c:out value="${sub.brand}" /></a>
-			                                            </c:forEach>
-			                                        </div>
-	                                            </td>
-	                                            <td>상품코드</td>
-	                                            <td><input type="text" id="gcode" name="gcode" style="width:100%;"></td>
-	                                        </tr>
-	                                        <tr>
-	                                            <td>상품명</td>
-	                                            <td><input type="text" id="name" name="name" style="width:100%;"></td>
-	                                            <td>기본가격</td>
-	                                            <td><input type="text"id="price1" name="price1"  style="width:30%;"> ~ <input type="text" id="price2" name="price2" style="width:30%;"></td>
-	                                        </tr>
-	                                        <tr>
-	                                            <td>등록일자</td>
-	                                            <td colspan=""><input type="text" id="datePicker1" name="regdate1" value="" style="width:40%;"> ~ <input type="text" id="datePicker2" name="regdate2" value="" style="width:40%;"></td>
-	                                            <td></td>
-	                                            <td></td>
-	                                        </tr>
-	                                    </tbody>
-	                                </table>
-                          			</form>
-	                                
-	                            </div>
-	                            
-                				<a href="javascript:location.reload(true);" class="btn btn-danger btn-icon-split">
-									<span class="text">초기화</span>
-								</a>
-								
-								<a href="javascript:search();" class="btn btn-success btn-icon-split">
-                                    <span class="text">조회</span>
-                                </a>
-	                            
-	                            <a href="/goods/goodsAdd" class="btn btn-primary btn-icon-split" style="float:right;">
-                                    <span class="text">등록</span>
-                                </a>
-	                        </div>
-	                        
-	                    </div>
+		let imageElement = document.createElement("img");
+		imageElement.classList.add("uploadedImage");
+		imageElement.setAttribute('src', cellInfo.value);
+		imageElement.setAttribute('height', '80');
 
-
-	                    <!-- DataTales Example -->
-	                    <div class="card shadow mb-4">
-	                        <div class="card-body">
-	                            <div class="table-responsive">
-	                            
-	                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-	                                    <thead>
-	                                        <tr>
-	                                            <th>순번</th>
-	                                            <th>이미지</th>
-	                                            <th>skuid</th>
-	                                            <th>바코드</th>
-	                                            <th>상품코드</th>
-	                                            <th>브랜드</th>
-	                                            <th>상품명</th>
-	                                            <th>기본가격</th>
-	                                            <th>등록일</th>
-	                                        </tr>
-	                                    </thead>
-	                                    <tbody id="searchBody">
-                            	           	<c:forEach var="sub" items="${goodsList}">
-	                                        <%-- <tr onclick="onModify('${sub.idx}')"> --%>
-	                                        <tr>
-                                            <td>${sub.idx}</td>
-                                            <td><img src="${sub.image}" alt="Goods Image" height="50" width="50"></td>
-                                            <td>${sub.skuid}</td>
-                                            <td>${sub.barcode}</td>
-                                            <td>${sub.gcode}</td>
-                                            <td>${sub.brand}</td>
-                                            <td>${sub.name}</td>
-                                            <td>${sub.price}</td>
-                                            <td><fmt:formatDate value="${sub.regdate}" pattern="yyyy.MM.dd HH:mm" /></td>
-                                            </tr>
-                                            </c:forEach>
-
-	                                    </tbody>
-	                                </table>
-	                            </div>
-	                        </div>
-	                    </div>
-	
-	                </div>
-	                <!-- /.container-fluid -->
-		
-	            </div>
-	            <!-- /.container-fluid -->
-	
-	        </div>
-	        <!-- End of Main Content -->
-	
-	    </div>
-	    <!-- End of Content Wrapper -->
-	
-	</div>
-
-
-</body>
-
-<script>
+		cellElement.append(imageElement);
+		cellElement.append(buttonElement);
+		cellElement.append(fileUploaderElement);
+	}
 	$(function(){
+		$("#gridContainer").dxDataGrid({
+			dataSource: DevExpress.data.AspNet.createStore({
+				key: "idx",
+				loadUrl:   "./goodsList/json?type=get",
+				insertUrl: "./goodsList/json?type=put",
+				updateUrl: "./goodsList/json?type=post",
+				deleteUrl: "./goodsList/json?type=delete",
+				onBeforeSend: function(method, ajaxOptions) {
+					ajaxOptions.xhrFields = { withCredentials: true };
+				}
+			}),
+			remoteOperations: true,
+			filterRow: { visible: true },
+			columnAutoWidth: true,
+			columns: [
+				{
+					caption: '#',
+					cellTemplate: function(cellElement, cellInfo) {
+						cellElement.text(function (){
+							//var cnt       = $("#gridContainer").dxDataGrid("instance").pageCount();
+							var pageSize  = $("#gridContainer").dxDataGrid("instance").pageSize();
+							var pageIndex = $("#gridContainer").dxDataGrid("instance").pageIndex();
+							var rowNum = (pageSize*pageIndex)+cellInfo.row.rowIndex+1;
 
-	    var table = $('#dataTable').DataTable();
-		
-		/* $("#menuSell").addClass("show"); */
-
-	    $('#dataTable tr').on( 'click', function () {
-			location.href = "/goods/goodsModify?idx="+$(this).children().eq(0).text();
-	    });
-		
-	});
-
-	function onModify(idx) {
-		location.href = "/goods/goodsModify?idx="+idx
-	}
-
-	function onBrand(idx, name) {
-		$('#dropBrand').html(name);
-		$('#brand').val(idx);
-	}	
-	
-
-	// 조회 클릭시 리스트 불러오기
-	function search() {
-		
-		var url="/goods/ajax_search";
-		
-		var ajax = $.ajax({ 
-			url : url
-			, type: "GET"
-			, daataType : "jason"
-			, contentType: 'application/x-www-form-urlencoded; charset=UTF-8' 
-			, data : $('#searchForm').serialize()
-			, beforeSend:function(response){
-				
-			}	
-			, success : function(responseData){
-
-				var data = JSON.parse(responseData);
-				//alert(data);
-				var html = '';
-
-				var tableData = [];
-
-				
-				$.each(data, function(index, item){
-
-					if(!item.store_num) {
-						item.store_num = "-";
+							return rowNum;
+						})
+					},
+					cssClass: "text-center",
+					allowEditing: false
+				}, {
+					dataField: "skuid",
+					cssClass: "text-center",
+					caption: "SKUID"
+				}, {
+					dataField: "barcode",
+					cssClass: "text-center",
+					caption: "바코드"
+				}, {
+					dataField: "idx",
+					cssClass: "text-center",
+					caption: "상품코드"
+				}, {
+					dataField: "brand_name",
+					caption: "브랜드"
+				}, {
+					dataField: "image",
+					caption: "이미지",
+					width: 50,
+					cssClass: "text-center",
+					cellTemplate: cellTemplate,
+					editCellTemplate: editCellTemplate
+					/*cellTemplate: function (container, options) {
+						$("<div>")
+								.append($("<img>", { "src": options.value }).width(30).height(30))
+								.appendTo(container);
+					}*//*,
+					editCellTemplate: function (cellElement, cellInfo) {
+						$("<div />")
+								.dxFileUploader({
+									buttonText: 'Select File',
+									labelText: cellInfo.value,
+									multiple: false,
+									accept: 'image/!*',
+									onValueChanged: function (e) {
+										this.labelText = e.value;
+										cellInfo.setValue(e.value);
+									}
+								})
+								.appendTo(cellElement);
+					}*/
+				}, {
+					dataField: "goods_name",
+					caption: "상품명"
+				},{
+					dataField: "price",
+					cssClass: "text-right",
+					caption: "기본가격",
+					cellTemplate: function(cellElement, cellInfo) {
+						cellElement.text(numberWithCommas(cellInfo.value))
 					}
+				}, {
+					dataField: "regdate",
+					caption: "등록일",
+					width: 80,
+					cssClass: "text-center",
+					dataType: "date",
+					format: "yy-MM-dd"
+				}
+			],
+			showBorders: true,
+			scrolling: {
+				rowRenderingMode: 'virtual'
+			},
+			pager: {
+				visible: true,
+				allowedPageSizes: [10, 20, 30, 'all'],
+				showPageSizeSelector: true,
+				showInfo: true,
+				showNavigationButtons: true
+			},
+			paging: {
+				pageSize: 10
+			},
+			height: 630,
+			editing: {
+				mode: "form",
+				useIcons: true,
+				allowAdding: true,
+				allowUpdating: true,
+				allowDeleting: true,
+				texts: {
+					confirmDeleteMessage: "해당 데이터를 삭제 합니다."
+				}
+			},
+			grouping: {
+				autoExpandAll: false
+			},
+			onCellPrepared: function(e, cellInfo) {
+				if (e.rowType == "header") {
+					e.cellElement.css("text-align", "center");
+				}
+				if (e.rowType == "data") {
+					e.cellElement.css("text-align", "left");
+				}
+			},
+			onEditorPreparing: function(e) {
 
-					var date = new Date(item.regdate);
-					
-					tableData[index] = [item.idx,
-						'<img src="'+item.image+'" alt="Goods Image" height="50" width="50">',
-						item.skuid,
-						item.barcode,
-						item.gcode,
-						item.brand_name,
-						item.name,
-						item.price,
-						getDateToString(date)];
+				if (e.parentType === "dataRow" && e.row.isEditing && !e.row.isNewRow) {//수정일때는 readonly처리
+					if (e.dataField === "regdate") {
+						e.editorOptions.readOnly = true;
+					}
+					/*if (e.dataField === "image") {
 
-					html += '<tr>';
-					html += '<td>'+item.idx+'</td>';
-					html += '<td><img src="'+item.image+'" alt="Goods Image" height="50" width="50"></td>';
-					html += '<td>'+item.skuid+'</td>';
-					html += '<td>'+item.barcode+'</td>';
-					html += '<td>'+item.gcode+'</td>';
-					html += '<td>'+item.brand_name+'</td>';
-					html += '<td>'+item.name+'</td>';
-					html += '<td>'+item.price+'</td>';
-					html += '<td>'+getDateToString(date)+'</td>';
-					html += '</tr>';
-					
-				});
+						const defaultValueChangeHandler = e.editorOptions.onValueChanged;
+						//e.editorName = "dxTextArea";
+						e.editorOptions.onValueChanged = function (args) {  // Override the default handler
+							// ...
+							// Custom commands go here
+							// ...
+							// If you want to modify the editor value, call the setValue function:
+							 e.setValue("newValue");
+							 console.log("aa");
+							// Otherwise, call the default handler:
+							defaultValueChangeHandler(args);
+						}
+					}*/
+				}
 
-				$('#dataTable').DataTable().destroy();
-				$('#dataTable').DataTable( {
-				   data: tableData  
-				});
-			    $('#dataTable tr').on( 'click', function () {
-					location.href = "/goods/goodsModify?idx="+$(this).children().eq(0).text();
-			    });
-
-				
-/* 				var searchBody = document.getElementById("searchBody");
-				searchBody.innerHTML = html;
-
-			    $('#dataTable').DataTable();
- */			}
-				
-						
-			,complete: function(response){
-				
-				// var ul = document.getElementById("ul_dynaList");
-				// ul.innerHTML = "";	
-			}
-			, error:function(e) {
-				// var ul = document.getElementById("ul_dynaList");
-				// ul.innerHTML = "";			
-			}
-			, fail: function(){
-				
+				if (e.parentType === "dataRow" && e.row.isEditing && e.row.isNewRow) {//등록일 때 활성화
+					if (e.dataField === "regdate") {
+						e.editorOptions.readOnly = true;
+					}
+				}
 			}
 		});
-	
-		// ajax 실행문
-		jQuery.ajax.done; // (function(data){})
-		
-	}
-
-	
-	function getDateToString(date)
-	{
-			var dd = date.getDate();
-			var mm = date.getMonth()+1; //January is 0!
-		
-			var yyyy = date.getFullYear();
-			if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm}
-			
-			yyyy = yyyy.toString();
-			mm = mm.toString();
-			dd = dd.toString();
-			
-			var h = date.getHours();
-			var m = date.getMinutes();
-
-			if(h<10){h='0'+h} if(m<10){m='0'+m}
-			h = h.toString();
-			m = m.toString();
-		
-			var s1 = yyyy+"."+mm+"."+dd+" "+h+":"+m;
-			return s1;
-	}
+	});
 </script>
-<script>
-	$(function() {	
-		$('#datePicker1').datepicker({
-		    format: "yyyy-mm-dd",	//데이터 포맷 형식(yyyy : 년 mm : 월 dd : 일 )
-/* 		    startDate: '-10d',	//달력에서 선택 할 수 있는 가장 빠른 날짜. 이전으로는 선택 불가능 ( d : 일 m : 달 y : 년 w : 주)
-		    endDate: '+10d',	//달력에서 선택 할 수 있는 가장 느린 날짜. 이후로 선택 불가 ( d : 일 m : 달 y : 년 w : 주)
- */		    autoclose : true,	//사용자가 날짜를 클릭하면 자동 캘린더가 닫히는 옵션
-		    calendarWeeks : false, //캘린더 옆에 몇 주차인지 보여주는 옵션 기본값 false 보여주려면 true
-		    clearBtn : true, //날짜 선택한 값 초기화 해주는 버튼 보여주는 옵션 기본값 false 보여주려면 true
-		    /* datesDisabled : ['2019-06-24','2019-06-26'],//선택 불가능한 일 설정 하는 배열 위에 있는 format 과 형식이 같아야함. */
-		    /* daysOfWeekDisabled : [0,6],	//선택 불가능한 요일 설정 0 : 일요일 ~ 6 : 토요일 */
-		    /* daysOfWeekHighlighted : [3], //강조 되어야 하는 요일 설정 */
-		    disableTouchKeyboard : false,	//모바일에서 플러그인 작동 여부 기본값 false 가 작동 true가 작동 안함.
-		    immediateUpdates: false,	//사용자가 보는 화면으로 바로바로 날짜를 변경할지 여부 기본값 :false 
-		    multidate : false, //여러 날짜 선택할 수 있게 하는 옵션 기본값 :false 
-		    multidateSeparator :",", //여러 날짜를 선택했을 때 사이에 나타나는 글짜 2019-05-01,2019-06-01
-		    templates : {
-		        leftArrow: '&laquo;',
-		        rightArrow: '&raquo;'
-		    }, //다음달 이전달로 넘어가는 화살표 모양 커스텀 마이징 
-		    showWeekDays : true ,// 위에 요일 보여주는 옵션 기본값 : true
-/* 		    title: "테스트",	//캘린더 상단에 보여주는 타이틀
- */		    todayHighlight : true ,	//오늘 날짜에 하이라이팅 기능 기본값 :false 
-		    toggleActive : false,	//이미 선택된 날짜 선택하면 기본값 : false인경우 그대로 유지 true인 경우 날짜 삭제
-		    weekStart : 0 ,//달력 시작 요일 선택하는 것 기본값은 0인 일요일 
-		    language : "ko"	//달력의 언어 선택, 그에 맞는 js로 교체해줘야한다.
-		    
-		});//datepicker end
+<div class="header-mobile-wrapper">
+	<div class="app-header__logo">
+		<a href="#" data-toggle="tooltip" data-placement="bottom" title="Smart Box Admin" class="logo-src"></a>
+		<button type="button" class="hamburger hamburger--elastic mobile-toggle-sidebar-nav">
+                <span class="hamburger-box">
+                    <span class="hamburger-inner"></span>
+                </span>
+		</button>
+		<div class="app-header__menu">
+            <span>
+                <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
+                    <span class="btn-icon-wrapper">
+                        <i class="fa fa-ellipsis-v fa-w-6"></i>
+                    </span>
+                </button>
+            </span>
+		</div>
+	</div>
+</div>
+<div class="app-inner-layout app-inner-layout-page" style>
+	<jsp:include page = '<%="../common/vd_top_tabmenu.jsp" %>'/>
+	<div class="app-inner-layout__wrapper">
+		<div class="app-inner-layout__content">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-12 col-lg-12">
+						<div class="mb-3 card">
+							<div class="card-header-tab card-header">
+								<div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+									<i class="header-icon lnr-cloud-download icon-gradient bg-happy-itmeo"> </i>
+									기본설정 > 사업자관리 > 매장관리
+								</div>
+								<div class="btn-actions-pane-right text-capitalize actions-icon-btn">
+									<div class="btn-group dropdown">
+										<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn-icon btn-icon-only btn btn-link">
+											<i class="pe-7s-menu btn-icon-wrapper"></i>
+										</button>
+										<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-right rm-pointers dropdown-menu-shadow dropdown-menu-hover-link dropdown-menu">
+											<h6 tabindex="-1" class="dropdown-header">Header</h6>
+											<button type="button" tabindex="0" class="dropdown-item"><i class="dropdown-icon lnr-inbox"> </i><span>Menus</span>
+											</button>
+											<button type="button" tabindex="0" class="dropdown-item"><i class="dropdown-icon lnr-file-empty"> </i><span>Settings</span>
+											</button>
+											<button type="button" tabindex="0" class="dropdown-item"><i class="dropdown-icon lnr-book"> </i><span>Actions</span>
+											</button>
+											<div tabindex="-1" class="dropdown-divider"></div>
+											<div class="p-3 text-right">
+												<button class="mr-2 btn-shadow btn-sm btn btn-link">
+													View Details
+												</button>
+												<button class="mr-2 btn-shadow btn-sm btn btn-primary">
+													Action
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 
-		$('#datePicker2').datepicker({
-		    format: "yyyy-mm-dd",	//데이터 포맷 형식(yyyy : 년 mm : 월 dd : 일 )
-    		autoclose : true,	//사용자가 날짜를 클릭하면 자동 캘린더가 닫히는 옵션
-   		    calendarWeeks : false, //캘린더 옆에 몇 주차인지 보여주는 옵션 기본값 false 보여주려면 true
-   		    clearBtn : true, //날짜 선택한 값 초기화 해주는 버튼 보여주는 옵션 기본값 false 보여주려면 true
-   		    disableTouchKeyboard : false,	//모바일에서 플러그인 작동 여부 기본값 false 가 작동 true가 작동 안함.
-   		    immediateUpdates: false,	//사용자가 보는 화면으로 바로바로 날짜를 변경할지 여부 기본값 :false 
-   		    multidate : false, //여러 날짜 선택할 수 있게 하는 옵션 기본값 :false 
-   		    multidateSeparator :",", //여러 날짜를 선택했을 때 사이에 나타나는 글짜 2019-05-01,2019-06-01
-   		    templates : {
-   		        leftArrow: '&laquo;',
-   		        rightArrow: '&raquo;'
-   		    }, //다음달 이전달로 넘어가는 화살표 모양 커스텀 마이징 
-   		    showWeekDays : true ,// 위에 요일 보여주는 옵션 기본값 : true
- 			todayHighlight : true ,	//오늘 날짜에 하이라이팅 기능 기본값 :false 
-   		    toggleActive : false,	//이미 선택된 날짜 선택하면 기본값 : false인경우 그대로 유지 true인 경우 날짜 삭제
-   		    weekStart : 0 ,//달력 시작 요일 선택하는 것 기본값은 0인 일요일 
-		    language : "ko"	//달력의 언어 선택, 그에 맞는 js로 교체해줘야한다.
-		});
-	});//ready end
-
-
-	
-</script>
-
-</html>
-
+							<div class="p-2 card-body">
+								<div id="gridContainer"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<jsp:include page = '<%="../common/vd_footer.jsp" %>'/>

@@ -233,17 +233,6 @@ public class BoxController {
 		response.setContentType("text/html;charset=UTF-8");
 		AgencyVO agencyVO  = new AgencyVO();
 		switch (pagingVO.getType()){
-			case "put":
-				String putDataString = request.getParameter("values");
-				logger.info("putDataString:"+putDataString);
-				agencyVO  =  new Gson().fromJson(putDataString, AgencyVO.class);
-				logger.info("agencyVO:"+new Gson().toJson(agencyVO));
-				List<AgencyVO> putRst = new ArrayList<>();
-				putRst = agencyService.putAgencyInfo(agencyVO);
-				if(putRst.size()>0) {
-					response.getWriter().write(new Gson().toJson(putRst.get(0)));
-				}
-				break;
 			case "get":
 				List<InventoryVO> agencyInfoList = boxService.getInventoryInfo(pagingVO);
 
@@ -258,30 +247,6 @@ public class BoxController {
 					mapResp.put("totalCount", countList.size());
 				}
 				response.getWriter().write(new Gson().toJson(mapResp));
-				break;
-			case "post":
-				String postKey = request.getParameter("key");
-				String postDataString = request.getParameter("values");
-				logger.info("postKey:"+postKey);
-				logger.info("postDataString:"+postDataString);
-				agencyVO  =  new Gson().fromJson(postDataString, AgencyVO.class);
-				agencyVO.setIdx(Integer.parseInt(postKey));
-				logger.info("agencyVO:"+new Gson().toJson(agencyVO));
-				List<AgencyVO> postRst = new ArrayList<>();
-				if(postKey!=null && !postKey.equals("")) {
-					postRst = agencyService.postAgencyInfo(agencyVO);
-				}
-				if(postRst.size()>0) {
-					response.getWriter().write(new Gson().toJson(postRst.get(0)));
-				}
-				break;
-			case "delete":
-				String deleteKey = request.getParameter("key");
-				logger.info("deleteKey:"+deleteKey);
-				agencyVO.setIdx(Integer.parseInt(deleteKey));
-				int delBoxRst = agencyService.delAgencyInfo(agencyVO);
-				logger.info("delBoxRst:"+delBoxRst);
-
 				break;
 		}
 	}
