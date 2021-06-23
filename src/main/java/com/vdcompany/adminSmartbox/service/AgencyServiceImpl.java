@@ -100,5 +100,12 @@ public class AgencyServiceImpl implements AgencyService {
 		int ret = storeMapper.delAgencyStoreInfo(agencyVO);
 		return ret;
 	}
+
+
+	@Override
+	public List<AgencyVO> getAgencyList() {
+		return agencyMapper.getAgencyList();
+	}
+
 }
 
