@@ -8,6 +8,7 @@ public interface LookupService {
 
 	List<LookupVO> getLookupAgency();
 	List<LookupVO> getLookupStoreInfo();
+	List<LookupVO> getLookupBrandInfo();
 
 	
 }

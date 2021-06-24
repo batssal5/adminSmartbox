@@ -10666,7 +10666,7 @@
     display: inline-block;
 }
 .dx-datagrid-rowsview .dx-row > .dx-master-detail-cell {
-    padding: 30px;
+    padding: 8px;
 }
 .dx-datagrid-rowsview .dx-row > .dx-master-detail-cell:focus {
     outline: 0;

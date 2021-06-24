@@ -226,6 +226,223 @@
 				pageSize: 10
 			},
 			height: 630,
+			masterDetail: {
+				enabled: true,
+				template: function(container, options) {
+					$("<div>")
+							.dxDataGrid({
+								columnAutoWidth: true,
+								showBorders: true,
+								columns: [
+									{
+										dataField: "agency_idx",
+										caption: "고객사명",
+										setCellValue: function(rowData, value) {
+											rowData.agency_idx = value;
+											rowData.store_num = null;
+										},
+										lookup: {
+											dataSource: {
+												paginate: true,
+												store: new DevExpress.data.CustomStore({
+													key: "agency_idx",
+													loadMode: "raw",
+													load: function() {
+														return $.getJSON("/lookup/agencyJson");
+													}
+												}),
+												sort: "agency_name"
+											},
+											valueExpr: "agency_idx",
+											displayExpr: "agency_name",
+											visible: false
+										}
+									}
+								],
+								dataSource: DevExpress.data.AspNet.createStore({
+									loadUrl: "./goodsExhibitionDetail/json?type=get",
+									insertUrl: "./goodsExhibitionDetail/json?type=put",
+									updateUrl: "./goodsExhibitionDetail/json?type=post",
+									deleteUrl: "./goodsExhibitionDetail/json?type=delete",
+									key: "box_idx",
+									loadParams: { goods_idx : options.data.idx },
+									onBeforeSend: function(method, ajaxOptions) {
+										ajaxOptions.xhrFields = { withCredentials: true };
+									}
+								}),
+								masterDetail: {
+									enabled: true,
+									template: function(container, options) {
+										$("<div>")
+												.dxDataGrid({
+													showBorders: true,
+													columns: [
+														{
+															dataField: "sto_name",
+															caption: "매장명",
+															allowEditing: false
+														},
+														{
+															dataField: "box_name",
+															caption: "박스명",
+															allowEditing: false
+														},
+														{
+															dataField: "goods_price",
+															caption: "기본가격",
+															allowEditing: false,
+															cellTemplate: function(cellElement, cellInfo) {
+																cellElement.text(numberWithCommas(cellInfo.value))
+															}
+														},
+														{
+															dataField: "price",
+															caption: "실판매 가격",
+															allowEditing: false,
+															cellTemplate: function(container, cellInfo) {
+																var html =  "";
+																html +=	"<div class=\"d-inline text-success pr-1\">\n";
+																html += numberWithCommas(cellInfo.value)+"</div>";
+																$(html).appendTo(container);
+															}
+														},
+														{
+															dataField: "agc_used",
+															caption: "고객사별 가격 사용 유무",
+															cssClass: "text-center",
+															lookup: {
+																displayExpr: "name",
+																valueExpr: "value",
+																dataSource: lookup_used
+															},
+															visible: false
+														},
+														{
+															dataField: "agc_price",
+															caption: "고객사별 가격",
+															cssClass: "text-left",
+															cellTemplate: function(container, cellInfo) {
+																var html =  "";
+																if(cellInfo.data.agc_used==0 && cellInfo.data.sto_used!=0 && cellInfo.data.box_used!=0){
+																	html +=	"<div class=\"d-inline text-primary pr-1\">\n";
+																}else{
+																	html +=	"<div class=\"d-inline text-dark pr-1\">\n";
+																}
+																if(cellInfo.data.agc_used==0) {
+																	html +=		"   <i class=\"ion-android-checkbox-outline\"></i>&nbsp;"
+																}else{
+																	html +=		"   <i class=\"ion-android-checkbox-outline-blank\"></i>&nbsp;"
+																}
+																if (cellInfo.value == -1) {
+																	html += "미등록";
+																} else {
+																	html += numberWithCommas(cellInfo.value);
+																}
+																html += "</div>";
+																$(html).appendTo(container);
+															}
+														},
+														{
+															dataField: "sto_used",
+															caption: "매장별 가격 사용 유무",
+															cssClass: "text-center",
+															lookup: {
+																displayExpr: "name",
+																valueExpr: "value",
+																dataSource: lookup_used
+															},
+															visible: false
+														},
+														{
+															dataField: "sto_price",
+															caption: "매장별 가격",
+															cssClass: "text-left",
+															cellTemplate: function(container, cellInfo) {
+																var html =  "";
+																if(cellInfo.data.sto_used==0 && cellInfo.data.box_used!=0){
+																	html +=	"<div class=\"d-inline text-primary pr-1\">\n";
+																}else{
+																	html +=	"<div class=\"d-inline text-dark pr-1\">\n";
+																}
+																if(cellInfo.data.sto_used==0) {
+																	html +=		"   <i class=\"ion-android-checkbox-outline\"></i>&nbsp;"
+																}else{
+																	html +=		"   <i class=\"ion-android-checkbox-outline-blank\"></i>&nbsp;"
+																}
+																if (cellInfo.value == -1) {
+																	html += "미등록";
+																} else {
+																	html += numberWithCommas(cellInfo.value);
+																}
+																html += "</div>";
+																$(html).appendTo(container);
+															}
+														},
+														{
+															dataField: "box_used",
+															caption: "박스별 가격 사용 유무",
+															cssClass: "text-center",
+															lookup: {
+																displayExpr: "name",
+																valueExpr: "value",
+																dataSource: lookup_used
+															},
+															visible: false
+														},
+														{
+															dataField: "box_price",
+															caption: "박스별 가격",
+															cssClass: "text-left",
+															cellTemplate: function(container, cellInfo) {
+																var html = "";
+																if(cellInfo.data.box_used==0){
+																	html +=	"<div class=\"d-inline text-primary pr-1\">\n";
+																}else{
+																	html +=	"<div class=\"d-inline text-dark pr-1\">\n";
+																}
+																if (cellInfo.data.box_used == 0) {
+																	html += "   <i class=\"ion-android-checkbox-outline\"></i>&nbsp;"
+																} else {
+																	html += "   <i class=\"ion-android-checkbox-outline-blank\"></i>&nbsp;"
+																}
+																if (cellInfo.value == -1) {
+																	html += "미등록";
+																} else {
+																	html += numberWithCommas(cellInfo.value);
+																}
+																html += "</div>";
+																$(html).appendTo(container);
+															}
+														}
+													],
+													editing: {
+														mode: "form",
+														useIcons: true,
+														allowAdding: false,
+														allowUpdating: true,
+														allowDeleting: false,
+														texts: {
+															confirmDeleteMessage: "해당 데이터를 삭제 합니다."
+														}
+													},
+													dataSource: DevExpress.data.AspNet.createStore({
+														loadUrl: "./goodsExhibitionDetail/json?type=get",
+														insertUrl: "./goodsExhibitionDetail/json?type=put",
+														updateUrl: "./goodsExhibitionDetail/json?type=post",
+														deleteUrl: "./goodsExhibitionDetail/json?type=delete",
+														key: ["box_idx","goods_idx","agency_idx","agc_sto_idx"],
+														loadParams: { goods_idx : options.data.goods_idx, agency_idx : options.data.agency_idx },
+														onBeforeSend: function(method, ajaxOptions) {
+															ajaxOptions.xhrFields = { withCredentials: true };
+														}
+													})
+												}).appendTo(container);
+									}
+								}
+							}).appendTo(container);
+				}
+			},
+			/*
 			editing: {
 				mode: "form",
 				useIcons: true,
@@ -235,7 +452,7 @@
 				texts: {
 					confirmDeleteMessage: "해당 데이터를 삭제 합니다."
 				}
-			},
+			},*/
 			grouping: {
 				autoExpandAll: false
 			},
@@ -302,7 +519,7 @@
 							<div class="card-header-tab card-header">
 								<div class="card-header-title font-size-lg text-capitalize font-weight-normal">
 									<i class="header-icon lnr-cloud-download icon-gradient bg-happy-itmeo"> </i>
-									상품 > 상품관리 > 상품리스트
+									상품 > 상품관리 > 상품진열/가격관리
 								</div>
 								<div class="btn-actions-pane-right text-capitalize actions-icon-btn">
 									<div class="btn-group dropdown">

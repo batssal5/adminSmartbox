@@ -29,9 +29,9 @@ public class LockupController {
 
 
 	@RequestMapping("/agencyJson")
-	private void agencyJson( HttpServletResponse response, HttpServletRequest request) throws IOException  {
+	private void agencyJson( HttpServletResponse response) throws IOException  {
 
-		response.setContentType("text/html;charset=UTF-8");
+		response.setContentType("application/json;charset=UTF-8");
 
 		List<LookupVO> agencyVOList = lookupService.getLookupAgency();
 		Map<String, Object> mapResp = new HashMap<>();
@@ -41,15 +41,27 @@ public class LockupController {
 	}
 
 	@RequestMapping("/storeJson")
-	private void storeJson( HttpServletResponse response, HttpServletRequest request) throws IOException  {
+	private void storeJson( HttpServletResponse response) throws IOException  {
 
-		response.setContentType("text/html;charset=UTF-8");
+		response.setContentType("application/json;charset=UTF-8");
 
-		List<LookupVO> agencyVOList = lookupService.getLookupStoreInfo();
+		List<LookupVO> storeList = lookupService.getLookupStoreInfo();
 		Map<String, Object> mapResp = new HashMap<>();
-		mapResp.put("data", agencyVOList);
+		mapResp.put("data", storeList);
 
-		response.getWriter().write(new Gson().toJson(agencyVOList));
+		response.getWriter().write(new Gson().toJson(storeList));
+	}
+
+	@RequestMapping("/brandJson")
+	private void brandJson( HttpServletResponse response) throws IOException  {
+
+		response.setContentType("application/json;charset=UTF-8");
+
+		List<LookupVO> brandVOList = lookupService.getLookupBrandInfo();
+		Map<String, Object> mapResp = new HashMap<>();
+		mapResp.put("data", brandVOList);
+
+		response.getWriter().write(new Gson().toJson(brandVOList));
 	}
 
 }

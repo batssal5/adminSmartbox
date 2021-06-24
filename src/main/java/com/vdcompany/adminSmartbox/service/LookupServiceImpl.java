@@ -25,6 +25,12 @@ public class LookupServiceImpl implements LookupService {
 		// TODO Auto-generated method stub
 		return lookupMapper.getLookupStoreInfo();
 	}
+
+	@Override
+	public List<LookupVO> getLookupBrandInfo() {
+		// TODO Auto-generated method stub
+		return lookupMapper.getLookupBrandInfo();
+	}
 	
 }
 

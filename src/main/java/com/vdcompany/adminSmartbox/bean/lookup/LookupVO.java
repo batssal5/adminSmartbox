@@ -17,4 +17,7 @@ public class LookupVO {
 	private int store_idx;
 	private String store_name;
 
+	private int brand;
+	private String brand_name;
+
 }

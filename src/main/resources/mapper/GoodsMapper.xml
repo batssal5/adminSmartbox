@@ -23,14 +23,233 @@
 		</if>
 	</select>
 
-
-	<update id="updateGoodsImage" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+	<update id="postGoodsList" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
 		UPDATE sb_goods SET
+		<if test="skuid != null and skuid > -1">
+			skuid = #{skuid},
+		</if>
+		<if test="goods_name != null and !goods_name.equals('')">
+			name = #{goods_name},
+		</if>
+		<if test="goods_code != null and !goods_code.equals('')">
+			gcode = #{goods_code},
+		</if>
+		<if test="barcode != null and !barcode.equals('')">
+			barcode = #{barcode},
+		</if>
+		<if test="brand != null and brand > -1">
+			brand = #{brand},
+		</if>
 		<if test="image != null and !image.equals('')">
 			image = #{image},
+		</if>
+		<if test="weight != null and weight > -1">
+			weight = #{weight},
+		</if>
+		<if test="status != null and status > -1">
+			status = #{status},
+		</if>
+		<if test="used != null and used > -1">
+			used = #{used},
+		</if>
+		<if test="price != null and price > -1">
+			price = #{price},
 		</if>
 		moddate = now()
 		WHERE idx = #{idx}
 	</update>
 
+
+	<insert id="putGoodsList" useGeneratedKeys="true" keyColumn="idx"  keyProperty="idx" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		insert into sb_goods (
+			skuid, name, gcode, barcode, brand,
+			image, weight, status, used, price,
+			regdate, moddate
+		)
+		values (
+				   #{skuid,jdbcType=INTEGER}, #{goods_name,jdbcType=VARCHAR}, #{goods_code,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR}, #{brand,jdbcType=INTEGER},
+				   #{image,jdbcType=VARCHAR}, #{weight,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{used,jdbcType=INTEGER}, #{price,jdbcType=INTEGER},
+				   now(), now()
+			   )
+	</insert>
+
+	<delete id="delGoodsList" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		DELETE FROM sb_goods WHERE idx = #{idx}
+	</delete>
+
+
+	<select id="getGoodsDetailList" parameterType="com.vdcompany.adminSmartbox.bean.web.paging.PagingVO"  resultType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		SELECT agency_idx, company_nm, agc_sto_idx, sto_name, box_name, box_idx,
+			agc_price, agc_used, sto_price, sto_used, box_price, box_used, goods_price, goods_used,
+			price, goood_name, goods_idx
+
+		FROM (
+			SELECT agc_idx as agency_idx, company_nm, agc_sto_idx, sto_name, box_name, box_idx,
+				agc_price, agc_used, sto_price, sto_used, box_price, box_used, goods_price, goods_used,
+				IF(box_used = 0, box_price,
+					IF(sto_used = 0, sto_price,
+						IF(agc_used = 0, agc_price, goods_price))) as price,
+				IFNULL(gagc_gds_idx,IFNULL(sto_gds_idx,IFNULL(box_gds_idx, -1))) as goods_idx
+			FROM (
+				select agc_idx, company_nm, agc_sto_idx, sto_name, box_name, box_idx
+					from (select idx as agc_idx, company_nm as company_nm from agency) agc,
+					(select idx as agc_sto_idx, agc_idx as agcidx, name as sto_name from agency_store) ags,
+					(select box_idx, agc_idx as bi_agx_idx, agc_sto_idx as bi_agc_sto_idx, alias as box_name
+						from sb_box_info) boxinfo
+				where agc.agc_idx = ags.agcidx
+					and agc.agc_idx = boxinfo.bi_agx_idx
+					and ags.agc_sto_idx = boxinfo.bi_agc_sto_idx
+				) a
+			LEFT OUTER JOIN
+				(select gds_idx as gagc_gds_idx, agc_idx as agency_idx, price as agc_price, used as agc_used
+				from sb_goods_agency) gagc
+				ON a.agc_idx = gagc.agency_idx
+				<if test="goods_idx != null and goods_idx > -1">
+					AND gagc.gagc_gds_idx = #{goods_idx}
+				</if>
+			LEFT OUTER JOIN
+				(select gds_idx as sto_gds_idx, agc_sto_idx as sto_idx, price as sto_price, used as sto_used
+				from sb_goods_store) sto
+				ON a.agc_sto_idx = sto.sto_idx
+				<if test="goods_idx != null and goods_idx > -1">
+					AND sto.sto_gds_idx = #{goods_idx}
+				</if>
+			LEFT OUTER JOIN
+				(select gds_idx as box_gds_idx, box_idx as gbox_idx, price as box_price, used as box_used
+				from sb_goods_box) gbox
+				ON a.box_idx = gbox.gbox_idx
+				<if test="goods_idx != null and goods_idx > -1">
+					AND gbox.box_gds_idx = #{goods_idx}
+				</if>
+			LEFT OUTER JOIN
+				(select idx as goods_idx, name as goood_name, price as goods_price, used as goods_used
+				from sb_goods) goods
+				<if test="goods_idx != null and goods_idx > -1">
+					ON goods.goods_idx = #{goods_idx}
+				</if>
+		) p,
+		(select idx as gidx, name as goood_name from sb_goods) g
+		WHERE g.gidx = p.goods_idx
+		<if test="agency_idx != null and agency_idx > -1">
+			AND agency_idx = #{agency_idx}
+		</if>
+		<if test="box_idx != null and box_idx > -1">
+			AND box_idx = #{box_idx}
+		</if>
+		<if test="agc_sto_idx != null and agc_sto_idx > -1">
+			AND agc_sto_idx = #{agc_sto_idx}
+		</if>
+		<if test="filter != null and !filter.equals('')">
+			AND ${filter}
+		</if>
+		<if test="agency_idx == null or agency_idx == -1">
+			GROUP BY agency_idx
+		</if>
+		ORDER BY company_nm asc
+		<if test="skip > -1 and take > 0">
+			LIMIT #{skip}, #{take}
+		</if>
+	</select>
+
+
+	<update id="postGoodsBoxPrice" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		UPDATE sb_goods_box SET
+		<if test="box_price != null and box_price > -1">
+			price = #{box_price},
+		</if>
+		<if test="box_used != null and box_used > -1">
+			used = #{box_used},
+		</if>
+		moddate = now()
+		WHERE gds_idx = #{goods_idx}
+		AND box_idx = #{box_idx}
+	</update>
+
+	<insert id="putGoodsBoxPrice" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		insert into sb_goods_box (
+			gds_idx, box_idx, price, sale_type, svalue,
+			purchase, used, safestock, safestock_alm, expdate_alm,
+			regdate, moddate,
+			safedate, expdate
+		)
+		values (
+				   #{goods_idx,jdbcType=INTEGER}, #{box_idx,jdbcType=INTEGER}, #{box_price,jdbcType=INTEGER}, 0, 0,
+				   0, #{box_used,jdbcType=INTEGER}, 0, 0, 0,
+				   now(), now(), now(), now()
+			   )
+	</insert>
+
+	<delete id="delGoodsBoxPrice" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		DELETE FROM sb_goods_box
+		WHERE gds_idx = #{goods_idx}
+		  AND box_idx = #{box_idx}
+	</delete>
+
+
+	<update id="postGoodsStorePrice" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		UPDATE sb_goods_store SET
+		<if test="sto_price != null and sto_price > -1">
+			price = #{sto_price},
+		</if>
+		<if test="sto_used != null and sto_used > -1">
+			used = #{sto_used},
+		</if>
+		moddate = now()
+		WHERE gds_idx = #{goods_idx}
+		AND agc_sto_idx = #{agc_sto_idx}
+	</update>
+
+	<insert id="putGoodsStorePrice" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		insert into sb_goods_store (
+			gds_idx, agc_sto_idx, price, sale_type, svalue,
+			purchase, used, safestock, safestock_alm, expdate_alm,
+			regdate, moddate,
+			safedate, expdate
+		)
+		values (
+				   #{goods_idx,jdbcType=INTEGER}, #{agc_sto_idx,jdbcType=INTEGER}, #{sto_price,jdbcType=INTEGER}, 0, 0,
+				   0, #{sto_used,jdbcType=INTEGER}, 0, 0, 0,
+				   now(), now(), now(), now()
+			   )
+	</insert>
+
+	<delete id="delGoodsStorePrice" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		DELETE FROM sb_goods_store
+		WHERE gds_idx = #{goods_idx}
+		  AND agc_sto_idx = #{agc_sto_idx}
+	</delete>
+
+
+	<update id="postGoodsAgencyPrice" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		UPDATE sb_goods_agency SET
+		<if test="agc_price != null and agc_price > -1">
+			price = #{agc_price},
+		</if>
+		<if test="agc_used != null and agc_used > -1">
+			used = #{agc_used},
+		</if>
+		moddate = now()
+		WHERE gds_idx = #{goods_idx}
+		AND agc_idx = #{agency_idx}
+	</update>
+
+	<insert id="putGoodsAgencyPrice" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		insert into sb_goods_agency (
+			gds_idx, agc_idx, price, sale_type, svalue,
+			purchase, used, safestock, safestock_alm, expdate_alm,
+			gcode, regdate, moddate,
+			safedate, expdate
+		)
+		values (
+				   #{goods_idx,jdbcType=INTEGER}, #{agency_idx,jdbcType=INTEGER}, #{sto_price,jdbcType=INTEGER}, 0, 0,
+				   0, #{sto_used,jdbcType=INTEGER}, 0, 0, 0,
+				   null, now(), now(), now(), now()
+			   )
+	</insert>
+
+	<delete id="delGoodsAgencyPrice" parameterType="com.vdcompany.adminSmartbox.bean.goods.GoodsVO">
+		DELETE FROM sb_goods_agency
+		WHERE gds_idx = #{goods_idx}
+		  AND agc_idx = #{agency_idx}
+	</delete>
 </mapper>

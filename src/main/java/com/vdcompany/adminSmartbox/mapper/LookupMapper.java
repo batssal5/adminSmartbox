@@ -10,5 +10,6 @@ public interface LookupMapper {
 
 	List<LookupVO> getLookupAgency();
 	List<LookupVO> getLookupStoreInfo();
+	List<LookupVO> getLookupBrandInfo();
 
 }

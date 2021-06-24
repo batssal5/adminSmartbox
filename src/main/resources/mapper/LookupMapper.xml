@@ -16,7 +16,14 @@
 		FROM agency_store a,
 			 agency b
 		WHERE a.agc_idx = b.idx
-		ORDER BY company_nm, store_name asc;
+		ORDER BY company_nm, store_name asc
+	</select>
+
+
+	<select id="getLookupBrandInfo" resultType="com.vdcompany.adminSmartbox.bean.lookup.LookupVO">
+		SELECT idx as brand, brand as brand_name
+		FROM sb_goods_brand
+		ORDER BY brand asc
 	</select>
 
 </mapper>

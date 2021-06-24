@@ -387,7 +387,7 @@ public class DefaultController {
 
 		logger.info("crudType : " + pagingVO.getType());
 		Map<String, Object> mapResp = new HashMap<>();
-		response.setContentType("text/html;charset=UTF-8");
+		response.setContentType("application/json;charset=UTF-8");
 		AgencyVO agencyVO  = new AgencyVO();
 		switch (pagingVO.getType()){
 			case "put":
@@ -491,7 +491,7 @@ public class DefaultController {
 
 		logger.info("crudType : " + pagingVO.getType());
 		Map<String, Object> mapResp = new HashMap<>();
-		response.setContentType("text/html;charset=UTF-8");
+		response.setContentType("application/json;charset=UTF-8");
 		AgencyVO agencyVO  = new AgencyVO();
 		switch (pagingVO.getType()){
 			case "put":

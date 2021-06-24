@@ -221,7 +221,6 @@
 		WHERE idx = #{store_idx}
 	</update>
 
-
 	<insert id="putAgencyStoreInfo" parameterType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
 		insert into agency_store (
 			agc_idx, name, company_num, zipcode, address,
@@ -234,6 +233,7 @@
 				   #{vd_comm,jdbcType=FLOAT}, now(), now()
 			   )
 	</insert>
+
 	<delete id="delAgencyStoreInfo" parameterType="com.vdcompany.adminSmartbox.bean.agency.AgencyVO">
 		DELETE FROM agency_store WHERE idx = #{store_idx}
 	</delete>
