@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class AdminSmartboxApplication extends SpringBootServletInitializer {
-
 	@Getter@Setter
 	private static String profile;
 	@Getter@Setter
@@ -27,7 +26,7 @@ public class AdminSmartboxApplication extends SpringBootServletInitializer {
 	// -Dspring.profiles.active : (prod : 상용 , local : local, dev : dev)
 	// -Dserver.port            : 웹 서비스 포트 3만번대 사용, 매장별 프로세스에 따라 1씩 증가 예정
 	// 매장 코드 args            : 고유 매장 코드 파라메터 입력
-	// java -jar -Dspring.profiles.active=prod -Dserver.port=8888 ./BoothManager3-x.x.x.jar B0004 dev-zk.beatcorp.io:2181
+	// java -jar -Dspring.profiles.active=prod -Dserver.port=8888 ./adminSmartbox-x.x.x.war
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
@@ -38,8 +37,7 @@ public class AdminSmartboxApplication extends SpringBootServletInitializer {
 		Logger logger = LoggerFactory.getLogger(AdminSmartboxApplication.class);
 		SERVER_PROTOCOL = "http";
 		if (args.length == 0) {
-			System.out.println("args : attach BOOTH_CODE ex)B0001");
-			System.exit(1);
+			SERVER_IP = "localhost";
 		}else if (args.length == 1) {
 			SERVER_IP = "localhost";
 			if (!args[0].equals("")) {

@@ -12,6 +12,7 @@
 	<groupId>com.vdcompany</groupId>
 	<artifactId>adminSmartbox</artifactId>
 	<name>adminSmartbox</name>
+	<version>1.0.0</version>
 	<description>SmartBox Admin</description>
 	<packaging>war</packaging>
 
