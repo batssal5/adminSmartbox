@@ -1,10 +1,18 @@
 package com.vdcompany.adminSmartbox.bean.web.paging;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/0.1.1
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+<<<<<<< HEAD
+=======
+import java.util.List;
+
+>>>>>>> origin/0.1.1
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
