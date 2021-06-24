@@ -7,6 +7,48 @@
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <jsp:include page='<%="../common/vd_header.jsp" %>'/>
+<script>
+    $(function (){
+        getVersion();
+    });
+
+    function getVersion(){
+        $.ajax({
+            url:"/default/ajax_appVersion",
+            type: "GET",
+            success:function (responseData){
+                var data = JSON.parse(responseData);
+
+                $('#and_c_ver').text(data[0]["c_version"]);
+                $('#and_c_pre').val(data[0]["c_version_pre"]);
+                $('#and_a_ver').text(data[0]["a_version"]);
+                $('#and_a_pre').val(data[0]["a_version_pre"]);
+                $('#ios_c_ver').text(data[1]["c_version"]);
+                $('#ios_c_pre').val(data[1]["c_version_pre"]);
+                $('#ios_a_ver').text(data[1]["a_version"]);
+                $('#ios_a_pre').val(data[1]["a_version_pre"]);
+            }
+        });
+    };
+
+    function postVersion(){
+
+        $.ajax({
+            url:"/default/ajax_postVersion",
+            type:"POST",
+            data:{
+                and_c_pre : $('#and_c_pre').val(),
+                and_a_pre : $('#and_a_pre').val(),
+                ios_c_pre : $('#ios_c_pre').val(),
+                ios_a_pre : $('#ios_a_pre').val()
+            },
+            success:function (){
+                alert("수정완료");
+            }
+        });
+    };
+
+</script>
 <div class="header-mobile-wrapper">
     <div class="app-header__logo">
         <a href="#" data-toggle="tooltip" data-placement="bottom" title="Smart Box Admin" class="logo-src"></a>
@@ -50,19 +92,19 @@
                                         <th style="border: none">iOS</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="appVersion">
                                     <tr>
                                         <th>현재버전</th>
-                                        <td>1.00</td>
+                                        <td id="and_c_ver">1.00</td>
                                         <th>현재버전</th>
-                                        <td>1.00</td>
+                                        <td id="ios_c_ver">1.00</td>
                                     </tr>
                                     <tr>
                                         <th>최소버전</th>
-                                        <td><input name="" type="text"
+                                        <td><input id="and_c_pre" type="text"
                                                    class="form-control"></td>
                                         <th>최소버전</th>
-                                        <td><input name="" type="text"
+                                        <td><input id="ios_c_pre" type="text"
                                                    class="form-control"></td>
                                     </tr>
                                     </tbody>
@@ -88,16 +130,16 @@
                                     <tbody>
                                     <tr>
                                         <th>현재버전</th>
-                                        <td>1.00</td>
+                                        <td id="and_a_ver">1.00</td>
                                         <th>현재버전</th>
-                                        <td>1.00</td>
+                                        <td id="ios_a_ver">1.00</td>
                                     </tr>
                                     <tr>
                                         <th>최소버전</th>
-                                        <td><input name="" type="text"
+                                        <td><input id="and_a_pre" type="text"
                                                    class="form-control"></td>
                                         <th>최소버전</th>
-                                        <td><input name="" type="text"
+                                        <td><input id="ios_a_pre" type="text"
                                                    class="form-control"></td>
                                     </tr>
                                     </tbody>
@@ -107,8 +149,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12 col-lg-12" style="text-align: center; margin-top: 20px">
-                            <button type="button" class="btn btn-danger" style="width: 100px">취소</button>
-                            <input type="submit" class="btn btn-success" value="저장" style="width: 100px"/>
+                            <button type="button" class="btn btn-success" onclick=" postVersion()" style="width: 100px; float: right">저장</button>
                         </div>
                     </div>
                 </form>

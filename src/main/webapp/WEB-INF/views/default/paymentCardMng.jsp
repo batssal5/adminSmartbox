@@ -7,6 +7,74 @@
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <jsp:include page = '<%="../common/vd_header.jsp" %>'/>
+<script>
+    $(function (){
+        getPayment();
+    });
+
+    function getPayment(){
+
+        $.ajax({
+            url:"/default/ajax_getPayment",
+            type:"GET",
+            success:function (responseData){
+                var data = JSON.parse(responseData);
+                console.log(data);
+
+                $.each(data, function (index, item){
+                    switch (item.idx){
+                        case 1 :
+                            if (item.pay_value == 0) {
+                                $('#creditcard_app_on').attr('checked', true);
+                            } else {
+                                $('#creditcard_app_off').attr('checked', true);
+                            }
+                            break;
+                        case 2 :
+                            if (item.pay_value == 0) {
+                                $('#creditcard_real_on').attr('checked', true);
+                            } else {
+                                $('#creditcard_real_off').attr('checked', true);
+                            }
+                            break;
+                        case 3 :
+                            if (item.pay_value == 0) {
+                                $('#checkcard_app_on').attr('checked', true);
+                            } else {
+                                $('#checkcard_app_off').attr('checked', true);
+                            }
+                            break;
+                        case 4 :
+                            if (item.pay_value == 0) {
+                                $('#checkcard_real_on').attr('checked', true);
+                            } else {
+                                $('#checkcard_real_off').attr('checked', true);
+                            }
+                            break;
+                        default :
+                            break;
+                    };
+                });
+            }
+        });
+    };
+
+    function postPayment(){
+
+        var params = $('#payForm').serialize();
+
+        $.ajax({
+            url:"/default/ajax_postPayment",
+            type: "POST",
+            data: params,
+            success:function (){
+                alert("수정완료");
+            }
+        })
+
+    };
+
+</script>
 <div class="header-mobile-wrapper">
     <div class="app-header__logo">
         <a href="#" data-toggle="tooltip" data-placement="bottom" title="Smart Box Admin" class="logo-src"></a>
@@ -34,7 +102,7 @@
                 <div class="col-sm-12 col-lg-12 mb-3">
                     <h5>결제수단관리 > 카드설정</h5>
                 </div>
-                <form actoion="#" method="post">
+                <form id="payForm" name="payForm" method="post">
                     <div class="row card mb-3">
                         <div class="col-sm-12 col-lg-12">
                             <div class="card-body col-sm-12 col-lg-12">
@@ -55,21 +123,22 @@
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block; margin-right: 50px">
                                                         <input type="radio"
-                                                               id="creditcard_radio"
+                                                               id="creditcard_app_on"
                                                                name="creditcard_app"
-                                                               class="custom-control-input">
-                                                        <label
+                                                               class="custom-control-input"
+                                                               value="0"><label
                                                                 class="custom-control-label"
-                                                                for="creditcard_radio">on</label></div>
+                                                                for="creditcard_app_on">on</label></div>
+
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="creditcard_radio2"
+                                                               id="creditcard_app_off"
                                                                name="creditcard_app"
-                                                               class="custom-control-input">
-                                                        <label
+                                                               class="custom-control-input"
+                                                               value="1"><label
                                                                 class="custom-control-label"
-                                                                for="creditcard_radio2">off</label>
+                                                                for="creditcard_app_off">off</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -81,21 +150,22 @@
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block; margin-right: 50px">
                                                         <input type="radio"
-                                                               id="creditcard_radio3"
+                                                               id="creditcard_real_on"
                                                                name="creditcard_real"
-                                                               class="custom-control-input">
-                                                        <label
+                                                               class="custom-control-input"
+                                                               value="0"><label
                                                                 class="custom-control-label"
-                                                                for="creditcard_radio3">on</label></div>
+                                                                for="creditcard_real_on">on</label></div>
+
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="creditcard_radio4"
+                                                               id="creditcard_real_off"
                                                                name="creditcard_real"
-                                                               class="custom-control-input">
-                                                        <label
+                                                               class="custom-control-input"
+                                                               value="1"><label
                                                                 class="custom-control-label"
-                                                                for="creditcard_radio4">off</label>
+                                                                for="creditcard_real_off">off</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -109,19 +179,22 @@
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block; margin-right: 50px">
                                                         <input type="radio"
-                                                               id="checkcard_radio"
+                                                               id="checkcard_app_on"
                                                                name="checkcard_app"
-                                                               class="custom-control-input"><label
+                                                               class="custom-control-input"
+                                                               value="0"><label
                                                             class="custom-control-label"
-                                                            for="checkcard_radio">on</label></div>
+                                                            for="checkcard_app_on">on</label></div>
+
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block; margin-right: 50px">
                                                         <input type="radio"
-                                                               id="checkcard_radio2"
+                                                               id="checkcard_app_off"
                                                                name="checkcard_app"
-                                                               class="custom-control-input"><label
+                                                               class="custom-control-input"
+                                                               value="1"><label
                                                             class="custom-control-label"
-                                                            for="checkcard_radio2">off</label>
+                                                            for="checkcard_app_off">off</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -133,19 +206,22 @@
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block; margin-right: 50px">
                                                         <input type="radio"
-                                                               id="checkcard_radio3"
+                                                               id="checkcard_real_on"
                                                                name="checkcard_real"
-                                                               class="custom-control-input"><label
+                                                               class="custom-control-input"
+                                                               value="0"><label
                                                             class="custom-control-label"
-                                                            for="checkcard_radio3">on</label></div>
+                                                            for="checkcard_real_on">on</label></div>
+
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="checkcard_radio4"
+                                                               id="checkcard_real_off"
                                                                name="checkcard_real"
-                                                               class="custom-control-input"><label
+                                                               class="custom-control-input"
+                                                               value="1"><label
                                                             class="custom-control-label"
-                                                            for="checkcard_radio4">off</label>
+                                                            for="checkcard_real_off">off</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -158,8 +234,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12 col-lg-12" style="text-align: center; margin-top: 20px">
-                            <button type="button" class="btn btn-danger" style="width: 100px">취소</button>
-                            <input type="submit" class="btn btn-success" value="저장" style="width: 100px"/>
+                            <button type="button" class="btn btn-success" onclick="postPayment()" style="width: 100px; float: right">저장</button>
                         </div>
                     </div>
                 </form>

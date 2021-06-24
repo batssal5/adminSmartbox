@@ -14,7 +14,7 @@
     <!--        </foreach>-->
     <!--    </insert>-->
 
-    <update id="postTutorialList" parameterType="com.vdcompany.adminSmartbox.bean.app.AppTutorialVO">
+    <update id="postTutorialList" parameterType="com.vdcompany.adminSmartbox.bean.app.AppVO">
         <foreach collection="list" item="item" separator=";">
             UPDATE app_tutorial
             SET image = #{item.src}
@@ -26,14 +26,14 @@
     </update>
 
     <select id="getPolicyList" parameterType="java.lang.Integer"
-            resultType="com.vdcompany.adminSmartbox.bean.app.AppPolicyVO">
+            resultType="com.vdcompany.adminSmartbox.bean.app.AppVO">
         SELECT catagory AS cate, a_context, c_context
         FROM policy_terms_of_service
         WHERE app_type = #{app_type}
     </select>
 
 
-    <update id="postPolicyList" parameterType="com.vdcompany.adminSmartbox.bean.app.AppPolicyVO">
+    <update id="postPolicyList" parameterType="com.vdcompany.adminSmartbox.bean.app.AppVO">
         <foreach collection="listMap" item="item" separator=";">
             UPDATE policy_terms_of_service
             <if test="item.a_context != null and !item.a_context.equals('')">
@@ -45,6 +45,64 @@
             </if>
             WHERE catagory = #{item.catagory}
             AND app_type = #{app_type}
+        </foreach>
+    </update>
+
+    <select id="getAppVersionList" resultType="com.vdcompany.adminSmartbox.bean.app.AppVO">
+        SELECT c_version, c_version_pre, a_version, a_version_pre
+        FROM app_info
+    </select>
+
+    <update id="postAppVersionList" parameterType="com.vdcompany.adminSmartbox.bean.app.AppVO">
+        <foreach collection="listMap" item="item" separator=";">
+            UPDATE app_info
+                SET c_version_pre = #{item.c_version_pre},
+                    a_version_pre = #{item.a_version_pre}
+                WHERE os_cd = #{item.os}
+        </foreach>
+    </update>
+
+    <select id="getAppAuthList" resultType="com.vdcompany.adminSmartbox.bean.app.AppVO">
+        SELECT c_auth_conn, c_auth_purchase, c_auto_logout_min, a_auth_inventory, a_auto_logout_min
+        FROM app_info
+    </select>
+
+    <update id="postAppAuthList" parameterType="com.vdcompany.adminSmartbox.bean.app.AppVO">
+        <foreach collection="listMap" item="item" separator=";">
+            UPDATE app_info
+            SET c_auth_conn = #{item.c_auth_conn},
+                c_auth_purchase = #{item.c_auth_purchase},
+                c_auto_logout_min = #{item.c_auto_logout_min},
+                a_auth_inventory = #{item.a_auth_inventory},
+                a_auto_logout_min = #{item.a_auto_logout_min}
+            WHERE os_cd = #{item.os}
+        </foreach>
+    </update>
+
+    <select id="getRefundList" resultType="com.vdcompany.adminSmartbox.bean.app.AppVO">
+        SELECT idx, name as refund_key, value as refund_value
+        FROM policy_refound
+    </select>
+
+    <update id="postRefund" parameterType="com.vdcompany.adminSmartbox.bean.app.AppVO">
+        <foreach collection="listMap" item="item" separator=";">
+            UPDATE policy_refound
+            SET value = #{item.refund_value}
+            WHERE idx = #{item.idx}
+            AND name = #{item.refund_key}
+        </foreach>
+    </update>
+
+    <select id="getPaymentList" resultType="com.vdcompany.adminSmartbox.bean.app.AppVO">
+        SELECT idx, card_type, using_type, value as pay_value
+        FROM policy_payment
+    </select>
+
+    <update id="postPayment" parameterType="com.vdcompany.adminSmartbox.bean.app.AppVO">
+        <foreach collection="listMap" item="item" separator=";">
+            UPDATE policy_payment
+            SET value = #{item.pay_value}
+            WHERE idx = #{item.idx}
         </foreach>
     </update>
 

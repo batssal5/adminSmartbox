@@ -1,29 +1,15 @@
 package com.vdcompany.adminSmartbox.controller;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.vdcompany.adminSmartbox.bean.CategoryVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencySearchVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencyStoreListVO;
-import com.vdcompany.adminSmartbox.bean.agency.AgencyStoreVO;
 import com.vdcompany.adminSmartbox.bean.agency.AgencyVO;
-import com.vdcompany.adminSmartbox.bean.app.AppTutorialVO;
-import com.vdcompany.adminSmartbox.bean.app.AppPolicyVO;
+import com.vdcompany.adminSmartbox.bean.app.AppVO;
 import com.vdcompany.adminSmartbox.bean.web.menu.LeftMenuListVO;
 import com.vdcompany.adminSmartbox.bean.web.paging.PagingVO;
-import com.vdcompany.adminSmartbox.service.*;
+import com.vdcompany.adminSmartbox.service.AgencyService;
+import com.vdcompany.adminSmartbox.service.AppService;
+import com.vdcompany.adminSmartbox.service.CategoryService;
 import com.vdcompany.adminSmartbox.utils.QueryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,28 +153,22 @@ public class DefaultController {
 	}
 
     @RequestMapping("/ajax_getApp")
-    private void ajax_adminApp(HttpServletResponse response, HttpServletRequest request, AppPolicyVO policy) throws IOException {
+    private void ajax_adminApp(HttpServletResponse response, HttpServletRequest request, AppVO app) throws IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        policy.setApp_type(Integer.parseInt(request.getParameter("appType")));
+		app.setApp_type(Integer.parseInt(request.getParameter("appType")));
 
-        List<AppPolicyVO> policyList = appService.getPolicyList(policy);
-        System.out.println("policyList :" + policyList);
+        List<AppVO> policyList = appService.getPolicyList(app);
 
         ObjectMapper mapper = new ObjectMapper();
         response.getWriter().print(mapper.writeValueAsString(policyList));
     }
 
     @RequestMapping("/ajax_postApp")
-    private void ajax_post_adminApp(HttpServletRequest request, HttpServletResponse response, AppPolicyVO policy) {
+    private void ajax_post_adminApp(HttpServletRequest request, HttpServletResponse response, AppVO app) {
         response.setContentType("text/html;charset=UTF-8");
 
-
-        logger.info("terms:" + request.getParameter("terms"));
-
         List<Map<String, String>> listMap = new ArrayList<Map<String, String>>();
-
-        System.out.println(request.getParameter("location"));
 
         if (request.getParameter("terms") != null) {
             Map<String, String> tempMap = new HashMap<>();
@@ -234,24 +214,15 @@ public class DefaultController {
             listMap.add(tempMap);
         }
 
-        System.out.println("listMap : " + listMap);
+		app.setApp_type(Integer.parseInt(request.getParameter("appType")));
+		app.setListMap(listMap);
 
-        policy.setApp_type(Integer.parseInt(request.getParameter("appType")));
-        policy.setListMap(listMap);
-        System.out.println(policy);
-
-        for (Object obj : policy.getListMap()) {
-            System.out.println(obj);
-        }
-
-        appService.postPolicyList(policy);
+        appService.postPolicyList(app);
 
     }
 
     @RequestMapping("/ajax_uploadImg")
-    private void ajax_postImg(MultipartHttpServletRequest req, HttpServletResponse response, AppTutorialVO appTutorial) throws IOException {
-        String url = "/default/adminApp";
-        ModelAndView mav = new ModelAndView(url);
+    private void ajax_postImg(MultipartHttpServletRequest req, HttpServletResponse response) throws IOException {
         String path = "C:/Vd/WebProjects/SmartBoxAdmin/src/main/resources/static/tutorial";
         File Folder = new File(path);
         List<String> filePath = new ArrayList<>();
@@ -262,15 +233,11 @@ public class DefaultController {
 
         try {
             MultiValueMap<String, MultipartFile> files = req.getMultiFileMap();
-            System.out.println("files: " + files);
 
             for (Map.Entry<String, List<MultipartFile>> entry : files.entrySet()) {
                 List<MultipartFile> fileList = entry.getValue();
 //                String sort = entry.getKey();
 //                sortList.add(sort);
-                System.out.println("entry :"+entry);
-                System.out.println("fileList: " + fileList);
-//                System.out.println("sort : "+sort);
 
                 for (MultipartFile file : fileList) {
                     if (file.isEmpty()) continue;
@@ -297,10 +264,7 @@ public class DefaultController {
         }
 
         for (int i = 0; i < mtfList.size(); i++) {
-            System.out.println(path+ "/" + mtfList.get(i).getOriginalFilename());
-            System.out.println(mtfList.get(i).getSize());
             filePath.add("/tutorial/" + mtfList.get(i).getOriginalFilename());
-            System.out.println("filePath : " + filePath);
         }
 
         response.getWriter().write(new Gson().toJson(filePath));
@@ -318,7 +282,6 @@ public class DefaultController {
 
     }
 
-
     public static <T> List<T> stringToArray(String s, Class<T[]> clazz) {
         T[] arr = new Gson().fromJson(s, clazz);
         return Arrays.asList(arr);
@@ -329,13 +292,162 @@ public class DefaultController {
 
         String json = request.getParameter("jsonData");
 
-        List<AppTutorialVO> list = stringToArray(json, AppTutorialVO[].class);
-        System.out.println("list : "+list);
+        List<AppVO> list = stringToArray(json, AppVO[].class);
 
         appService.postTutorialList(list);
 
     }
 
+    @RequestMapping("/ajax_appVersion")
+	private void ajax_appVersion(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		response.setContentType("text/html;charset=UTF-8");
+
+		List<AppVO> list = appService.getAppVersionList();
+		logger.info("list"+list.toString());
+
+		ObjectMapper mapper = new ObjectMapper();
+		response.getWriter().write(mapper.writeValueAsString(list));
+
+	}
+
+	@RequestMapping("/ajax_postVersion")
+	private void ajax_postVersion(HttpServletRequest request, HttpServletResponse response, AppVO app)	{
+
+		List<Map<String,String>> listMap = new ArrayList<>();
+
+		Map<String, String> and_map = new HashMap<>();
+		and_map.put("os", "0");
+		and_map.put("c_version_pre", request.getParameter("and_c_pre"));
+		and_map.put("a_version_pre", request.getParameter("and_a_pre"));
+		listMap.add(and_map);
+
+		Map<String, String> ios_map = new HashMap<>();
+		ios_map.put("os", "1");
+		ios_map.put("c_version_pre", request.getParameter("ios_c_pre"));
+		ios_map.put("a_version_pre", request.getParameter("ios_a_pre"));
+		listMap.add(ios_map);
+
+		app.setListMap(listMap);
+		appService.postAppVersionList(app);
+
+	}
+
+	@RequestMapping("/ajax_getAppAuth")
+	private void ajax_getAppAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		response.setContentType("text/html;charset=UTF-8");
+
+		List<AppVO> list = appService.getAppAuthList();
+
+		ObjectMapper mapper = new ObjectMapper();
+		response.getWriter().write(mapper.writeValueAsString(list));
+
+	}
+
+	@RequestMapping("/ajax_postAppAuth")
+	private void ajax_postAppAuth(HttpServletRequest request, HttpServletResponse response, AppVO app){
+
+		List<Map<String, String>> listMap = new ArrayList<>();
+		Map<String, String> and_map = new HashMap<>();
+		and_map.put("os", "0");
+		and_map.put("c_auth_conn",request.getParameter("a_connect"));
+		and_map.put("c_auth_purchase",request.getParameter("a_purchase"));
+		and_map.put("a_auth_inventory",request.getParameter("a_inventory"));
+		and_map.put("c_auto_logout_min",request.getParameter("a_user_autoLogout"));
+		and_map.put("a_auto_logout_min",request.getParameter("a_admin_auto_logout"));
+		listMap.add(and_map);
+
+		Map<String, String> ios_map = new HashMap<>();
+		ios_map.put("os", "1");
+		ios_map.put("c_auth_conn",request.getParameter("i_connect"));
+		ios_map.put("c_auth_purchase",request.getParameter("i_purchase"));
+		ios_map.put("a_auth_inventory",request.getParameter("i_inventory"));
+		ios_map.put("c_auto_logout_min",request.getParameter("i_user_autoLogout"));
+		ios_map.put("a_auto_logout_min",request.getParameter("i_admin_auto_logout"));
+		listMap.add(ios_map);
+
+		app.setListMap(listMap);
+		appService.postAppAuthList(app);
+
+	}
+
+	@RequestMapping("/ajax_getRefund")
+	private void ajax_getRefund(HttpServletRequest request, HttpServletResponse response) throws IOException{
+
+		response.setContentType("text/html;charset=UTF-8");
+
+		List<AppVO> list = appService.getRefundList();
+
+		ObjectMapper mapper = new ObjectMapper();
+		response.getWriter().write(mapper.writeValueAsString(list));
+
+	}
+
+	@RequestMapping("/ajax_postRefund")
+	private void ajax_postRefund(HttpServletRequest request, HttpServletResponse response, AppVO app){
+
+		int day = Integer.parseInt(request.getParameter("refund_day"))*24;
+		int time = Integer.parseInt(request.getParameter("refund_time"));
+
+		int set_time = day + time;
+
+		List<Map<String, String>> listMap = new ArrayList<>();
+		Map<String, String> refund_req = new HashMap<>();
+		refund_req.put("idx","1");
+		refund_req.put("refund_key","환불신청");
+		refund_req.put("refund_value",request.getParameter("refundRequest"));
+		listMap.add(refund_req);
+
+		Map<String, String> refund_time = new HashMap<>();
+		refund_time.put("idx","2");
+		refund_time.put("refund_key","환불가능기간");
+		refund_time.put("refund_value",Integer.toString(set_time));
+		listMap.add(refund_time);
+
+		app.setListMap(listMap);
+		appService.postRefund(app);
+	}
+
+	@RequestMapping("/ajax_getPayment")
+	private void ajax_getPayment(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		response.setContentType("text/html;charset=UTF-8");
+
+		List<AppVO> list = appService.getPaymentList();
+
+		ObjectMapper mapper = new ObjectMapper();
+		response.getWriter().write(mapper.writeValueAsString(list));
+
+	}
+
+	@RequestMapping("/ajax_postPayment")
+	private void ajax_postPayment(HttpServletRequest request, HttpServletResponse response, AppVO app){
+
+		List<Map<String, String>> listMap = new ArrayList<>();
+		Map<String, String> cradit_app = new HashMap<>();
+		cradit_app.put("idx","1");
+		cradit_app.put("pay_value",request.getParameter("creditcard_app"));
+		listMap.add(cradit_app);
+
+		Map<String, String> cradit_real = new HashMap<>();
+		cradit_real.put("idx","2");
+		cradit_real.put("pay_value",request.getParameter("creditcard_real"));
+		listMap.add(cradit_real);
+
+		Map<String, String> check_app = new HashMap<>();
+		check_app.put("idx","3");
+		check_app.put("pay_value",request.getParameter("checkcard_app"));
+		listMap.add(check_app);
+
+		Map<String, String> check_real = new HashMap<>();
+		check_real.put("idx","4");
+		check_real.put("pay_value",request.getParameter("checkcard_real"));
+		listMap.add(check_real);
+
+		app.setListMap(listMap);
+		appService.postPayment(app);
+
+	}
 
 
 	@RequestMapping("/agencyMng")
@@ -354,7 +466,6 @@ public class DefaultController {
 		mav.addObject("leftMenuInfo", leftMenuListVO);
 		return mav;
 	}
-
 
 	@RequestMapping("/agencyMng/json")
 	private void agencyMngJson( HttpServletResponse response, HttpServletRequest request) throws IOException  {

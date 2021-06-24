@@ -7,6 +7,87 @@
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <jsp:include page='<%="../common/vd_header.jsp" %>'/>
+<script>
+    $(function () {
+        getAuth();
+    });
+
+    function getAuth() {
+        $.ajax({
+            url: "/default/ajax_getAppAuth",
+            type: "GET",
+            success: function (responseData) {
+                var data = JSON.parse(responseData);
+
+                //안드로이드 접속제한
+                if ((data[0]["c_auth_conn"]) == 0) {
+                    $('#a_connect_on').attr('checked', true);
+                } else {
+                    $('#a_connect_off').attr('checked', true);
+                }
+
+                //iOS 접속제한
+                if ((data[1]["c_auth_conn"]) == 0) {
+                    $('#i_connect_on').attr('checked', true);
+                } else {
+                    $('#i_connect_off').attr('checked', true);
+                }
+
+                //안드로이드 구매제한
+                if ((data[0]["c_auth_purchase"]) == 0) {
+                    $('#a_purchase_on').attr('checked', true);
+                } else {
+                    $('#a_purchase_off').attr('checked', true);
+                }
+
+                //iOS 구매제한
+                if ((data[1]["c_auth_purchase"]) == 0) {
+                    $('#i_purchase_on').attr('checked', true);
+                } else {
+                    $('#i_purchase_off').attr('checked', true);
+                }
+
+                //안드로이드 관리자 재고관리제한
+                if ((data[0]["a_auth_inventory"]) == 0) {
+                    $('#a_inventory_on').attr('checked', true);
+                } else {
+                    $('#a_inventory_off').attr('checked', true);
+                }
+
+                //iOS 관리자 재고관리제한
+                if ((data[1]["a_auth_inventory"]) == 0) {
+                    $('#i_inventory_on').attr('checked', true);
+                } else {
+                    $('#i_inventory_off').attr('checked', true);
+                }
+
+                //자동로그아웃
+                $('#a_user_autoLogout').val(data[0]["c_auto_logout_min"]);
+                $('#i_user_autoLogout').val(data[1]["c_auto_logout_min"]);
+                $('#a_admin_autoLogout').val(data[0]["a_auto_logout_min"]);
+                $('#i_admin_autoLogout').val(data[1]["a_auto_logout_min"]);
+
+            }
+        });
+    };
+
+    function AuthSave() {
+
+        var params = $('#authForm').serialize();
+
+        $.ajax({
+            url: "/default/ajax_postAppAuth",
+            type: "POST",
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: params,
+            success: function () {
+                alert("수정완료")
+            }
+        });
+
+    };
+
+</script>
 <div class="header-mobile-wrapper">
     <div class="app-header__logo">
         <a href="#" data-toggle="tooltip" data-placement="bottom" title="Smart Box Admin" class="logo-src"></a>
@@ -34,7 +115,7 @@
                 <div class="col-sm-12 col-lg-12 mb-3">
                     <h5>어플관리 > 제한설정</h5>
                 </div>
-                <form actoion="#" method="post">
+                <form id="authForm" name="authForm" method="post">
                     <div class="row card mb-3">
                         <div class="col-sm-12 col-lg-12">
                             <div class="card-header">
@@ -58,21 +139,21 @@
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="user_connect_radio"
-                                                               name="user_android_connect"
-                                                               class="custom-control-input">
-                                                        <label
+                                                               id="a_connect_on"
+                                                               name="a_connect"
+                                                               class="custom-control-input"
+                                                               value="0"><label
                                                                 class="custom-control-label"
-                                                                for="user_connect_radio">on</label></div>
+                                                                for="a_connect_on">on</label></div>
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="user_connect_radio2"
-                                                               name="user_android_connect"
-                                                               class="custom-control-input">
-                                                        <label
+                                                               id="a_connect_off"
+                                                               name="a_connect"
+                                                               class="custom-control-input"
+                                                               value="1"><label
                                                                 class="custom-control-label"
-                                                                for="user_connect_radio2">off</label>
+                                                                for="a_connect_off">off</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -84,21 +165,21 @@
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="user_connect_radio3"
-                                                               name="user_ios_connect"
-                                                               class="custom-control-input">
-                                                        <label
+                                                               id="i_connect_on"
+                                                               name="i_connect"
+                                                               class="custom-control-input"
+                                                               value="0"><label
                                                                 class="custom-control-label"
-                                                                for="user_connect_radio3">on</label></div>
+                                                                for="i_connect_on">on</label></div>
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="user_connect_radio4"
-                                                               name="user_ios_connect"
-                                                               class="custom-control-input">
-                                                        <label
+                                                               id="i_connect_off"
+                                                               name="i_connect"
+                                                               class="custom-control-input"
+                                                               value="1"><label
                                                                 class="custom-control-label"
-                                                                for="user_connect_radio4">off</label>
+                                                                for="i_connect_off">off</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -112,19 +193,21 @@
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="user_buy_radio"
-                                                               name="user_android_buy"
-                                                               class="custom-control-input"><label
+                                                               id="a_purchase_on"
+                                                               name="a_purchase"
+                                                               class="custom-control-input"
+                                                               value="0"><label
                                                             class="custom-control-label"
-                                                            for="user_buy_radio">on</label></div>
+                                                            for="a_purchase_on">on</label></div>
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="user_buy_radio2"
-                                                               name="user_android_buy"
-                                                               class="custom-control-input"><label
+                                                               id="a_purchase_off"
+                                                               name="a_purchase"
+                                                               class="custom-control-input"
+                                                               value="1"><label
                                                             class="custom-control-label"
-                                                            for="user_buy_radio2">off</label>
+                                                            for="a_purchase_off">off</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -136,19 +219,21 @@
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="user_buy_radio3"
-                                                               name="user_ios_buy"
-                                                               class="custom-control-input"><label
+                                                               id="i_purchase_on"
+                                                               name="i_purchase"
+                                                               class="custom-control-input"
+                                                               value="0"><label
                                                             class="custom-control-label"
-                                                            for="user_buy_radio3">on</label></div>
+                                                            for="i_purchase_on">on</label></div>
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="user_buy_radio4"
-                                                               name="user_ios_buy"
-                                                               class="custom-control-input"><label
+                                                               id="i_purchase_off"
+                                                               name="i_purchase"
+                                                               class="custom-control-input"
+                                                               value="1"><label
                                                             class="custom-control-label"
-                                                            for="user_buy_radio4">off</label>
+                                                            for="i_purchase_off">off</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -157,12 +242,14 @@
                                     <tr>
                                         <th>자동로그아웃</th>
                                         <td>
-                                            <input type="number" min="0" max="60" name="user_android_timeout"/>
+                                            <input id="a_user_autoLogout" name="a_user_autoLogout" type="number" min="0"
+                                                   max="60"/>
                                             <span> 분 이후</span>
                                         </td>
 
                                         <td>
-                                            <input type="number" min="0" max="60" name="user_ios_timeout"/>
+                                            <input id="i_user_autoLogout" name="i_user_autoLogout" type="number" min="0"
+                                                   max="60"/>
                                             <span> 분 이후</span>
                                         </td>
                                     </tr>
@@ -194,19 +281,21 @@
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="admin_radio"
-                                                               name="admin_android_stock"
-                                                               class="custom-control-input"><label
+                                                               id="a_inventory_on"
+                                                               name="a_inventory"
+                                                               class="custom-control-input"
+                                                               value="0"><label
                                                             class="custom-control-label"
-                                                            for="admin_radio">on</label></div>
+                                                            for="a_inventory_on">on</label></div>
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="admin_radio2"
-                                                               name="admin_android_stock"
-                                                               class="custom-control-input"><label
+                                                               id="a_inventory_off"
+                                                               name="a_inventory"
+                                                               class="custom-control-input"
+                                                               value="1"><label
                                                             class="custom-control-label"
-                                                            for="admin_radio2">off</label>
+                                                            for="a_inventory_off">off</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -216,19 +305,21 @@
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="admin_radio3"
-                                                               name="admin_ios_stock"
-                                                               class="custom-control-input"><label
+                                                               id="i_inventory_on"
+                                                               name="i_inventory"
+                                                               class="custom-control-input"
+                                                               value="0"><label
                                                             class="custom-control-label"
-                                                            for="admin_radio3">on</label></div>
+                                                            for="i_inventory_on">on</label></div>
                                                     <div class="custom-radio custom-control"
                                                          style="display: inline-block">
                                                         <input type="radio"
-                                                               id="admin_radio4"
-                                                               name="admin_ios_stock"
-                                                               class="custom-control-input"><label
+                                                               id="i_inventory_off"
+                                                               name="i_inventory"
+                                                               class="custom-control-input"
+                                                               value="1"><label
                                                             class="custom-control-label"
-                                                            for="admin_radio4">off</label>
+                                                            for="i_inventory_off">off</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -237,11 +328,13 @@
                                     <tr>
                                         <th>자동로그아웃</th>
                                         <td>
-                                            <input type="number" min="0" max="60" name="admin_android_timeout"/>
+                                            <input id="a_admin_autoLogout" name="a_admin_auto_logout" type="number"
+                                                   min="0" max="60"/>
                                             <span> 분 이후</span>
                                         </td>
                                         <td>
-                                            <input type="number" min="0" max="60" name="admin_ios_timeout"/>
+                                            <input id="i_admin_autoLogout" name="i_admin_auto_logout" type="number"
+                                                   min="0" max="60"/>
                                             <span> 분 이후</span>
                                         </td>
                                     </tr>
@@ -252,8 +345,8 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12 col-lg-12" style="text-align: center; margin-top: 20px">
-                            <button type="button" class="btn btn-danger" style="width: 100px">취소</button>
-                            <input type="submit" class="btn btn-success" value="저장" style="width: 100px"/>
+                            <button type="button" class="btn btn-success" onclick="AuthSave()" style="width: 100px; float: right">저장
+                            </button>
                         </div>
                     </div>
                 </form>

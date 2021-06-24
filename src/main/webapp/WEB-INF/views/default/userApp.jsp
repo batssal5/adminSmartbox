@@ -105,26 +105,32 @@
         formData.append("4", $('#file_input4')[0].files[0]);
         formData.append("5", $('#file_input5')[0].files[0]);
 
-        $.ajax({
-            url: "/default/ajax_uploadImg",
-            type: "POST",
-            enctype: 'multipart/form-data',
-            processData: false,
-            contentType: false,
-            data: formData,
-            success: function (responseData) {
-                console.log(responseData);
-                var data = JSON.parse(responseData);
-                var html = '';
-                $.each(data, function (index, item){
-                    // html += '<div style="display: inline-block;">';
-                    html += '<img class="tutorialImg" id="tutorial_'+(index+1)+'" style="width: 100px; height: 100px; object-fit: cover" src="'+item+'"/>';
-                    // html += '</div>'
-                });
-                var imgWrap = document.getElementById('img-wrap')
-                imgWrap.innerHTML = html;
-            }
-        });
+        if($('#file_input1')[0].files[0] == null){
+            alert("파일을 선택하세요")
+        }else {
+            $.ajax({
+                url: "/default/ajax_uploadImg",
+                type: "POST",
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (responseData) {
+                    console.log(responseData);
+                    var data = JSON.parse(responseData);
+                    var html = '';
+                    $.each(data, function (index, item){
+                        html += '<img class="tutorialImg" id="tutorial_'+(index+1)+'" style="width: 100px; height: 100px; object-fit: cover" src="'+item+'"/>';
+                    });
+                    var imgWrap = document.getElementById('img-wrap')
+                    imgWrap.innerHTML = html;
+
+                    var button = document.getElementById('img_save_button');
+                    var btn = '<button id="imgUsed" style="width: 100px" onclick="ajax_imgSave()">저장</button>';
+                    button.innerHTML = btn;
+                }
+            });
+        }
     };
 
     function ajax_imgSave(){
@@ -168,7 +174,7 @@
 
         $('#imgForm').submit(function (e){
             e.preventDefault();
-        })
+        });
 
     });
 </script>

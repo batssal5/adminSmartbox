@@ -18,15 +18,11 @@
         var location = window.location.pathname;
         var admin = "/default/adminApp";
 
-        console.log(appType);
-        console.log(location);
-
         $.ajax({
             url: "/default/ajax_getApp",
             type: "GET",
             data: {appType: appType},
             success: function (responseData) {
-                console.log("responseData" + responseData);
                 var data = JSON.parse(responseData);
                 $.each(data, function (index, item) {
                     switch (item.cate) {
@@ -75,7 +71,6 @@
         var secession = $('#secession').val();
         var location = window.location.pathname;
 
-        console.log(appType);
         $.ajax({
             url: "/default/ajax_postApp",
             type: "POST",
@@ -89,7 +84,6 @@
                 location: location
             },
             success: function () {
-                console.log("#######################")
                 alert("수정완료");
             }
         });
@@ -105,26 +99,31 @@
         formData.append("4", $('#file_input4')[0].files[0]);
         formData.append("5", $('#file_input5')[0].files[0]);
 
-        $.ajax({
-            url: "/default/ajax_uploadImg",
-            type: "POST",
-            enctype: 'multipart/form-data',
-            processData: false,
-            contentType: false,
-            data: formData,
-            success: function (responseData) {
-                console.log(responseData);
-                var data = JSON.parse(responseData);
-                var html = '';
-                $.each(data, function (index, item){
-                    // html += '<div style="display: inline-block;">';
-                    html += '<img class="tutorialImg" id="tutorial_'+(index+1)+'" style="width: 100px; height: 100px; object-fit: cover" src="'+item+'"/>';
-                    // html += '</div>'
-                });
-                var imgWrap = document.getElementById('img-wrap')
-                imgWrap.innerHTML = html;
-            }
-        });
+        if($('#file_input1')[0].files[0] == null){
+            alert("파일을 선택하세요")
+        }else {
+            $.ajax({
+                url: "/default/ajax_uploadImg",
+                type: "POST",
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (responseData) {
+                    var data = JSON.parse(responseData);
+                    var html = '';
+                    $.each(data, function (index, item){
+                        html += '<img class="tutorialImg" id="tutorial_'+(index+1)+'" style="width: 100px; height: 100px; object-fit: cover" src="'+item+'"/>';
+                    });
+                    var imgWrap = document.getElementById('img-wrap');
+                    imgWrap.innerHTML = html;
+
+                    var button = document.getElementById('img_save_button');
+                    var btn = '<button id="imgUsed" style="width: 100px" onclick="ajax_imgSave()">저장</button>';
+                    button.innerHTML = btn;
+                }
+            });
+        }
     };
 
     function ajax_imgSave(){
@@ -141,7 +140,6 @@
             data.sort = imgWrap.find('img').eq(i).attr('id').substr(-1,1);
             data.src = imgWrap.find('img').eq(i).attr('src');
             dataList.push(data);
-            console.log(dataList);
         }
 
         var jsonData = JSON.stringify(dataList);
@@ -153,7 +151,7 @@
             dataType: 'json',
             data: {jsonData : jsonData},
             success: function (){
-                console.log("aaaaaaaaaaaaaaaaaaaaaaa")
+
             }
         })
 
@@ -168,7 +166,7 @@
 
         $('#imgForm').submit(function (e){
             e.preventDefault();
-        })
+        });
 
     });
 </script>
@@ -283,10 +281,7 @@
                                 <div class="row">
                                     <div class="col-lg-7">
                                         <div class="img-group" id="img-wrap" style="display:inline-block "></div>
-                                        <div>
-                                            <button id="imgUsed" style="width: 100px"
-                                                    onclick="ajax_imgSave()">저장
-                                            </button>
+                                        <div id="img_save_button">
                                         </div>
                                     </div>
                                     <div class="col-lg-5">
