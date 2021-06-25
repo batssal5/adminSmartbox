@@ -20,7 +20,6 @@
         if($("#inputLoginId").val()=="admin" && $("#inputLoginPw").val()=="admin"){
             var sessionData = "1234";
             sessionStorage.setItem("vdsession", sessionData ); // 저장
-            alert(sessionStorage.getItem("vdsession"));
             $(location).attr("href", "/home/dashboard");
         }else{
             alert("ID 혹은 Password를 확인 하세요.");
