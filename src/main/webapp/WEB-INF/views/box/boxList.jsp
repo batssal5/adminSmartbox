@@ -53,6 +53,25 @@
 					ajaxOptions.xhrFields = { withCredentials: true };
 				}
 			}),
+			export: {
+				enabled: true,
+				allowExportSelectedData: true
+			},
+			onExporting: function(e) {
+				var workbook = new ExcelJS.Workbook();
+				var worksheet = workbook.addWorksheet('boxlist');
+
+				DevExpress.excelExporter.exportDataGrid({
+					component: e.component,
+					worksheet: worksheet,
+					autoFilterEnabled: true
+				}).then(function() {
+					workbook.xlsx.writeBuffer().then(function(buffer) {
+						saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'boxlist.xlsx');
+					});
+				});
+				e.cancel = true;
+			},
 			remoteOperations: true,
 			columnAutoWidth: true,
 			filterRow: { visible: true },

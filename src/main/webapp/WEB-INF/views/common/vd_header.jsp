@@ -26,13 +26,16 @@
     <link rel="stylesheet" href=/bootstrab/css/vd-style.css>
 
 
-    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <script src="/bootstrab/js/jquery-3.4.0.min.js"></script>
     <script type="text/javascript" src="/bootstrab/js/util.js?v=0.0.1"></script>
     <script language="javascript">
         $(function () {
-            // Handler for .ready() called.
-            console.log("sssssssssssss");
-
+            var sessionid = sessionStorage.getItem("vdsession");
+            //alert(sessionid);
+            if(sessionid!="1234"){
+                sessionStorage.clear(); // 전체삭제
+                $(location).attr("href", "/");
+            }
         });
 
 

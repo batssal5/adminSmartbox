@@ -1,28 +1,14 @@
-INFO  21-06-24 18:37:54:060[main] [AdminSmartboxApplicationTests:55] - Starting AdminSmartboxApplicationTests using Java 14.0.2 on DESKTOP-O9DMHOH with PID 17780 (started by vd in C:\SmartBoxAdmin)
-INFO  21-06-24 18:37:54:063[main] [AdminSmartboxApplicationTests:660] - No active profile set, falling back to default profiles: default
-INFO  21-06-24 18:37:54:889[main] [PostProcessorRegistrationDelegate$BeanPostProcessorChecker:350] - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$43357f01] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-INFO  21-06-24 18:37:54:929[main] [AnnotationActionEndpointMapping:236] - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
-INFO  21-06-24 18:37:55:656[main] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
-INFO  21-06-24 18:37:56:164[main] [AdminSmartboxApplicationTests:61] - Started AdminSmartboxApplicationTests in 2.394 seconds (JVM running for 3.204)
-INFO  21-06-24 18:37:56:670[SpringContextShutdownHook] [ThreadPoolTaskExecutor:218] - Shutting down ExecutorService 'applicationTaskExecutor'
-INFO  21-06-24 18:38:22:139[main] [AdminSmartboxApplicationTests:55] - Starting AdminSmartboxApplicationTests using Java 14.0.2 on DESKTOP-O9DMHOH with PID 21100 (started by vd in C:\SmartBoxAdmin)
-INFO  21-06-24 18:38:22:143[main] [AdminSmartboxApplicationTests:660] - No active profile set, falling back to default profiles: default
-INFO  21-06-24 18:38:22:899[main] [PostProcessorRegistrationDelegate$BeanPostProcessorChecker:350] - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$463e3a8a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-INFO  21-06-24 18:38:22:932[main] [AnnotationActionEndpointMapping:236] - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
-INFO  21-06-24 18:38:23:605[main] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
-INFO  21-06-24 18:38:24:001[main] [AdminSmartboxApplicationTests:61] - Started AdminSmartboxApplicationTests in 2.168 seconds (JVM running for 2.962)
-INFO  21-06-24 18:38:24:317[SpringContextShutdownHook] [ThreadPoolTaskExecutor:218] - Shutting down ExecutorService 'applicationTaskExecutor'
-INFO  21-06-24 18:39:23:706[main] [AdminSmartboxApplicationTests:55] - Starting AdminSmartboxApplicationTests using Java 14.0.2 on DESKTOP-O9DMHOH with PID 27608 (started by vd in C:\SmartBoxAdmin)
-INFO  21-06-24 18:39:23:709[main] [AdminSmartboxApplicationTests:660] - No active profile set, falling back to default profiles: default
-INFO  21-06-24 18:39:24:488[main] [PostProcessorRegistrationDelegate$BeanPostProcessorChecker:350] - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$11df9f88] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-INFO  21-06-24 18:39:24:522[main] [AnnotationActionEndpointMapping:236] - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
-INFO  21-06-24 18:39:25:200[main] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
-INFO  21-06-24 18:39:25:575[main] [AdminSmartboxApplicationTests:61] - Started AdminSmartboxApplicationTests in 2.156 seconds (JVM running for 2.942)
-INFO  21-06-24 18:39:25:908[SpringContextShutdownHook] [ThreadPoolTaskExecutor:218] - Shutting down ExecutorService 'applicationTaskExecutor'
-INFO  21-06-24 18:56:45:838[main] [AdminSmartboxApplicationTests:55] - Starting AdminSmartboxApplicationTests using Java 14.0.2 on DESKTOP-O9DMHOH with PID 24756 (started by vd in C:\SmartBoxAdmin)
-INFO  21-06-24 18:56:45:841[main] [AdminSmartboxApplicationTests:660] - No active profile set, falling back to default profiles: default
-INFO  21-06-24 18:56:46:645[main] [PostProcessorRegistrationDelegate$BeanPostProcessorChecker:350] - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$f4884895] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-INFO  21-06-24 18:56:46:678[main] [AnnotationActionEndpointMapping:236] - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
-INFO  21-06-24 18:56:47:371[main] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
-INFO  21-06-24 18:56:47:775[main] [AdminSmartboxApplicationTests:61] - Started AdminSmartboxApplicationTests in 2.229 seconds (JVM running for 3.026)
-INFO  21-06-24 18:56:48:107[SpringContextShutdownHook] [ThreadPoolTaskExecutor:218] - Shutting down ExecutorService 'applicationTaskExecutor'
+INFO  21-06-24 20:06:16:813[main] [AdminSmartboxApplicationTests:55] - Starting AdminSmartboxApplicationTests using Java 14.0.2 on DESKTOP-O9DMHOH with PID 14460 (started by vd in C:\SmartBoxAdmin)
+INFO  21-06-24 20:06:16:817[main] [AdminSmartboxApplicationTests:660] - No active profile set, falling back to default profiles: default
+INFO  21-06-24 20:06:17:570[main] [PostProcessorRegistrationDelegate$BeanPostProcessorChecker:350] - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$7e25cd28] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+INFO  21-06-24 20:06:17:604[main] [AnnotationActionEndpointMapping:236] - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+INFO  21-06-24 20:06:18:290[main] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
+INFO  21-06-24 20:06:18:667[main] [AdminSmartboxApplicationTests:61] - Started AdminSmartboxApplicationTests in 2.138 seconds (JVM running for 2.977)
+INFO  21-06-24 20:06:18:991[SpringContextShutdownHook] [ThreadPoolTaskExecutor:218] - Shutting down ExecutorService 'applicationTaskExecutor'
+INFO  21-06-24 20:43:59:347[main] [AdminSmartboxApplicationTests:55] - Starting AdminSmartboxApplicationTests using Java 14.0.2 on DESKTOP-O9DMHOH with PID 16552 (started by vd in C:\SmartBoxAdmin)
+INFO  21-06-24 20:43:59:350[main] [AdminSmartboxApplicationTests:660] - No active profile set, falling back to default profiles: default
+INFO  21-06-24 20:44:00:154[main] [PostProcessorRegistrationDelegate$BeanPostProcessorChecker:350] - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$ddee4612] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+INFO  21-06-24 20:44:00:189[main] [AnnotationActionEndpointMapping:236] - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+INFO  21-06-24 20:44:00:889[main] [ThreadPoolTaskExecutor:181] - Initializing ExecutorService 'applicationTaskExecutor'
+INFO  21-06-24 20:44:01:296[main] [AdminSmartboxApplicationTests:61] - Started AdminSmartboxApplicationTests in 2.237 seconds (JVM running for 3.039)
+INFO  21-06-24 20:44:01:617[SpringContextShutdownHook] [ThreadPoolTaskExecutor:218] - Shutting down ExecutorService 'applicationTaskExecutor'

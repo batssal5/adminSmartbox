@@ -912,5 +912,7 @@
 </div>
 <div class="app-drawer-overlay d-none animated fadeIn"></div>
 <script type="text/javascript" src="/bootstrab/js/vd-js-engine-min.js"></script>
+<script type="text/javascript" src="/bootstrab/js/FileSaver.min.js"></script>
+<script type="text/javascript" src="/bootstrab/js/exceljs.min.js"></script>
 </body>
 </html>
