@@ -11,7 +11,6 @@
     <!--Environment 내의 프로퍼티들을 개별적으로 설정할 수도 있다.-->
     <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root" />
     <springProperty scope="context" name="LOG_QUERY_LEVEL" source="logging.query.level" />
-    <property name="LOGGER_HOME" value="${log.home.dir}" />
     <!-- log file path -->
     <property name="LOG_PATH" value="${log.config.path}" />
     <!-- log file name -->
