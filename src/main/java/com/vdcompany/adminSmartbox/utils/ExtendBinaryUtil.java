@@ -1,7 +1,6 @@
 package com.vdcompany.adminSmartbox.utils;
 
 
-import lombok.SneakyThrows;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,6 +27,7 @@ public class ExtendBinaryUtil {
 			throw new RuntimeException("Invalid hex character: " + a);
 		}
 	}
+/*
 
 	public static byte[] decodeHex(String hexstring) {
 		String hex = pattern.matcher(hexstring).replaceAll("");
@@ -51,6 +51,7 @@ public class ExtendBinaryUtil {
 
 		return new String(chars);
 	}
+*/
 
 	public static byte[] getBytes(String data, String charset, int length) throws UnsupportedEncodingException {
 		ByteBuffer buffer = null;
@@ -104,7 +105,7 @@ public class ExtendBinaryUtil {
 
 		return var4;
 	}
-
+/*
 	@SneakyThrows
 	public static String byteToString(ByteBuffer buffer, int size, String charset) throws IOException {
 		int pos = buffer.position();
@@ -170,7 +171,7 @@ public class ExtendBinaryUtil {
 
 			throw var4;
 		}
-	}
+	}*/
 
 	public static byte[] nullPadding(String src, int len) throws Exception {
 		byte[] des = new byte[len];
