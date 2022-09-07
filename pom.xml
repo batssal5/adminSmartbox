@@ -18,6 +18,7 @@
 
 	<properties>
 		<java.version>8</java.version>
+		<springfox-version>2.4.0</springfox-version>
 	</properties>
 
 	<dependencies>
@@ -103,6 +104,24 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.2.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.ortools/ortools-java -->
+		<dependency>
+			<groupId>com.google.ortools</groupId>
+			<artifactId>ortools-java</artifactId>
+			<version>9.2.9972</version>
+		</dependency>
+		<!--SpringFox and Swagger dependencies-->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox-version}</version>
 		</dependency>
 	</dependencies>
 
