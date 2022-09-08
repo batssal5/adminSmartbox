@@ -1,8 +1,7 @@
 package com.vdcompany.adminSmartbox.controller;
 
-import com.vdcompany.adminSmartbox.AdminSmartboxApplication;
-import com.vdcompany.adminSmartbox.jni.BrailleJavaInterCaller;
 import com.vdcompany.adminSmartbox.service.HomeService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,9 @@ public class BrailleDllController {
 			Bridge.setVerbose(true);
 			Bridge.init();
 
-			File coreFile = new File("jni4net.n-0.8.8.0.dll");
+			File coreFile = new File("jni4net/lib/jni4net.n-0.8.8.0.dll");
 
-			File dllFile = new File("MyJni.j4n.dll");
+			File dllFile = new File("jni4net/lib/MyJni.j4n.dll");
 
 
 			Bridge.LoadAndRegisterAssemblyFrom(coreFile);

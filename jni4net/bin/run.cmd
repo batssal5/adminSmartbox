@@ -1,1 +1,1 @@
-proxygen.exe ..\..\lib\MyJni.dll -wd ..\..\lib\
+proxygen.exe ..\lib\MyJni.dll -wd ..\

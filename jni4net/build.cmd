@@ -14,7 +14,7 @@ IF %ERRORLEVEL% NEQ 0 goto end
 
 
 echo MyJni.j4n.dll 
-csc /nologo /warn:0 /t:library /out:MyJni.j4n.dll /recurse:clr\*.cs  /reference:"C:\Users\Admin\IdeaProjects\adminSmartbox\MyJni.dll" /reference:"C:\Users\Admin\IdeaProjects\adminSmartbox\jni4net\lib\jni4net.n-0.8.8.0.dll"
+csc /nologo /warn:0 /t:library /out:MyJni.j4n.dll /recurse:clr\*.cs  /reference:"C:\Users\Admin\IdeaProjects\adminSmartbox\jni4net\lib\MyJni.dll" /reference:"C:\Users\Admin\IdeaProjects\adminSmartbox\jni4net\lib\jni4net.n-0.8.8.0.dll"
 IF %ERRORLEVEL% NEQ 0 goto end
 
 
