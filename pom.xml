@@ -28,10 +28,12 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
@@ -138,7 +140,6 @@
 			<scope>system</scope>
 			<version>1.0</version>
 			<systemPath>${jni.dll}/MyJni.j4n.jar</systemPath>
-
 		</dependency>
 
 	</dependencies>
